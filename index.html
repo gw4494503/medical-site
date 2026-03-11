@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Gordon Wong MD, MPH — Precision Psychopharmacology · Palo Alto</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config={theme:{extend:{colors:{moss:'#2E4036',clay:'#CC5833',cream:'#F2F0E9',charcoal:'#1A1A1A'},fontFamily:{sans:['"Plus Jakarta Sans"','sans-serif'],display:['"Outfit"','sans-serif'],drama:['"Cormorant Garamond"','serif'],mono:['"IBM Plex Mono"','monospace']}}}}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Outfit:wght@400;600;700&family=Cormorant+Garamond:ital,wght@1,300;1,600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<style>
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.035;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='250'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='250' height='250' filter='url(%23n)'/%3E%3C/svg%3E")}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{background:#F2F0E9;color:#1A1A1A;font-family:'Plus Jakarta Sans',sans-serif;overflow-x:hidden;margin:0}
+.btn-m{position:relative;overflow:hidden;transition:transform .3s cubic-bezier(.25,.46,.45,.94),box-shadow .3s ease;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;text-decoration:none}
+.btn-m:hover{transform:scale(1.03)}
+.btn-m .fill{position:absolute;inset:0;background:rgba(255,255,255,.12);transform:translateX(-101%);transition:transform .35s cubic-bezier(.25,.46,.45,.94)}
+.btn-m:hover .fill{transform:translateX(0)}
+#nav{transition:background .4s,border-color .4s}
+#nav.s{background:rgba(242,240,233,.82);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-color:rgba(46,64,54,.18)!important}
+#nav.s .nlogo,#nav.s .nlink{color:#2E4036!important}
+#nav.s .nav-cta{background:#CC5833!important}
+.svc-card{transition:transform .35s cubic-bezier(.25,.46,.45,.94),box-shadow .35s ease;border-radius:1.75rem}
+.svc-card:hover{transform:translateY(-5px);box-shadow:0 16px 48px rgba(46,64,54,.13)}
+.tw-cur{display:inline-block;width:2px;height:.9em;background:#CC5833;animation:blink 1s infinite;vertical-align:middle;margin-left:1px}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.helix{animation:helixSpin 10s linear infinite;transform-origin:50% 50%}
+@keyframes helixSpin{to{transform:rotate(360deg)}}
+.laser{animation:laserScan 2.8s ease-in-out infinite}
+@keyframes laserScan{0%{transform:translateX(-110%)}100%{transform:translateX(260%)}}
+.ekg{stroke-dasharray:520;stroke-dashoffset:520;animation:ekgDraw 2.5s ease-in-out infinite}
+@keyframes ekgDraw{0%{stroke-dashoffset:520;opacity:.2}50%{stroke-dashoffset:0;opacity:1}100%{stroke-dashoffset:-520;opacity:.2}}
+.proto-card{border-radius:2.5rem;background:#F2F0E9;border:1px solid rgba(46,64,54,.12);will-change:transform,filter,opacity}
+.gsap-fade{opacity:0;transform:translateY(32px)}
+@media(max-width:768px){.hero-h2{font-size:clamp(4rem,17vw,8rem)!important}}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav" class="fixed top-4 left-1/2 -translate-x-1/2 z-50 border border-transparent rounded-full px-5 py-2.5 flex items-center gap-6 w-[94%] max-w-4xl">
+  <a href="#" class="nlogo font-display font-bold text-xs tracking-[0.22em] uppercase text-cream mr-auto whitespace-nowrap transition-colors duration-300">GORDON WONG MD</a>
+  <div class="hidden md:flex items-center gap-5">
+    <a href="#about" class="nlink text-cream/75 text-sm font-medium hover:-translate-y-px transition-all duration-200">About</a>
+    <a href="#services" class="nlink text-cream/75 text-sm font-medium hover:-translate-y-px transition-all duration-200">Services</a>
+    <a href="#portal" class="nlink text-cream/75 text-sm font-medium hover:-translate-y-px transition-all duration-200">Portal</a>
+    <a href="#contact" class="nlink text-cream/75 text-sm font-medium hover:-translate-y-px transition-all duration-200">Contact</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero" class="relative flex items-end overflow-hidden" style="height:100dvh;min-height:680px">
+  <div class="absolute inset-0">
+    <img src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=1920&q=80" alt="Nature Landscape" class="w-full h-full object-cover object-center" loading="eager">
+    <div class="absolute inset-0" style="background:linear-gradient(to top,#1A1A1A 0%,rgba(26,26,26,.60) 40%,rgba(46,64,54,.25) 100%)"></div>
+  </div>
+  <div class="relative z-10 pb-16 md:pb-24 pl-8 md:pl-16 lg:pl-24 max-w-5xl">
+    <p id="h-tag" class="font-mono text-clay text-xs tracking-[0.28em] uppercase mb-5 opacity-0">Board-Certified Psychiatrist · Palo Alto, CA</p>
+    <h1 id="h-l1" class="font-display font-bold text-cream text-4xl md:text-5xl tracking-tight leading-none mb-1 opacity-0">Precision</h1>
+    <h1 id="h-l2" class="hero-h2 font-drama italic text-cream opacity-0" style="font-size:clamp(5rem,12vw,10rem);line-height:0.88">Medicine</h1>
+    <p id="h-sub" class="font-sans text-cream/60 text-base md:text-lg max-w-md mt-7 mb-8 leading-relaxed opacity-0">Advanced psychopharmacology rooted in your unique biology — individualized, evidence-based, and built around you as a partner.</p>
+    <div id="h-cta" class="flex flex-wrap gap-3 opacity-0">
+      <a href="https://docs.google.com/forms/d/11Woed37V7VzEFentDL-ydRVn3cIEgkSKybhrgcoXXzA/viewform" target="_blank" class="btn-m bg-clay text-white font-semibold px-7 py-3.5 rounded-full text-sm"><span class="fill"></span><span class="relative z-10">New Patient Inquiry</span></a>
+      <a href="#about" class="btn-m border border-cream/35 text-cream font-medium px-7 py-3.5 rounded-full text-sm"><span class="fill" style="background:rgba(255,255,255,.05)"></span><span class="relative z-10">Learn More ↓</span></a>
+    </div>
+  </div>
+</section>
+
+
+<!-- PHILOSOPHY -->
+<section class="relative py-32 px-6 overflow-hidden" style="background:#1A1A1A">
+  <div class="absolute inset-0 opacity-10">
+    <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1920&q=60" alt="" class="w-full h-full object-cover" style="filter:saturate(0.3)">
+  </div>
+  <div class="relative z-10 max-w-4xl mx-auto text-center">
+    <p class="font-mono text-clay text-xs tracking-[0.28em] uppercase mb-12 gsap-fade">My Approach</p>
+    <h2 class="font-drama italic gsap-fade" style="font-size:clamp(2.8rem,7vw,5.5rem);line-height:1.05;color:#F2F0E9">
+      I focus on <em style="color:#CC5833;font-style:normal">compassionate</em> evidence-based medical and psychiatric care.
+    </h2>
+    <div class="mt-16 grid md:grid-cols-3 gap-8 text-left gsap-fade">
+      <div class="border-t border-cream/15 pt-6">
+        <p class="font-mono text-clay text-[10px] tracking-widest uppercase mb-3">Pharmacogenomics</p>
+        <p class="text-cream/60 text-sm leading-relaxed">Genetic testing informs which medications your body metabolizes best — reducing trial and error.</p>
+      </div>
+      <div class="border-t border-cream/15 pt-6">
+        <p class="font-mono text-clay text-[10px] tracking-widest uppercase mb-3">Complex Cases</p>
+        <p class="text-cream/60 text-sm leading-relaxed">Expertise in co-occurring psychiatric and medical conditions that require nuanced, integrated management.</p>
+      </div>
+      <div class="border-t border-cream/15 pt-6">
+        <p class="font-mono text-clay text-[10px] tracking-widest uppercase mb-3">Second Opinions</p>
+        <p class="text-cream/60 text-sm leading-relaxed">A rigorous, in-depth consultation to bring fresh biological perspective to your current treatment plan.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- SERVICES -->
+<section id="services" class="py-24 px-6 md:px-12 lg:px-20" style="background:#2E4036">
+  <div class="max-w-6xl mx-auto">
+    <div class="mb-14">
+      <p class="font-mono text-clay text-xs tracking-[0.25em] uppercase mb-3 gsap-fade">What I Offer</p>
+    </div>
+    <div class="grid md:grid-cols-2 gap-5">
+
+      <div class="svc-card p-8 gsap-fade" style="background:rgba(242,240,233,.07);border:1px solid rgba(242,240,233,.12)">
+        <p class="font-mono text-clay text-[10px] tracking-widest uppercase mb-5">Service 01</p>
+        <h3 class="font-display font-bold text-xl text-cream mb-4">Comprehensive Initial Evaluation</h3>
+        <p class="text-cream/55 text-sm leading-relaxed">An in-depth first consultation synthesizing your psychiatric, medical, and social history into a clear diagnostic picture and individualized treatment framework.</p>
+        <div class="mt-6 pt-6 border-t border-cream/10 flex items-center gap-3">
+          <span class="font-mono text-cream/30 text-xs">→ Initial Consultation</span>
+        </div>
+      </div>
+
+      <div class="svc-card p-8 gsap-fade" style="background:rgba(242,240,233,.07);border:1px solid rgba(242,240,233,.12)">
+        <p class="font-mono text-clay text-[10px] tracking-widest uppercase mb-5">Service 02</p>
+        <h3 class="font-display font-bold text-xl text-cream mb-4">Medication Management</h3>
+        <p class="text-cream/55 text-sm leading-relaxed">Active, ongoing management of psychiatric medications — not passive prescription renewals. Efficacy, tolerability, and interactions are continuously evaluated with each visit.</p>
+        <div class="mt-6 pt-6 border-t border-cream/10 flex items-center gap-3">
+          <span class="font-mono text-cream/30 text-xs">→ 30-min follow-up appointments</span>
+        </div>
+      </div>
+
+      <div class="svc-card p-8 gsap-fade" style="background:rgba(204,88,51,.15);border:1px solid rgba(204,88,51,.3)">
+        <p class="font-mono text-clay text-[10px] tracking-widest uppercase mb-5">Service 03 — Cutting Edge</p>
+        <h3 class="font-display font-bold text-xl text-cream mb-4">Genetic Testing</h3>
+        <p class="text-cream/55 text-sm leading-relaxed">Pharmacogenomic testing to understand how your unique genetic makeup influences drug metabolism — enabling a biologically driven treatment plan that minimizes trial and error.</p>
+        <div class="mt-6 pt-6 border-t border-clay/20 flex items-center gap-3">
+          <span class="font-mono text-clay text-xs">→ Personalized to your genome</span>
+        </div>
+      </div>
+
+      <div class="svc-card p-8 gsap-fade" style="background:rgba(242,240,233,.07);border:1px solid rgba(242,240,233,.12)">
+        <p class="font-mono text-clay text-[10px] tracking-widest uppercase mb-5">Service 04</p>
+        <h3 class="font-display font-bold text-xl text-cream mb-4">Second Opinion Consultations</h3>
+        <p class="text-cream/55 text-sm leading-relaxed">A one-time, in-depth consultation providing independent perspective on your current diagnosis and treatment plan. Ideal for complex cases or patients seeking additional clarity before major decisions.</p>
+        <div class="mt-6 pt-6 border-t border-cream/10">
+          <span class="font-mono text-cream/30 text-xs">→ One-time, no ongoing commitment required</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- PATIENT PORTAL -->
+<section id="portal" class="py-24 px-6 md:px-12 lg:px-20 bg-cream">
+  <div class="max-w-5xl mx-auto">
+    <div class="mb-14 text-center">
+      <p class="font-mono text-clay text-xs tracking-[0.25em] uppercase mb-3 gsap-fade">Current Patients</p>
+      <h2 class="font-display font-bold text-3xl md:text-4xl text-charcoal gsap-fade">Patient Portal</h2>
+      <p class="text-charcoal/55 text-base mt-4 max-w-lg mx-auto gsap-fade">Everything you need between appointments — in one place.</p>
+    </div>
+    <div class="grid sm:grid-cols-2 gap-5">
+
+      <a href="https://calendar.google.com/calendar/u/0/appointments/AcZssZ3qU7bbOEBEb9bEizAf0Fff_OF1W-un0lLUePg=" target="_blank"
+         class="btn-m group flex-col items-start p-8 rounded-[1.75rem] text-left gsap-fade"
+         style="background:#2E4036;border:1px solid rgba(46,64,54,.0)">
+        <span class="fill" style="background:rgba(255,255,255,.06)"></span>
+        <span class="relative z-10 w-full">
+          <span class="font-mono text-clay text-[10px] tracking-widest uppercase block mb-4">Action 01</span>
+          <span class="font-display font-bold text-xl text-cream block mb-2">Schedule Follow-Up</span>
+          <span class="text-cream/50 text-sm leading-relaxed block mb-6">Book your 30-minute follow-up appointment directly on the calendar.</span>
+          <span class="font-mono text-clay text-xs group-hover:translate-x-1 transition-transform inline-block">Open Calendar →</span>
+        </span>
+      </a>
+
+      <a href="https://docs.google.com/forms/d/11Woed37V7VzEFentDL-ydRVn3cIEgkSKybhrgcoXXzA/viewform" target="_blank"
+         class="btn-m group flex-col items-start p-8 rounded-[1.75rem] text-left gsap-fade"
+         style="background:#F2F0E9;border:1px solid rgba(46,64,54,.15)">
+        <span class="fill" style="background:rgba(46,64,54,.04)"></span>
+        <span class="relative z-10 w-full">
+          <span class="font-mono text-clay text-[10px] tracking-widest uppercase block mb-4">Action 02</span>
+          <span class="font-display font-bold text-xl text-charcoal block mb-2">New Patient Inquiry</span>
+          <span class="text-charcoal/50 text-sm leading-relaxed block mb-6">Prospective patients: complete this form so Dr. Wong can review your care needs.</span>
+          <span class="font-mono text-clay text-xs group-hover:translate-x-1 transition-transform inline-block">Submit Inquiry →</span>
+        </span>
+      </a>
+
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSeQG7QJVRN4nhPcY3RorjdkbQTeV0YIxojPbFdT615W7FDdHw/viewform?usp=sf_link" target="_blank"
+         class="btn-m group flex-col items-start p-8 rounded-[1.75rem] text-left gsap-fade"
+         style="background:#F2F0E9;border:1px solid rgba(46,64,54,.15)">
+        <span class="fill" style="background:rgba(46,64,54,.04)"></span>
+        <span class="relative z-10 w-full">
+          <span class="font-mono text-clay text-[10px] tracking-widest uppercase block mb-4">Action 03</span>
+          <span class="font-display font-bold text-xl text-charcoal block mb-2">Update Billing</span>
+          <span class="text-charcoal/50 text-sm leading-relaxed block mb-6">Securely update your credit card information on file. All data is encrypted and stored securely.</span>
+          <span class="font-mono text-clay text-xs group-hover:translate-x-1 transition-transform inline-block">Update Card →</span>
+        </span>
+      </a>
+
+      <a href="https://docs.google.com/forms/d/18fydAkfXej8Xbn15qeIe4Rrh_m316uLAIUvSS3RFErc/viewform" target="_blank"
+         class="btn-m group flex-col items-start p-8 rounded-[1.75rem] text-left gsap-fade"
+         style="background:#F2F0E9;border:1px solid rgba(46,64,54,.15)">
+        <span class="fill" style="background:rgba(46,64,54,.04)"></span>
+        <span class="relative z-10 w-full">
+          <span class="font-mono text-clay text-[10px] tracking-widest uppercase block mb-4">Action 04</span>
+          <span class="font-display font-bold text-xl text-charcoal block mb-2">Request Refill</span>
+          <span class="text-charcoal/50 text-sm leading-relaxed block mb-6">Specify the medication name and dosage. Requests are reviewed within one business day.</span>
+          <span class="font-mono text-clay text-xs group-hover:translate-x-1 transition-transform inline-block">Request Refill →</span>
+        </span>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about" class="py-24 px-6 md:px-12 lg:px-20 bg-cream">
+  <div class="max-w-6xl mx-auto">
+    <div class="grid lg:grid-cols-2 gap-16 items-start">
+      <!-- Left: Bio -->
+      <div>
+        <p class="font-mono text-clay text-xs tracking-[0.25em] uppercase mb-5 gsap-fade">The Physician</p>
+        <h2 class="font-display font-bold text-3xl md:text-4xl text-charcoal mb-8 gsap-fade">Gordon Wong<br><span class="text-moss">MD, MPH</span></h2>
+        <div class="space-y-5 text-charcoal/70 text-base leading-relaxed gsap-fade">
+          <p>I am a board-certified psychiatrist specializing in the diagnosis and pharmacologic management of psychiatric illness. My practice is guided by evidence-based medicine and a holistic framework — treating the full complexity of anxiety, depression, mood disorders, and co-occurring medical and psychiatric conditions.</p>
+          <p>My background in biomedical engineering and two years of radiology training inform a systems-level view of the nervous system that distinguishes how I approach diagnosis. Within Silicon Valley, that perspective matters. I completed two years of radiology training and psychiatric training at Stanford University. I attended undergraduate and medical school at Northwestern University where I also obtained my Masters in Public Health.</p>
+          <p>As a lecturer at Five Branches University and a guest lecturer at Stanford Department of Psychiatry and Behavioral Sciences, I remain deeply engaged in education and collaborative care — including integration with complementary and alternative medicine approaches.</p>
+          <p>In my spare time, I enjoy tennis, hiking, swimming, and spending time with my family.</p>
+          <p>I welcome patients seeking expert psychiatric treatment, complex case consultation, second opinions, and forensic evaluations.</p>
+        </div>
+        <div class="mt-8 p-5 rounded-2xl gsap-fade" style="background:rgba(46,64,54,.06);border:1px solid rgba(46,64,54,.1)">
+          <p class="font-mono text-charcoal/40 text-[10px] tracking-widest uppercase mb-2">Disclosure</p>
+          <p class="text-xs text-charcoal/50 leading-relaxed">I have no conflicts of interest and receive no payments from pharmaceutical companies, device companies, or third parties. <a href="https://openpaymentsdata.cms.gov/" target="_blank" class="text-clay hover:underline">CMS Open Payments ↗</a></p>
+        </div>
+        <div class="mt-6 gsap-fade">
+          <p class="font-mono text-charcoal/40 text-[10px] tracking-widest uppercase mb-2">Languages</p>
+          <p class="text-sm text-charcoal/60"><span class="font-medium text-charcoal/80">Fluent:</span> English · Cantonese &nbsp;·&nbsp; <span class="font-medium text-charcoal/80">Conversational:</span> Mandarin</p>
+        </div>
+      </div>
+
+      <!-- Right: CV Accordion -->
+      <div class="space-y-4 gsap-fade">
+
+        <details class="cv-section rounded-2xl overflow-hidden" style="border:1px solid rgba(46,64,54,.12)">
+          <summary class="flex items-center justify-between px-6 py-5 font-display font-semibold text-charcoal hover:bg-moss/5 transition-colors">
+            <span>Education</span>
+            <span class="font-mono text-charcoal/30 text-xs">+</span>
+          </summary>
+          <div class="px-6 pb-6 space-y-4 text-sm">
+            <div class="border-l-2 border-clay pl-4">
+              <p class="font-semibold text-charcoal">Psychiatry Residency</p>
+              <p class="text-charcoal/55">Stanford University</p>
+            </div>
+            <div class="border-l-2 border-moss pl-4">
+              <p class="font-semibold text-charcoal">Doctor of Medicine (MD)</p>
+              <p class="text-charcoal/55">Northwestern University Feinberg School of Medicine</p>
+            </div>
+            <div class="border-l-2 border-moss pl-4">
+              <p class="font-semibold text-charcoal">Masters in Public Health (MPH)</p>
+              <p class="text-charcoal/55">Northwestern University</p>
+            </div>
+            <div class="border-l-2 border-charcoal/20 pl-4">
+              <p class="font-semibold text-charcoal">BA, Molecular Biology</p>
+              <p class="text-charcoal/55">Northwestern University · Magna Cum Laude · Phi Beta Kappa</p>
+            </div>
+          </div>
+        </details>
+
+        <details class="cv-section rounded-2xl overflow-hidden" style="border:1px solid rgba(46,64,54,.12)">
+          <summary class="flex items-center justify-between px-6 py-5 font-display font-semibold text-charcoal hover:bg-moss/5 transition-colors">
+            <span>Teaching &amp; Affiliations</span>
+            <span class="font-mono text-charcoal/30 text-xs">+</span>
+          </summary>
+          <div class="px-6 pb-6 space-y-3 text-sm text-charcoal/65">
+            <p>→ Stanford University School of Medicine — Clinical Instructor, Psychiatry (2004–2010)</p>
+            <p>→ Five Branches University — Lecturer &amp; Clinical Instructor, Acupuncture/Herbal Medicine (2004–present)</p>
+            <p>→ Guest Speaker, Stanford Psychiatry Grand Rounds (2004–present)</p>
+            <p>→ Guest Speaker, Traditional Chinese Medicine Conference, San Francisco (2016–present)</p>
+            <p>→ Expert Testimony / Forensic Psychiatry (2013–present)</p>
+            <p>→ Richmond Area Multi-Services (RAMS) — Staff Psychiatrist (2004–2009)</p>
+          </div>
+        </details>
+
+        <details class="cv-section rounded-2xl overflow-hidden" style="border:1px solid rgba(46,64,54,.12)">
+          <summary class="flex items-center justify-between px-6 py-5 font-display font-semibold text-charcoal hover:bg-moss/5 transition-colors">
+            <span>Honors &amp; Awards</span>
+            <span class="font-mono text-charcoal/30 text-xs">+</span>
+          </summary>
+          <div class="px-6 pb-6 space-y-3 text-sm text-charcoal/65">
+            <p>→ Alpha Omega Alpha Medical Honor Society</p>
+            <p>→ Beatrice E. Tucker Award — Northwestern (Top Graduate, OB/GYN)</p>
+            <p>→ Northwestern University Medical School Summer Research Fellowship</p>
+            <p>→ Honors: Psychiatry, Radiology, Internal Medicine, Neurology, and more</p>
+            <p>→ Canadian National Mathematics Champion (Euclid &amp; Descartes) — Ranked 20th in Canada</p>
+            <p>→ High School Valedictorian</p>
+          </div>
+        </details>
+
+        <details class="cv-section rounded-2xl overflow-hidden" style="border:1px solid rgba(46,64,54,.12)">
+          <summary class="flex items-center justify-between px-6 py-5 font-display font-semibold text-charcoal hover:bg-moss/5 transition-colors">
+            <span>Research &amp; Publications</span>
+            <span class="font-mono text-charcoal/30 text-xs">+</span>
+          </summary>
+          <div class="px-6 pb-6 space-y-3 text-sm text-charcoal/60">
+            <p class="font-mono text-[10px] text-charcoal/35 uppercase tracking-widest mb-3">Selected Publications</p>
+            <p><strong class="text-charcoal/80">Wong GCH</strong>, Muir SJ, Lai APW, Goodwin SCG. Uterine artery embolization: a minimally invasive technique for the treatment of uterine fibroids. <em>Journal of Women's Health &amp; Gender-Based Medicine</em> 2000;9(4):357–362.</p>
+            <p><strong class="text-charcoal/80">Wong GCH</strong>, Goodwin SC. Uterine artery embolization for uterine fibroids — a radiologist's perspective. <em>Clinical Obstetrics and Gynecology</em> 2001;44(2):412–424.</p>
+            <p><strong class="text-charcoal/80">Wong G</strong>, Goodwin SC. Uterine artery embolization for uterine fibroids. <em>Applied Radiology</em> 2001;Jan:26–31.</p>
+            <p>Goodwin SC, Bittner CA, Peterson CL, <strong class="text-charcoal/80">Wong G</strong>. Single-dose toxicity study of hepatic intra-arterial doxorubicin. <em>Toxicological Sciences</em> 2001.</p>
+            <p>Rodin MB, Daviglus ML, <strong class="text-charcoal/80">Wong GC</strong>, et al. Middle age cardiovascular risk factors and abdominal aortic aneurysm in older age. <em>Hypertension</em> 2003.</p>
+            <p class="font-mono text-[10px] text-charcoal/35 uppercase tracking-widest mt-4">Research — UCLA, U. of Hong Kong, Northwestern (1997–1999)</p>
+          </div>
+        </details>
+
+        <!-- Diplomate badge -->
+        <div class="flex items-center gap-4 p-5 rounded-2xl gsap-fade" style="background:#2E4036">
+          <div class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0" style="background:rgba(204,88,51,.25)">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#CC5833" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          </div>
+          <div>
+            <p class="font-display font-semibold text-cream text-sm">Diplomate, ABPN</p>
+            <p class="text-cream/50 text-xs">American Board of Psychiatry &amp; Neurology · Licensed, Medical Board of California</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer id="contact" class="pt-20 pb-12 px-6 md:px-12 lg:px-20" style="background:#1A1A1A;border-radius:3rem 3rem 0 0">
+  <div class="max-w-6xl mx-auto">
+    <div class="grid md:grid-cols-4 gap-12 mb-16 pb-12" style="border-bottom:1px solid rgba(242,240,233,.08)">
+      <div class="md:col-span-2">
+        <p class="font-display font-bold text-cream text-xl tracking-wide mb-3">Gordon Wong MD, MPH</p>
+        <p class="font-drama italic text-cream/40 text-lg mb-6">Precision. Partnership. Clarity.</p>
+        <p class="text-cream/40 text-sm leading-relaxed max-w-sm">Evidence-based psychiatry and psychopharmacology in Palo Alto, CA — tailored to the complexity of each individual patient.</p>
+      </div>
+      <div>
+        <p class="font-mono text-cream/30 text-[10px] tracking-widest uppercase mb-5">Navigation</p>
+        <div class="space-y-3">
+          <a href="#" class="block text-cream/55 text-sm hover:text-cream hover:-translate-y-px transition-all">Home</a>
+          <a href="#about" class="block text-cream/55 text-sm hover:text-cream hover:-translate-y-px transition-all">About</a>
+          <a href="#services" class="block text-cream/55 text-sm hover:text-cream hover:-translate-y-px transition-all">Services</a>
+          <a href="#portal" class="block text-cream/55 text-sm hover:text-cream hover:-translate-y-px transition-all">Patient Portal</a>
+        </div>
+      </div>
+      <div>
+        <p class="font-mono text-cream/30 text-[10px] tracking-widest uppercase mb-5">Contact</p>
+        <div class="space-y-3 text-sm text-cream/55">
+          <p>359 Middlefield Road<br>Palo Alto, CA 94301</p>
+          <p>Tel: <a href="tel:6505216111" class="hover:text-clay transition-colors">650-521-6111</a></p>
+          <p>Fax: 650-352-2351</p>
+          <p><a href="mailto:gordon@gordonwongmd.com" class="hover:text-clay transition-colors">gordon@gordonwongmd.com</a></p>
+        </div>
+      </div>
+    </div>
+    <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <p class="font-mono text-cream/25 text-[10px] tracking-wider">© 2026 Gordon Wong MD, MPH · All Rights Reserved</p>
+      <p class="font-mono text-cream/25 text-[10px] tracking-wider">This website is compliant with HIPAA. Your privacy matters.</p>
+    </div>
+  </div>
+</footer>
+
+<!-- JAVASCRIPT -->
+<script>
+gsap.registerPlugin(ScrollTrigger);
+
+// Hero entrance
+const tl = gsap.timeline({delay:0.3});
+tl.to('#h-tag',{opacity:1,y:0,duration:0.7,ease:'power3.out'})
+  .to('#h-l1',{opacity:1,y:0,duration:0.7,ease:'power3.out'},'-=0.4')
+  .to('#h-l2',{opacity:1,y:0,duration:0.9,ease:'power3.out'},'-=0.5')
+  .to('#h-sub',{opacity:1,y:0,duration:0.7,ease:'power3.out'},'-=0.5')
+  .to('#h-cta',{opacity:1,y:0,duration:0.6,ease:'power3.out'},'-=0.4');
+
+// Navbar morph
+const hero = document.getElementById('hero');
+const nav = document.getElementById('nav');
+const io = new IntersectionObserver(([e])=>{
+  nav.classList.toggle('s',!e.isIntersecting);
+},{threshold:0.05});
+io.observe(hero);
+
+// Scroll reveals
+gsap.utils.toArray('.gsap-fade').forEach(el=>{
+  gsap.to(el,{
+    opacity:1,y:0,duration:0.75,ease:'power3.out',
+    scrollTrigger:{trigger:el,start:'top 88%',toggleActions:'play none none none'}
+  });
+});
+
+// FEATURE CARD 1: Diagnostic Shuffler
+(function(){
+  const items = document.querySelectorAll('.diag-item');
+  const positions = [
+    {top:'0px',zIndex:3,opacity:1,scale:1},
+    {top:'44px',zIndex:2,opacity:0.75,scale:0.97},
+    {top:'80px',zIndex:1,opacity:0.5,scale:0.94}
+  ];
+  let cur = 0;
+  function shuffle(){
+    cur = (cur+1)%3;
+    items.forEach((el,i)=>{
+      const pos = positions[(i - cur + 3) % 3];
+      el.style.top = pos.top;
+      el.style.zIndex = pos.zIndex;
+      el.style.opacity = pos.opacity;
+      el.style.transform = `scale(${pos.scale})`;
+      el.style.transition = 'all 0.55s cubic-bezier(0.34,1.56,0.64,1)';
+    });
+  }
+  setInterval(shuffle,2800);
+})();
+
+// FEATURE CARD 2: Typewriter
+(function(){
+  const msgs = [
+    'Reviewing medication response data...',
+    'Adjusting treatment parameters...',
+    'Scheduling follow-up in 4 weeks...',
+    'Coordinating with your therapist...',
+    'Analyzing tolerability profile...',
+    'Updating genomic markers...'
+  ];
+  const el = document.getElementById('tw-text');
+  let mi=0,ci=0,typing=true;
+  function tick(){
+    if(typing){
+      el.textContent = msgs[mi].slice(0,ci+1);
+      ci++;
+      if(ci>=msgs[mi].length){typing=false;setTimeout(tick,1800);return;}
+    } else {
+      el.textContent = msgs[mi].slice(0,ci-1);
+      ci--;
+      if(ci<=0){typing=true;mi=(mi+1)%msgs.length;setTimeout(tick,400);return;}
+    }
+    setTimeout(tick,typing?55:28);
+  }
+  setTimeout(tick,800);
+})();
+
+// FEATURE CARD 3: Scheduler Grid
+(function(){
+  const grid = document.getElementById('sched-grid');
+  if(!grid) return;
+  const days = ['S','M','T','W','T','F','S'];
+  days.forEach(d=>{
+    const h = document.createElement('div');
+    h.className='font-mono text-charcoal/35 text-center';
+    h.style.cssText='font-size:9px;padding-bottom:4px';
+    h.textContent=d;
+    grid.appendChild(h);
+  });
+  const cells=[];
+  for(let r=0;r<3;r++){
+    for(let c=0;c<7;c++){
+      const cell=document.createElement('div');
+      cell.className='sched-cell';
+      cell.style.cssText='height:20px;border-radius:4px;background:rgba(46,64,54,.08);transition:background .3s,transform .2s;position:relative';
+      grid.appendChild(cell);
+      cells.push({el:cell,row:r,col:c});
+    }
+  }
+  const cursor=document.getElementById('sched-cursor');
+  function animateSched(){
+    cells.forEach(c=>c.el.style.background='rgba(46,64,54,.08)');
+    const target=cells[Math.floor(Math.random()*cells.length)];
+    const rect=target.el.getBoundingClientRect();
+    const pRect=document.getElementById('sched-container').getBoundingClientRect();
+    const cx=rect.left-pRect.left+rect.width/2-6;
+    const cy=rect.top-pRect.top+rect.height/2-6;
+    cursor.style.opacity='1';
+    cursor.style.transform=`translate(${cx}px,${cy}px) scale(0.95)`;
+    setTimeout(()=>{
+      target.el.style.background='rgba(204,88,51,.4)';
+      target.el.style.transform='scale(0.9)';
+      setTimeout(()=>{target.el.style.transform='scale(1)';},200);
+      setTimeout(()=>{cursor.style.opacity='0';},700);
+      setTimeout(animateSched,3200);
+    },600);
+  }
+  setTimeout(animateSched,1500);
+})();
+
+// Protocol grid dots (replace script tag approach)
+(function(){
+  const grids = document.querySelectorAll('#proto-dot-grid');
+  grids.forEach(g=>{
+    for(let i=0;i<48;i++){
+      const d=document.createElement('div');
+      d.style.cssText=`width:100%;aspect-ratio:1;border-radius:2px;background:rgba(46,64,54,${Math.random()>.6?.22:.06})`;
+      g.appendChild(d);
+    }
+  });
+})();
+</script>
+</body>
+</html>
