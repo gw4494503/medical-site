@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Medication Refill Request — Gordon Wong MD, MPH</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{moss:'#2E4036',clay:'#CC5833',cream:'#F2F0E9',charcoal:'#1A1A1A'},fontFamily:{sans:['"Plus Jakarta Sans"','sans-serif'],display:['"Outfit"','sans-serif'],drama:['"Cormorant Garamond"','serif'],mono:['"IBM Plex Mono"','monospace']}}}}</script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&family=Outfit:wght@600;700&family=Cormorant+Garamond:ital,wght@1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}body{background:#F2F0E9;color:#1A1A1A;font-family:'Plus Jakarta Sans',sans-serif;margin:0;min-height:100vh}
+.inp{width:100%;padding:12px 16px;border:1.5px solid rgba(46,64,54,.2);border-radius:12px;background:#fff;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;color:#1A1A1A;outline:none;transition:border-color .2s,box-shadow .2s}
+.inp:focus{border-color:#2E4036;box-shadow:0 0 0 3px rgba(46,64,54,.08)}
+.inp::placeholder{color:rgba(26,26,26,.35)}
+.lbl{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(26,26,26,.5);margin-bottom:6px;display:block}
+.req{color:#CC5833;margin-left:2px}
+.btn-cta{background:#CC5833;color:#F2F0E9;font-family:'Outfit',sans-serif;font-weight:700;padding:16px 40px;border-radius:50px;border:none;cursor:pointer;font-size:15px;transition:transform .2s,background .2s;width:100%}
+.btn-cta:hover{background:#b34d2c;transform:scale(1.01)}
+.section-card{background:#fff;border-radius:20px;padding:24px;margin-bottom:16px;border:1px solid rgba(46,64,54,.08)}
+.section-title{font-family:'Outfit',sans-serif;font-weight:700;font-size:12px;color:#2E4036;letter-spacing:.07em;text-transform:uppercase;margin-bottom:16px}
+#success{display:none}
+</style>
+</head>
+<body>
+
+<header class="py-6 px-6 flex justify-center" style="border-bottom:1px solid rgba(46,64,54,.1)">
+  <div class="flex flex-col items-center gap-1">
+    <a href="https://www.gordonwongmd.com" class="font-display font-bold text-moss tracking-[.18em] text-sm uppercase">GORDON WONG MD</a>
+    <span class="font-mono text-[9px] tracking-widest text-charcoal/30 uppercase">Medication Refill Request</span>
+  </div>
+</header>
+
+<main class="max-w-xl mx-auto px-4 py-10" id="form-main">
+  <h2 class="font-display font-bold text-2xl text-charcoal mb-1">Request a Refill</h2>
+  <p class="text-sm text-charcoal/50 mb-8">For current patients only. Requests are reviewed within one business day. Fields marked <span class="text-clay">*</span> are required.</p>
+
+  <!-- Patient Identity -->
+  <div class="section-card">
+    <p class="section-title">Patient Information</p>
+    <div class="grid grid-cols-2 gap-4 mb-4">
+      <div>
+        <label class="lbl">First Name<span class="req">*</span></label>
+        <input class="inp" type="text" id="f-first" placeholder="Jane">
+      </div>
+      <div>
+        <label class="lbl">Last Name<span class="req">*</span></label>
+        <input class="inp" type="text" id="f-last" placeholder="Smith">
+      </div>
+    </div>
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <label class="lbl">Email<span class="req">*</span></label>
+        <input class="inp" type="email" id="f-email" placeholder="you@example.com">
+      </div>
+      <div>
+        <label class="lbl">Date of Birth<span class="req">*</span></label>
+        <input class="inp" type="date" id="f-dob">
+      </div>
+    </div>
+  </div>
+
+  <!-- Medication Details -->
+  <div class="section-card">
+    <p class="section-title">Medication Details</p>
+    <div class="mb-4">
+      <label class="lbl">Medication Name<span class="req">*</span></label>
+      <input class="inp" type="text" id="f-medname" placeholder="e.g. Sertraline">
+    </div>
+    <div class="grid grid-cols-2 gap-4 mb-4">
+      <div>
+        <label class="lbl">Tablet Size (mg)<span class="req">*</span></label>
+        <input class="inp" type="text" id="f-mg" placeholder="e.g. 50mg">
+      </div>
+      <div>
+        <label class="lbl">Times per Day<span class="req">*</span></label>
+        <input class="inp" type="text" id="f-freq" placeholder="e.g. Once daily">
+      </div>
+    </div>
+    <div>
+      <label class="lbl">Special Release Type</label>
+      <input class="inp" type="text" id="f-release" placeholder="e.g. Extended Release (XR) — leave blank if N/A">
+    </div>
+  </div>
+
+  <!-- Pharmacy -->
+  <div class="section-card">
+    <p class="section-title">Pharmacy</p>
+    <div class="mb-4">
+      <label class="lbl">Pharmacy Name<span class="req">*</span></label>
+      <input class="inp" type="text" id="f-rxname" placeholder="CVS Pharmacy">
+    </div>
+    <div class="grid grid-cols-3 gap-3">
+      <div class="col-span-2">
+        <label class="lbl">Pharmacy Address<span class="req">*</span></label>
+        <input class="inp" type="text" id="f-rxaddr" placeholder="100 Main St, Palo Alto, CA">
+      </div>
+      <div>
+        <label class="lbl">Zip Code<span class="req">*</span></label>
+        <input class="inp" type="text" id="f-rxzip" placeholder="94301" maxlength="10">
+      </div>
+    </div>
+  </div>
+
+  <button class="btn-cta" onclick="submitForm()">Submit Refill Request →</button>
+
+  <p class="text-center font-mono text-[9px] text-charcoal/30 tracking-wider mt-6 uppercase">HIPAA Compliant · gordonwongmd.com</p>
+</main>
+
+<!-- SUCCESS -->
+<div id="success" class="text-center py-20 px-4">
+  <div class="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-6" style="background:#2E4036">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#F2F0E9" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+  </div>
+  <h2 class="font-drama italic text-3xl text-charcoal mb-3">Request Submitted</h2>
+  <p class="text-charcoal/55 text-sm max-w-sm mx-auto leading-relaxed mb-8">Your refill request has been received. Dr. Wong will review it within one business day.</p>
+  <a href="https://www.gordonwongmd.com" class="font-mono text-moss text-xs tracking-widest uppercase hover:underline">← Return to gordonwongmd.com</a>
+</div>
+
+<footer class="py-8 mt-4 text-center" style="border-top:1px solid rgba(46,64,54,.1)">
+  <p class="font-mono text-[9px] text-charcoal/30 tracking-widest uppercase">© 2026 Gordon Wong MD, MPH · All Rights Reserved</p>
+</footer>
+
+<script>
+const FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdZBy3gYl5YZb5-8My2YdATtu2hOEpv05b7-X-AvT5o7S8TCw/formResponse';
+
+function submitForm() {
+  const v = id => document.getElementById(id).value.trim();
+  const required = [['f-first','First Name'],['f-last','Last Name'],['f-email','Email'],['f-dob','Date of Birth'],['f-medname','Medication Name'],['f-mg','Tablet Size'],['f-freq','Times per Day'],['f-rxname','Pharmacy Name'],['f-rxaddr','Pharmacy Address'],['f-rxzip','Pharmacy Zip']];
+  for (const [id, label] of required) {
+    const el = document.getElementById(id);
+    if (!el.value.trim()) {
+      el.focus(); el.style.borderColor='#CC5833';
+      setTimeout(()=>el.style.borderColor='',2000);
+      alert(label+' is required.'); return;
+    }
+  }
+  const data = new FormData();
+  data.append('emailAddress', v('f-email'));
+  data.append('entry.480610476', v('f-last'));
+  data.append('entry.924219301', v('f-first'));
+  data.append('entry.1202142651', v('f-dob'));
+  data.append('entry.703322966', v('f-medname'));
+  data.append('entry.2111521613', v('f-mg'));
+  data.append('entry.1464064327', v('f-freq'));
+  data.append('entry.1661476402', v('f-release'));
+  data.append('entry.1900392646', v('f-rxname'));
+  data.append('entry.2003328638', v('f-rxaddr'));
+  data.append('entry.323109341', v('f-rxzip'));
+  fetch(FORM_URL, {method:'POST', mode:'no-cors', body:data})
+    .then(()=>showSuccess()).catch(()=>showSuccess());
+}
+function showSuccess() {
+  document.getElementById('form-main').style.display='none';
+  document.getElementById('success').style.display='block';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>

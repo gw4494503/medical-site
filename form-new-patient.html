@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>New Patient Consultation — Gordon Wong MD, MPH</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{moss:'#2E4036',clay:'#CC5833',cream:'#F2F0E9',charcoal:'#1A1A1A'},fontFamily:{sans:['"Plus Jakarta Sans"','sans-serif'],display:['"Outfit"','sans-serif'],drama:['"Cormorant Garamond"','serif'],mono:['"IBM Plex Mono"','monospace']}}}}</script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&family=Outfit:wght@600;700&family=Cormorant+Garamond:ital,wght@1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}body{background:#F2F0E9;color:#1A1A1A;font-family:'Plus Jakarta Sans',sans-serif;margin:0;min-height:100vh}
+.inp{width:100%;padding:12px 16px;border:1.5px solid rgba(46,64,54,.2);border-radius:12px;background:#fff;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;color:#1A1A1A;outline:none;transition:border-color .2s,box-shadow .2s}
+.inp:focus{border-color:#2E4036;box-shadow:0 0 0 3px rgba(46,64,54,.08)}
+.inp::placeholder{color:rgba(26,26,26,.35)}
+textarea.inp{resize:vertical;min-height:90px}
+.lbl{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(26,26,26,.5);margin-bottom:6px;display:block}
+.req{color:#CC5833;margin-left:2px}
+.step{display:none}.step.active{display:block}
+.prog-bar{height:3px;background:#2E4036;border-radius:2px;transition:width .4s cubic-bezier(.25,.46,.45,.94)}
+.btn-pri{background:#2E4036;color:#F2F0E9;font-family:'Outfit',sans-serif;font-weight:600;padding:14px 32px;border-radius:50px;border:none;cursor:pointer;font-size:14px;transition:transform .2s,background .2s}
+.btn-pri:hover{background:#1e2b25;transform:scale(1.02)}
+.btn-sec{background:transparent;color:#2E4036;font-family:'Outfit',sans-serif;font-weight:600;padding:14px 24px;border-radius:50px;border:1.5px solid rgba(46,64,54,.25);cursor:pointer;font-size:14px;transition:transform .2s}
+.btn-sec:hover{background:rgba(46,64,54,.05);transform:scale(1.01)}
+.btn-cta{background:#CC5833;color:#F2F0E9;font-family:'Outfit',sans-serif;font-weight:700;padding:16px 40px;border-radius:50px;border:none;cursor:pointer;font-size:15px;transition:transform .2s,background .2s}
+.btn-cta:hover{background:#b34d2c;transform:scale(1.02)}
+select.inp{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%232E4036' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center}
+.radio-group{display:flex;gap:10px;flex-wrap:wrap}
+.radio-opt{flex:1;min-width:80px}
+.radio-opt input{display:none}
+.radio-opt label{display:block;text-align:center;padding:10px 12px;border:1.5px solid rgba(46,64,54,.2);border-radius:10px;cursor:pointer;font-size:13px;font-weight:600;transition:all .2s;color:rgba(26,26,26,.6)}
+.radio-opt input:checked+label{background:#2E4036;color:#F2F0E9;border-color:#2E4036}
+.section-card{background:#fff;border-radius:20px;padding:24px;margin-bottom:16px;border:1px solid rgba(46,64,54,.08)}
+.section-title{font-family:'Outfit',sans-serif;font-weight:700;font-size:13px;color:#2E4036;letter-spacing:.06em;text-transform:uppercase;margin-bottom:16px}
+.toggle-section{border:1.5px solid rgba(46,64,54,.15);border-radius:16px;overflow:hidden;margin-top:8px}
+.toggle-header{padding:14px 18px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-family:'Outfit',sans-serif;font-weight:600;font-size:14px;color:#2E4036;background:rgba(46,64,54,.04)}
+.toggle-body{display:none;padding:18px;background:#fff}
+.toggle-body.open{display:block}
+#success{display:none}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="py-6 px-6 flex justify-center" style="border-bottom:1px solid rgba(46,64,54,.1)">
+  <div class="flex flex-col items-center gap-1">
+    <a href="https://www.gordonwongmd.com" class="font-display font-bold text-moss tracking-[.18em] text-sm uppercase">GORDON WONG MD</a>
+    <span class="font-mono text-[9px] tracking-widest text-charcoal/30 uppercase">New Patient Consultation</span>
+  </div>
+</header>
+
+<!-- PROGRESS -->
+<div class="max-w-2xl mx-auto px-4 pt-8 pb-2">
+  <div class="flex items-center justify-between mb-3">
+    <span class="font-mono text-[10px] tracking-widest text-charcoal/40 uppercase" id="step-label">Step 1 of 4</span>
+    <span class="font-mono text-[10px] tracking-widest text-clay uppercase" id="step-name">Personal</span>
+  </div>
+  <div style="height:3px;background:rgba(46,64,54,.12);border-radius:2px">
+    <div class="prog-bar" id="prog" style="width:25%"></div>
+  </div>
+  <div class="flex justify-between mt-2">
+    <span class="font-mono text-[9px] text-moss/70">Personal</span>
+    <span class="font-mono text-[9px] text-charcoal/30">Contact</span>
+    <span class="font-mono text-[9px] text-charcoal/30">Clinical</span>
+    <span class="font-mono text-[9px] text-charcoal/30">Adolescent</span>
+  </div>
+</div>
+
+<!-- FORM CONTAINER -->
+<main class="max-w-2xl mx-auto px-4 py-6">
+
+<!-- STEP 1: Personal -->
+<div class="step active" id="step1">
+  <h2 class="font-display font-bold text-2xl text-charcoal mb-1">Personal Information</h2>
+  <p class="text-sm text-charcoal/50 mb-6">Please complete all required fields marked with <span class="text-clay">*</span></p>
+
+  <div class="grid grid-cols-2 gap-4 mb-4">
+    <div>
+      <label class="lbl">First Name<span class="req">*</span></label>
+      <input class="inp" type="text" id="f-first" placeholder="Jane">
+    </div>
+    <div>
+      <label class="lbl">Last Name<span class="req">*</span></label>
+      <input class="inp" type="text" id="f-last" placeholder="Smith">
+    </div>
+  </div>
+
+  <div class="mb-4">
+    <label class="lbl">Email Address<span class="req">*</span></label>
+    <input class="inp" type="email" id="f-email" placeholder="you@example.com">
+  </div>
+
+  <div class="mb-4">
+    <label class="lbl">Date of Birth<span class="req">*</span></label>
+    <input class="inp" type="date" id="f-dob">
+  </div>
+
+  <div class="mb-6">
+    <label class="lbl">Gender<span class="req">*</span></label>
+    <div class="radio-group">
+      <div class="radio-opt"><input type="radio" name="gender" id="g-m" value="Male"><label for="g-m">Male</label></div>
+      <div class="radio-opt"><input type="radio" name="gender" id="g-f" value="Female"><label for="g-f">Female</label></div>
+      <div class="radio-opt"><input type="radio" name="gender" id="g-o" value="Other"><label for="g-o">Other</label></div>
+    </div>
+  </div>
+
+  <div class="flex justify-end">
+    <button class="btn-pri" onclick="goStep(2)">Continue →</button>
+  </div>
+</div>
+
+<!-- STEP 2: Contact & Pharmacy -->
+<div class="step" id="step2">
+  <h2 class="font-display font-bold text-2xl text-charcoal mb-1">Contact & Pharmacy</h2>
+  <p class="text-sm text-charcoal/50 mb-6">Your address, phone numbers, and pharmacy details.</p>
+
+  <div class="section-card">
+    <p class="section-title">Home Address</p>
+    <div class="mb-4">
+      <label class="lbl">Street Address<span class="req">*</span></label>
+      <input class="inp" type="text" id="f-street" placeholder="123 Main St">
+    </div>
+    <div class="grid grid-cols-3 gap-3">
+      <div class="col-span-1">
+        <label class="lbl">City<span class="req">*</span></label>
+        <input class="inp" type="text" id="f-city" placeholder="Palo Alto">
+      </div>
+      <div>
+        <label class="lbl">State<span class="req">*</span></label>
+        <input class="inp" type="text" id="f-state" placeholder="CA" maxlength="2">
+      </div>
+      <div>
+        <label class="lbl">Zip<span class="req">*</span></label>
+        <input class="inp" type="text" id="f-zip" placeholder="94301" maxlength="10">
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <p class="section-title">Phone Numbers</p>
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <label class="lbl">Mobile Phone<span class="req">*</span></label>
+        <input class="inp" type="tel" id="f-mobile" placeholder="(650) 555-0100">
+      </div>
+      <div>
+        <label class="lbl">Home Phone</label>
+        <input class="inp" type="tel" id="f-home" placeholder="Optional">
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <p class="section-title">Emergency Contact</p>
+    <div class="mb-0">
+      <label class="lbl">Name & Phone Number<span class="req">*</span></label>
+      <textarea class="inp" id="f-emergency" placeholder="Jane Smith — (650) 555-0199" style="min-height:70px"></textarea>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <p class="section-title">Pharmacy</p>
+    <div class="mb-4">
+      <label class="lbl">Pharmacy Name<span class="req">*</span></label>
+      <input class="inp" type="text" id="f-rxname" placeholder="CVS Pharmacy">
+    </div>
+    <div>
+      <label class="lbl">Full Address with City & Zip<span class="req">*</span></label>
+      <input class="inp" type="text" id="f-rxaddr" placeholder="100 Main St, Palo Alto, CA 94301">
+    </div>
+  </div>
+
+  <div class="flex justify-between">
+    <button class="btn-sec" onclick="goStep(1)">← Back</button>
+    <button class="btn-pri" onclick="goStep(3)">Continue →</button>
+  </div>
+</div>
+
+<!-- STEP 3: Clinical History -->
+<div class="step" id="step3">
+  <h2 class="font-display font-bold text-2xl text-charcoal mb-1">Clinical History</h2>
+  <p class="text-sm text-charcoal/50 mb-6">This helps Dr. Wong prepare a thorough first consultation.</p>
+
+  <div class="section-card">
+    <p class="section-title">Reason for Consultation</p>
+    <label class="lbl">Please describe what you are seeking help for<span class="req">*</span></label>
+    <textarea class="inp" id="f-reason" placeholder="Brief description of your situation and what you're hoping to address..." style="min-height:110px"></textarea>
+  </div>
+
+  <div class="section-card">
+    <p class="section-title">Current Medications</p>
+    <label class="lbl">List all medications & supplements with dosages (include OTC & herbal)</label>
+    <textarea class="inp" id="f-currmeds" placeholder="Example: Sertraline 50mg daily, Melatonin 5mg nightly..."></textarea>
+  </div>
+
+  <div class="section-card">
+    <p class="section-title">Prior Medications</p>
+    <label class="lbl">Medications you have taken in the past</label>
+    <textarea class="inp" id="f-priormeds" placeholder="Include what worked, what didn't, and any adverse reactions..."></textarea>
+  </div>
+
+  <div class="section-card">
+    <p class="section-title">Family Psychiatric History</p>
+    <label class="lbl">Both sides of the family, immediate and extended</label>
+    <textarea class="inp" id="f-famhx" placeholder="Depression, anxiety, bipolar, schizophrenia, substance use, etc. on either side..."></textarea>
+  </div>
+
+  <div class="section-card">
+    <p class="section-title">Referring Provider / Therapist <span class="font-mono text-[9px] text-charcoal/30 normal-case tracking-normal">(optional — allows care coordination)</span></p>
+    <div class="grid grid-cols-1 gap-3">
+      <div>
+        <label class="lbl">Name</label>
+        <input class="inp" type="text" id="f-refname" placeholder="Dr. Jane Smith">
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="lbl">Email</label>
+          <input class="inp" type="email" id="f-refemail" placeholder="provider@clinic.com">
+        </div>
+        <div>
+          <label class="lbl">Phone</label>
+          <input class="inp" type="tel" id="f-refphone" placeholder="(650) 555-0100">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex justify-between">
+    <button class="btn-sec" onclick="goStep(2)">← Back</button>
+    <button class="btn-pri" onclick="goStep(4)">Continue →</button>
+  </div>
+</div>
+
+<!-- STEP 4: Adolescent / Review & Submit -->
+<div class="step" id="step4">
+  <h2 class="font-display font-bold text-2xl text-charcoal mb-1">Adolescent Section & Submit</h2>
+  <p class="text-sm text-charcoal/50 mb-6">If the patient is a minor, expand the section below. Otherwise skip to submit.</p>
+
+  <div class="toggle-section mb-6">
+    <div class="toggle-header" onclick="toggleAdol()">
+      <span>Parent / Guardian Information <span class="font-mono text-[10px] text-charcoal/35 normal-case">(for adolescent patients only)</span></span>
+      <span id="adol-arrow" style="transition:transform .3s">▾</span>
+    </div>
+    <div class="toggle-body" id="adol-body">
+      <p class="text-xs text-charcoal/50 mb-4">Please ensure mobile phone and email above belong to your dependent.</p>
+      <div class="grid grid-cols-1 gap-4 mb-6">
+        <p class="font-mono text-[10px] text-moss tracking-widest uppercase">Parent / Guardian #1</p>
+        <div class="grid grid-cols-2 gap-3">
+          <div><label class="lbl">Name</label><input class="inp" type="text" id="f-p1name" placeholder="Parent Name"></div>
+          <div><label class="lbl">Cell Phone</label><input class="inp" type="tel" id="f-p1phone" placeholder="(650) 555-0100"></div>
+        </div>
+        <div><label class="lbl">Address (if different)</label><input class="inp" type="text" id="f-p1addr" placeholder="Optional"></div>
+        <div><label class="lbl">Email</label><input class="inp" type="email" id="f-p1email" placeholder="parent@email.com"></div>
+      </div>
+      <div class="grid grid-cols-1 gap-4">
+        <p class="font-mono text-[10px] text-moss tracking-widest uppercase">Parent / Guardian #2</p>
+        <div class="grid grid-cols-2 gap-3">
+          <div><label class="lbl">Name</label><input class="inp" type="text" id="f-p2name" placeholder="Parent Name"></div>
+          <div><label class="lbl">Cell Phone</label><input class="inp" type="tel" id="f-p2phone" placeholder="(650) 555-0100"></div>
+        </div>
+        <div><label class="lbl">Address (if different)</label><input class="inp" type="text" id="f-p2addr" placeholder="Optional"></div>
+        <div><label class="lbl">Email</label><input class="inp" type="email" id="f-p2email" placeholder="parent@email.com"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="p-5 rounded-2xl mb-6" style="background:rgba(46,64,54,.06);border:1px solid rgba(46,64,54,.1)">
+    <p class="font-mono text-[10px] text-charcoal/40 tracking-widest uppercase mb-2">Before You Submit</p>
+    <p class="text-xs text-charcoal/55 leading-relaxed">Please double-check your email address. If you don't receive a response within 72 hours, contact <a href="mailto:gordonwongmd@gmail.com" class="text-clay hover:underline">gordonwongmd@gmail.com</a>.</p>
+    <p class="text-xs text-charcoal/40 mt-2">This form was created inside gordonwongmd.com and is HIPAA compliant.</p>
+  </div>
+
+  <div class="flex justify-between items-center">
+    <button class="btn-sec" onclick="goStep(3)">← Back</button>
+    <button class="btn-cta" onclick="submitForm()">Submit Inquiry →</button>
+  </div>
+</div>
+
+<!-- SUCCESS STATE -->
+<div id="success" class="text-center py-16">
+  <div class="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-6" style="background:#2E4036">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#F2F0E9" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+  </div>
+  <h2 class="font-drama italic text-3xl text-charcoal mb-3">Inquiry Received</h2>
+  <p class="text-charcoal/55 text-sm max-w-sm mx-auto leading-relaxed mb-8">Thank you. Dr. Wong will review your information and respond within 72 hours. Please check your email.</p>
+  <a href="https://www.gordonwongmd.com" class="font-mono text-moss text-xs tracking-widest uppercase hover:underline">← Return to gordonwongmd.com</a>
+</div>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="py-8 mt-8 text-center" style="border-top:1px solid rgba(46,64,54,.1)">
+  <p class="font-mono text-[9px] text-charcoal/30 tracking-widest uppercase">This form is HIPAA compliant · gordonwongmd.com · © 2026 Gordon Wong MD, MPH</p>
+</footer>
+
+<script>
+const FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLScdHEReRhzH-RA3ai-hyPS0TgXspK7csWczNieOEgnB0gPEEQ/formResponse';
+const stepNames = ['Personal','Contact','Clinical','Adolescent'];
+const progWidths = ['25%','50%','75%','100%'];
+
+function goStep(n) {
+  // Validate current step
+  if (n > 1) {
+    if (!validateStep(n-1)) return;
+  }
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  document.getElementById('step'+n).classList.add('active');
+  document.getElementById('step-label').textContent = 'Step '+n+' of 4';
+  document.getElementById('step-name').textContent = stepNames[n-1];
+  document.getElementById('prog').style.width = progWidths[n-1];
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function validateStep(n) {
+  const required = {
+    1: [['f-first','First Name'],['f-last','Last Name'],['f-email','Email'],['f-dob','Date of Birth']],
+    2: [['f-street','Street Address'],['f-city','City'],['f-state','State'],['f-zip','Zip'],['f-mobile','Mobile Phone'],['f-emergency','Emergency Contact'],['f-rxname','Pharmacy Name'],['f-rxaddr','Pharmacy Address']],
+    3: [['f-reason','Reason for Consultation']]
+  };
+  // Gender check for step 1
+  if (n === 1) {
+    if (!document.querySelector('input[name="gender"]:checked')) {
+      alert('Please select a gender option.'); return false;
+    }
+  }
+  if (required[n]) {
+    for (const [id, label] of required[n]) {
+      const el = document.getElementById(id);
+      if (!el.value.trim()) {
+        el.focus(); el.style.borderColor = '#CC5833';
+        setTimeout(()=>el.style.borderColor='',2000);
+        alert(label + ' is required.'); return false;
+      }
+    }
+  }
+  return true;
+}
+
+function toggleAdol() {
+  const body = document.getElementById('adol-body');
+  const arrow = document.getElementById('adol-arrow');
+  body.classList.toggle('open');
+  arrow.style.transform = body.classList.contains('open') ? 'rotate(180deg)' : '';
+}
+
+function submitForm() {
+  if (!validateStep(3)) { goStep(3); return; }
+  const gender = document.querySelector('input[name="gender"]:checked');
+  const data = new FormData();
+  const v = id => document.getElementById(id).value.trim();
+  data.append('emailAddress', v('f-email'));
+  data.append('entry.2132668499', v('f-last'));
+  data.append('entry.832494460', v('f-first'));
+  data.append('entry.588503652', gender ? gender.value : '');
+  data.append('entry.950068948', v('f-street'));
+  data.append('entry.1461157383', v('f-city'));
+  data.append('entry.1333103088', v('f-state'));
+  data.append('entry.1411032168', v('f-zip'));
+  data.append('entry.475963612', v('f-mobile'));
+  data.append('entry.658383259', v('f-home'));
+  data.append('entry.553054778', v('f-dob'));
+  data.append('entry.683501831', v('f-reason'));
+  data.append('entry.67858805', v('f-rxname'));
+  data.append('entry.1457910239', v('f-rxaddr'));
+  data.append('entry.742467901', v('f-emergency'));
+  data.append('entry.797069621', v('f-refname'));
+  data.append('entry.993955779', v('f-refemail'));
+  data.append('entry.179804209', v('f-refphone'));
+  data.append('entry.78023142', v('f-currmeds'));
+  data.append('entry.1275173453', v('f-priormeds'));
+  data.append('entry.60283495', v('f-famhx'));
+  data.append('entry.1881916147', v('f-p1name'));
+  data.append('entry.1082032273', v('f-p1phone'));
+  data.append('entry.1660922529', v('f-p1addr'));
+  data.append('entry.1693271154', v('f-p1email'));
+  data.append('entry.997174503', v('f-p2name'));
+  data.append('entry.1509713333', v('f-p2phone'));
+  data.append('entry.384320379', v('f-p2addr'));
+  data.append('entry.1166882863', v('f-p2email'));
+  fetch(FORM_URL, {method:'POST', mode:'no-cors', body:data})
+    .then(() => {
+      document.getElementById('step4').style.display = 'none';
+      document.querySelector('.max-w-2xl.px-4.pt-8').style.display = 'none';
+      document.getElementById('success').style.display = 'block';
+    })
+    .catch(() => {
+      document.getElementById('step4').style.display = 'none';
+      document.querySelector('.max-w-2xl.px-4.pt-8').style.display = 'none';
+      document.getElementById('success').style.display = 'block';
+    });
+}
+</script>
+</body>
+</html>
