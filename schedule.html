@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Schedule Follow-Up — Gordon Wong MD, MPH</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{moss:'#2E4036',clay:'#CC5833',cream:'#F2F0E9',charcoal:'#1A1A1A'},fontFamily:{sans:['"Plus Jakarta Sans"','sans-serif'],display:['"Outfit"','sans-serif'],drama:['"Cormorant Garamond"','serif'],mono:['"IBM Plex Mono"','monospace']}}}}</script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&family=Outfit:wght@600;700&family=Cormorant+Garamond:ital,wght@1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}body{background:#F2F0E9;color:#1A1A1A;font-family:'Plus Jakarta Sans',sans-serif;margin:0;min-height:100vh}
+.inp{width:100%;padding:12px 16px;border:1.5px solid rgba(46,64,54,.2);border-radius:12px;background:#fff;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;color:#1A1A1A;outline:none;transition:border-color .2s,box-shadow .2s;letter-spacing:.02em}
+.inp:focus{border-color:#2E4036;box-shadow:0 0 0 3px rgba(46,64,54,.08)}
+.inp::placeholder{color:rgba(26,26,26,.35)}
+.lbl{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(26,26,26,.5);margin-bottom:6px;display:block}
+.req{color:#CC5833;margin-left:2px}
+.btn-cta{background:#CC5833;color:#F2F0E9;font-family:'Outfit',sans-serif;font-weight:700;padding:16px 40px;border-radius:50px;border:none;cursor:pointer;font-size:15px;transition:transform .2s,background .2s;width:100%}
+.btn-cta:hover:not(:disabled){background:#b34d2c;transform:scale(1.01)}
+.btn-cta:disabled{opacity:.5;cursor:not-allowed}
+.btn-sec{background:transparent;color:#2E4036;font-family:'Outfit',sans-serif;font-weight:600;padding:14px 24px;border-radius:50px;border:1.5px solid rgba(46,64,54,.25);cursor:pointer;font-size:13px;transition:transform .2s,background .2s;display:inline-block;text-decoration:none}
+.btn-sec:hover{background:rgba(46,64,54,.05)}
+#welcome,#denied{display:none}
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(242,240,233,.3);border-top-color:#F2F0E9;border-radius:50%;animation:spin .8s linear infinite;vertical-align:-2px;margin-right:8px}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+
+<header class="py-6 px-6 flex justify-center" style="border-bottom:1px solid rgba(46,64,54,.1)">
+  <div class="flex flex-col items-center gap-1">
+    <a href="https://www.gordonwongmd.com" class="font-display font-bold text-moss tracking-[.18em] text-sm uppercase">GORDON WONG MD</a>
+    <span class="font-mono text-[9px] tracking-widest text-charcoal/30 uppercase">Schedule Follow-Up</span>
+  </div>
+</header>
+
+<!-- VERIFY FORM -->
+<main class="max-w-md mx-auto px-4 py-10" id="form-main">
+  <h2 class="font-display font-bold text-2xl text-charcoal mb-1">Verify Your Information</h2>
+  <p class="text-sm text-charcoal/50 mb-2">Follow-up appointments are for current patients of Dr. Wong.</p>
+
+  <!-- Notice -->
+  <div class="flex items-start gap-3 p-4 rounded-2xl mb-8" style="background:rgba(46,64,54,.06);border:1px solid rgba(46,64,54,.1)">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2E4036" stroke-width="2" class="mt-0.5 flex-shrink-0"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+    <div>
+      <p class="font-mono text-[10px] text-moss tracking-widest uppercase mb-1">Established Patients</p>
+      <p class="text-xs text-charcoal/55 leading-relaxed">Enter your name and date of birth as they appear on your medical record. New patients, please use the <a href="#portal" class="text-clay underline">New Patient Inquiry</a> form on the homepage.</p>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-2 gap-4 mb-5">
+    <div>
+      <label class="lbl">First Name<span class="req">*</span></label>
+      <input class="inp" type="text" id="f-first" placeholder="Jane" autocomplete="given-name">
+    </div>
+    <div>
+      <label class="lbl">Last Name<span class="req">*</span></label>
+      <input class="inp" type="text" id="f-last" placeholder="Smith" autocomplete="family-name">
+    </div>
+  </div>
+
+  <div class="mb-8">
+    <label class="lbl">Date of Birth<span class="req">*</span></label>
+    <input class="inp" type="date" id="f-dob" autocomplete="bday">
+  </div>
+
+  <button class="btn-cta" id="verify-btn" onclick="verify()">Continue to Scheduling →</button>
+
+  <p id="err-msg" class="text-clay text-xs text-center mt-4" style="display:none"></p>
+
+  <p class="text-center font-mono text-[9px] text-charcoal/30 tracking-wider mt-6 uppercase">Secure · gordonwongmd.com</p>
+</main>
+
+<!-- WELCOME (match) -->
+<div id="welcome" class="text-center py-20 px-4">
+  <div class="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-6" style="background:#2E4036">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#F2F0E9" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+  </div>
+  <h2 class="font-drama italic text-3xl text-charcoal mb-3">Welcome back<span id="greet-name"></span></h2>
+  <p class="text-charcoal/55 text-sm max-w-sm mx-auto leading-relaxed mb-8">Opening your scheduling page now…</p>
+  <a id="manual-link" href="#" class="font-mono text-moss text-xs tracking-widest uppercase hover:underline">Click here if not redirected →</a>
+</div>
+
+<!-- DENIED (no match) -->
+<div id="denied" class="max-w-md mx-auto px-4 py-16 text-center">
+  <div class="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-6" style="background:rgba(204,88,51,.12);border:1.5px solid rgba(204,88,51,.3)">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#CC5833" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+  </div>
+  <h2 class="font-display font-bold text-2xl text-charcoal mb-3">We couldn't find your record</h2>
+  <p class="text-charcoal/55 text-sm leading-relaxed mb-8 max-w-sm mx-auto">
+    The information you entered doesn't match an active patient in our system.
+    Please double-check spelling and date of birth, or contact the office for assistance.
+  </p>
+  <div class="flex flex-col gap-3 max-w-xs mx-auto">
+    <button class="btn-sec" onclick="resetForm()">← Try Again</button>
+    <a class="btn-sec" href="https://www.gordonwongmd.com/#portal">New Patient Inquiry</a>
+  </div>
+</div>
+
+<footer class="py-8 mt-4 text-center" style="border-top:1px solid rgba(46,64,54,.1)">
+  <p class="font-mono text-[9px] text-charcoal/30 tracking-widest uppercase">© 2026 Gordon Wong MD, MPH · All Rights Reserved</p>
+</footer>
+
+<script>
+// Cloud Function endpoint (Firebase project: gordonwongmd-billing, region us-west1)
+const VERIFY_URL = 'https://us-west1-gordonwongmd-billing.cloudfunctions.net/verifyPatient';
+// Where verified patients are sent to actually book.
+const CALENDAR_URL = 'https://calendar.google.com/calendar/u/0/appointments/AcZssZ3qU7bbOEBEb9bEizAf0Fff_OF1W-un0lLUePg=';
+
+async function verify() {
+  const first = document.getElementById('f-first').value.trim();
+  const last  = document.getElementById('f-last').value.trim();
+  const dob   = document.getElementById('f-dob').value.trim();
+  const errEl = document.getElementById('err-msg');
+  const btn   = document.getElementById('verify-btn');
+
+  errEl.style.display = 'none';
+
+  if (!first || !last || !dob) {
+    errEl.textContent = 'Please fill in all three fields.';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>Verifying…';
+
+  try {
+    const res = await fetch(VERIFY_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ firstName: first, lastName: last, dob })
+    });
+    const data = await res.json().catch(() => ({}));
+
+    if (!res.ok) {
+      errEl.textContent = data.error || 'Verification temporarily unavailable. Please try again.';
+      errEl.style.display = 'block';
+      btn.disabled = false;
+      btn.innerHTML = 'Continue to Scheduling →';
+      return;
+    }
+
+    if (data.match) {
+      showWelcome(data.greeting || first);
+    } else {
+      showDenied();
+    }
+  } catch (e) {
+    errEl.textContent = 'Network error. Please check your connection and try again.';
+    errEl.style.display = 'block';
+    btn.disabled = false;
+    btn.innerHTML = 'Continue to Scheduling →';
+  }
+}
+
+function showWelcome(name) {
+  document.getElementById('form-main').style.display = 'none';
+  document.getElementById('denied').style.display = 'none';
+  document.getElementById('greet-name').textContent = name ? ', ' + name : '';
+  document.getElementById('manual-link').href = CALENDAR_URL;
+  document.getElementById('welcome').style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  setTimeout(() => { window.location.href = CALENDAR_URL; }, 1600);
+}
+
+function showDenied() {
+  document.getElementById('form-main').style.display = 'none';
+  document.getElementById('welcome').style.display = 'none';
+  document.getElementById('denied').style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function resetForm() {
+  document.getElementById('denied').style.display = 'none';
+  document.getElementById('form-main').style.display = 'block';
+  document.getElementById('verify-btn').disabled = false;
+  document.getElementById('verify-btn').innerHTML = 'Continue to Scheduling →';
+  document.getElementById('err-msg').style.display = 'none';
+  document.getElementById('f-first').focus();
+}
+
+// Submit on Enter from any field
+document.querySelectorAll('#f-first, #f-last, #f-dob').forEach(el => {
+  el.addEventListener('keydown', e => { if (e.key === 'Enter') verify(); });
+});
+</script>
+</body>
+</html>
