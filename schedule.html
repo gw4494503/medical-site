@@ -60,7 +60,8 @@
 
   <div class="mb-8">
     <label class="lbl">Date of Birth<span class="req">*</span></label>
-    <input class="inp" type="date" id="f-dob" autocomplete="bday">
+    <input class="inp" type="text" id="f-dob" placeholder="MM/DD/YYYY" maxlength="10" inputmode="numeric" autocomplete="bday" oninput="formatDob(this)">
+    <p class="font-mono text-[9px] text-charcoal/40 tracking-wider mt-1.5 uppercase">Month / Day / Year</p>
   </div>
 
   <button class="btn-cta" id="verify-btn" onclick="verify()">Continue to Scheduling →</button>
@@ -105,6 +106,15 @@
 const VERIFY_URL = 'https://us-west1-gordonwongmd-billing.cloudfunctions.net/verifyPatient';
 // Where verified patients are sent to actually book.
 const CALENDAR_URL = 'https://calendar.google.com/calendar/u/0/appointments/AcZssZ3qU7bbOEBEb9bEizAf0Fff_OF1W-un0lLUePg=';
+
+// Auto-insert slashes so MM/DD/YYYY appears as the patient types digits.
+function formatDob(el) {
+  const digits = el.value.replace(/\D/g, '').slice(0, 8);
+  let out = digits;
+  if (digits.length >= 5) out = digits.slice(0,2) + '/' + digits.slice(2,4) + '/' + digits.slice(4);
+  else if (digits.length >= 3) out = digits.slice(0,2) + '/' + digits.slice(2);
+  el.value = out;
+}
 
 async function verify() {
   const first = document.getElementById('f-first').value.trim();
