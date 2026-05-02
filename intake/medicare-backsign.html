@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Medicare Paperwork — Gordon Wong MD, MPH</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{moss:'#2E4036',clay:'#CC5833',cream:'#F2F0E9',charcoal:'#1A1A1A'},fontFamily:{sans:['"Plus Jakarta Sans"','sans-serif'],display:['"Outfit"','sans-serif'],drama:['"Cormorant Garamond"','serif'],mono:['"IBM Plex Mono"','monospace']}}}}</script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&family=Outfit:wght@600;700&family=Cormorant+Garamond:ital,wght@1,400;1,600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}body{background:#F2F0E9;color:#1A1A1A;font-family:'Plus Jakarta Sans',sans-serif;margin:0;min-height:100vh}
+.inp{width:100%;padding:12px 16px;border:1.5px solid rgba(46,64,54,.2);border-radius:12px;background:#fff;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;color:#1A1A1A;outline:none;transition:border-color .2s,box-shadow .2s}
+.inp:focus{border-color:#2E4036;box-shadow:0 0 0 3px rgba(46,64,54,.08)}
+.inp::placeholder{color:rgba(26,26,26,.35)}
+.lbl{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(26,26,26,.5);margin-bottom:6px;display:block}
+.req{color:#CC5833;margin-left:2px}
+.btn-cta{background:#CC5833;color:#F2F0E9;font-family:'Outfit',sans-serif;font-weight:700;padding:14px 32px;border-radius:50px;border:none;cursor:pointer;font-size:15px;transition:transform .2s,background .2s;width:100%}
+.btn-cta:hover:not(:disabled){background:#b34d2c;transform:scale(1.01)}
+.btn-cta:disabled{opacity:.4;cursor:not-allowed}
+.btn-secondary{background:transparent;color:#2E4036;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;padding:10px 18px;border:1.5px solid rgba(46,64,54,.25);border-radius:50px;cursor:pointer;transition:background .2s}
+.btn-secondary:hover{background:rgba(46,64,54,.06)}
+.contract{background:#fff;border:1px solid rgba(46,64,54,.12);border-radius:16px;padding:24px;font-size:13px;line-height:1.75;color:rgba(26,26,26,.85)}
+.contract h3{font-family:'Outfit',sans-serif;font-weight:700;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#2E4036;margin:0 0 16px;text-align:center}
+.contract p{margin:0 0 14px}
+.contract .preamble{font-size:12px;color:rgba(26,26,26,.6);font-style:italic;border-bottom:1px solid rgba(46,64,54,.1);padding-bottom:14px;margin-bottom:18px}
+.fillin{display:inline-block;font-family:'IBM Plex Mono',monospace;font-weight:600;color:#2E4036;background:rgba(46,64,54,.05);padding:1px 6px;border-radius:4px;font-size:12px}
+.checkitem{display:flex;align-items:flex-start;gap:12px;padding:14px;border:1.5px solid rgba(46,64,54,.15);border-radius:12px;margin-bottom:10px;cursor:pointer;background:#fff;transition:all .2s}
+.checkitem:hover{border-color:rgba(46,64,54,.35)}
+.checkitem.checked{border-color:#2E4036;background:rgba(46,64,54,.04)}
+.checkitem input{display:none}
+.check-box{flex-shrink:0;width:20px;height:20px;border:1.5px solid rgba(46,64,54,.3);border-radius:5px;display:flex;align-items:center;justify-content:center;background:#fff;margin-top:1px;transition:all .2s}
+.checkitem.checked .check-box{background:#2E4036;border-color:#2E4036}
+.check-box svg{opacity:0;transition:opacity .2s}
+.checkitem.checked .check-box svg{opacity:1}
+.check-text{font-size:13px;line-height:1.55;color:rgba(26,26,26,.85)}
+.sig-input{width:100%;padding:14px 18px;border:1.5px solid rgba(46,64,54,.25);border-radius:12px;background:#fff;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:24px;color:#2E4036;outline:none;letter-spacing:.5px}
+.sig-input:focus{border-color:#2E4036;box-shadow:0 0 0 3px rgba(46,64,54,.08)}
+.sig-input::placeholder{color:rgba(46,64,54,.25);font-style:italic}
+.back-link{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(46,64,54,.6);text-decoration:none}
+.back-link:hover{color:#2E4036}
+.provider-block{background:rgba(46,64,54,.04);border:1px solid rgba(46,64,54,.15);border-radius:14px;padding:16px;margin:16px 0;font-family:'IBM Plex Mono',monospace;font-size:11px;line-height:1.7}
+.provider-block .pl{color:rgba(26,26,26,.5);text-transform:uppercase;letter-spacing:.08em;font-size:9px}
+.field-error{display:none;font-family:'IBM Plex Mono',monospace;font-size:10px;color:#CC5833;letter-spacing:.05em;margin-top:5px;padding-left:4px}
+
+/* Card list (per-interval) */
+.card{background:#fff;border:1.5px solid rgba(46,64,54,.18);border-radius:16px;margin-bottom:14px;overflow:hidden;transition:border-color .2s,box-shadow .2s}
+.card.signed{border-color:rgba(46,64,54,.35);background:rgba(46,64,54,.03)}
+.card.expanded{border-color:#2E4036;box-shadow:0 4px 20px rgba(46,64,54,.08)}
+.card-header{display:flex;align-items:center;gap:14px;padding:18px 20px;cursor:pointer;user-select:none}
+.card.signed .card-header{cursor:default}
+.card-header .badge{flex-shrink:0;width:28px;height:28px;border-radius:50%;background:rgba(46,64,54,.08);color:#2E4036;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:11px}
+.card.signed .card-header .badge{background:#2E4036;color:#F2F0E9}
+.card-header .title{flex:1}
+.card-header .period-label{font-family:'Outfit',sans-serif;font-weight:600;font-size:14px;color:#1A1A1A;letter-spacing:.01em}
+.card-header .period-sub{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:rgba(26,26,26,.5);margin-top:3px}
+.card.signed .card-header .period-sub{color:#2E4036}
+.card-header .cta-tag{flex-shrink:0;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#CC5833}
+.card.signed .card-header .cta-tag{color:#2E4036}
+.card-body{display:none;padding:0 20px 20px;border-top:1px solid rgba(46,64,54,.08)}
+.card.expanded .card-body{display:block}
+.greeting{background:rgba(46,64,54,.04);border-left:3px solid #2E4036;border-radius:8px;padding:18px 22px;margin-bottom:24px;font-size:14px;line-height:1.6;color:rgba(26,26,26,.8)}
+.greeting strong{color:#2E4036;font-weight:600}
+#lookup-screen,#forms-screen,#all-done-screen{display:none}
+.active-screen{display:block !important}
+.lookup-error{display:none;background:rgba(204,88,51,.06);border:1px solid rgba(204,88,51,.25);border-radius:12px;padding:14px 16px;margin-top:16px;font-size:13px;color:#CC5833;line-height:1.5}
+</style>
+</head>
+<body>
+
+<header class="py-6 px-6" style="border-bottom:1px solid rgba(46,64,54,.1)">
+  <div class="max-w-2xl mx-auto flex items-center justify-between">
+    <a href="/" class="back-link">← gordonwongmd.com</a>
+    <div class="flex flex-col items-center gap-1">
+      <a href="/" class="font-display font-bold text-moss tracking-[.18em] text-sm uppercase hover:opacity-80 transition-opacity" style="text-decoration:none">GORDON WONG MD</a>
+      <span class="font-mono text-[9px] tracking-widest text-charcoal/30 uppercase">Medicare Paperwork</span>
+    </div>
+    <span class="font-mono text-[10px] tracking-widest text-charcoal/40 uppercase">Paperwork</span>
+  </div>
+</header>
+
+<!-- ─── Screen 1: Patient Lookup ─────────────────────────────────────────── -->
+<main id="lookup-screen" class="active-screen max-w-xl mx-auto px-4 py-12">
+  <h2 class="font-display font-bold text-2xl md:text-3xl text-charcoal mb-3">Medicare Paperwork</h2>
+  <p class="text-sm text-charcoal/65 mb-8 leading-relaxed">
+    Please enter your information so I can pull up the specific forms that apply to you. Your information is checked against our records — only you will see your forms.
+  </p>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
+    <div>
+      <label class="lbl">Last Name<span class="req">*</span></label>
+      <input class="inp" type="text" id="lk-last" autocomplete="family-name" placeholder="Smith">
+    </div>
+    <div>
+      <label class="lbl">First Name<span class="req">*</span></label>
+      <input class="inp" type="text" id="lk-first" autocomplete="given-name" placeholder="Jane">
+    </div>
+  </div>
+
+  <div class="mb-8">
+    <label class="lbl">Date of Birth<span class="req">*</span></label>
+    <input class="inp" type="text" id="lk-dob" placeholder="MM/DD/YYYY" maxlength="10" inputmode="numeric" oninput="Intake.formatDob(this)">
+  </div>
+
+  <button class="btn-cta" id="lk-submit">Look up my forms →</button>
+
+  <div class="lookup-error" id="lk-error"></div>
+
+  <p class="text-center font-mono text-[9px] text-charcoal/30 tracking-wider mt-10 uppercase">
+    Need help? Email <span class="text-charcoal/50">gordon@gordonwongmd.com</span>
+  </p>
+</main>
+
+<!-- ─── Screen 2: Per-interval forms ─────────────────────────────────────── -->
+<main id="forms-screen" class="max-w-2xl mx-auto px-4 py-10">
+  <div class="greeting" id="greeting-block">
+    <!-- populated by renderFormsScreen() -->
+  </div>
+
+  <div id="cards-container">
+    <!-- one .card per interval, populated by renderFormsScreen() -->
+  </div>
+
+  <p class="text-center font-mono text-[9px] text-charcoal/30 tracking-wider mt-10 uppercase">Records of Signature Retained · gordonwongmd.com</p>
+</main>
+
+<!-- ─── Screen 3: All done ───────────────────────────────────────────────── -->
+<main id="all-done-screen" class="max-w-xl mx-auto px-4 py-20 text-center">
+  <div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6" style="background:#2E4036">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#F2F0E9" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+  </div>
+  <h2 class="font-drama italic text-3xl md:text-4xl text-charcoal mb-4">Medicare paperwork is all up to date</h2>
+  <p class="text-charcoal/65 text-sm max-w-md mx-auto leading-relaxed mb-2" id="all-done-message">
+    Every Medicare opt-out contract has been signed and saved to your file. There's nothing further you need to do.
+  </p>
+  <p class="text-charcoal/50 text-xs max-w-md mx-auto leading-relaxed mb-10" id="all-done-detail"></p>
+  <a href="/" class="font-mono text-moss text-xs tracking-widest uppercase hover:underline">← Return to gordonwongmd.com</a>
+</main>
+
+<footer class="py-8 mt-4 px-6 text-center" style="border-top:1px solid rgba(46,64,54,.1)">
+  <p class="text-[10px] text-charcoal/45 leading-relaxed max-w-xl mx-auto">
+    <strong>Notice to Patients</strong> — Medical doctors are licensed and regulated by the Medical Board of California. <span class="font-mono">www.mbc.ca.gov</span> · <span class="font-mono">(800) 633-2322</span>
+  </p>
+  <p class="font-mono text-[9px] text-charcoal/30 tracking-widest uppercase mt-3">© 2026 Gordon Wong MD, MPH</p>
+</footer>
+
+<!-- ─── Single Medicare contract template (cloned per card on expand) ───── -->
+<!-- All %%PLACEHOLDERS%% are substituted at clone time with this card's
+     effective/expiration date strings. The substantive language is the
+     CMS-prescribed text and must NOT be edited here. -->
+<template id="contract-template">
+  <div class="contract mb-6">
+    <h3>Medicare Private Contract</h3>
+    <p class="preamble">Section 4507 of the 1997 Balanced Budget Act allows a physician or practitioner to enter a private contract with a Medicare beneficiary. Signatures from the provider, a witness and the patient/beneficiary or their legal representative are required below. The supplier must submit an affidavit to Medicare expressing his/her decision to opt-out.</p>
+    <p>I, <span class="fillin">GORDON WONG MD</span> (provider's name) have not been excluded from Medicare under sections 1128, 1156 or 1892 of the Social Security Act. Provider's NPI: <span class="fillin">1770608101</span>.</p>
+    <p>I (the Medicare beneficiary) or my legal representative accept full responsibility for payment of charges for all services furnished by <span class="fillin">GORDON WONG MD</span>.</p>
+    <p>I (the Medicare beneficiary) or my legal representative understand that Medicare limits do not apply to what <span class="fillin">GORDON WONG MD</span> may charge for items or services furnished.</p>
+    <p>I (the Medicare beneficiary) or my legal representative agree not to submit a claim to Medicare or to ask <span class="fillin">GORDON WONG MD</span> to submit a claim to Medicare.</p>
+    <p>I (the Medicare beneficiary) or my legal representative understand that Medicare payment will not be made for any items or services furnished by <span class="fillin">GORDON WONG MD</span> that would have otherwise been covered by Medicare if there was no private contract and a proper Medicare claim had been submitted.</p>
+    <p>I (the Medicare beneficiary) or my legal representative enter into this contract with the knowledge that I have the right to obtain Medicare-covered items and services from a physician and/or practitioner who has not opted-out of Medicare, and I am not compelled to enter into private contracts that apply to other Medicare-covered services furnished by other physicians or practitioners who have not opted-out.</p>
+    <p>The expected or known effective date and expected or known expiration date of the opt-out period is <span class="fillin">%%EFFECTIVE%%</span> (effective date) and <span class="fillin">%%EXPIRATION%%</span> (expiration date).</p>
+    <p>I (the Medicare beneficiary) or my legal representative understand that Medigap plans do not, and that other supplemental plans may elect not to, make payments for items and services not paid for by Medicare.</p>
+    <p>This contract cannot be entered into by me, (the Medicare beneficiary), or by my legal representative during a time when I, (the Medicare beneficiary), require emergency care services or urgent care services. (However, a physician/practitioner may furnish emergency or urgent care services to a Medicare beneficiary in accordance with §3044.28 of the Medicare Carriers Manual.)</p>
+    <p>I (the Medicare beneficiary) or my legal representative will receive or have received a copy (a photocopy is permissible) of this contract, before items or services are furnished to me under the terms of this contract.</p>
+    <p>I, <span class="fillin">GORDON WONG MD</span>, will retain the original contract (original signatures of both parties required) for the duration of the opt-out period.</p>
+    <p>I, <span class="fillin">GORDON WONG MD</span>, will supply CMS with a copy of this contract upon request.</p>
+    <p>I, <span class="fillin">GORDON WONG MD</span>, understand that the current private contract remains in effect for two years. If I again opt-out of Medicare, I will expediently complete a new contract for each Medicare beneficiary and will expediently submit the appropriate affidavit(s) to all local Medicare carriers.</p>
+    <div class="provider-block">
+      <div class="pl">Provider</div><div>GORDON WONG MD</div>
+      <div class="pl mt-2">NPI</div><div>1770608101</div>
+      <div class="pl mt-2">Phone</div><div>(650) 521-6111</div>
+      <div class="pl mt-2">Email</div><div>gordon@gordonwongmd.com</div>
+      <div class="pl mt-2">Provider Signature on File</div><div>Yes — original on file with the Practice</div>
+    </div>
+  </div>
+</template>
+
+<script src="intake-shared.js?v=3"></script>
+<script>
+const LOOKUP_URL = "https://us-west1-gordonwongmd-billing.cloudfunctions.net/lookupBackSignRecord";
+
+// Patient state for the session — set after a successful lookup. Held
+// only in memory; reload = re-enter name+DOB. (The identityprefill
+// pattern from intake-shared.js is intentionally NOT used here per the
+// project spec — back-sign patients enter fresh.)
+let PATIENT = null;       // { firstName, lastName, dob, patientId }
+let INTERVALS = [];       // array from lookupBackSignRecord response
+
+// ─── Lookup screen ─────────────────────────────────────────────────────────
+document.getElementById('lk-submit').addEventListener('click', onLookup);
+['lk-last','lk-first','lk-dob'].forEach(id => {
+  document.getElementById(id).addEventListener('keydown', e => {
+    if (e.key === 'Enter') { e.preventDefault(); onLookup(); }
+  });
+});
+
+async function onLookup() {
+  const btn = document.getElementById('lk-submit');
+  const errEl = document.getElementById('lk-error');
+  errEl.style.display = 'none';
+
+  const lastName  = document.getElementById('lk-last').value.trim();
+  const firstName = document.getElementById('lk-first').value.trim();
+  const dob       = document.getElementById('lk-dob').value.trim();
+
+  if (!lastName || !firstName || !/^\d{2}\/\d{2}\/\d{4}$/.test(dob)) {
+    showLookupError("Please enter your last name, first name, and date of birth (MM/DD/YYYY).");
+    return;
+  }
+
+  btn.disabled = true; btn.textContent = 'Looking up…';
+
+  try {
+    const res = await fetch(LOOKUP_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ firstName, lastName, dob }),
+    });
+    if (!res.ok) {
+      const errBody = await res.json().catch(() => ({}));
+      throw new Error(errBody.error || `Lookup failed (status ${res.status}).`);
+    }
+    const data = await res.json();
+
+    if (!data.match) {
+      showLookupError("We couldn't find your record with the information provided. Please double-check your name and date of birth, or contact the office at gordon@gordonwongmd.com.");
+      return;
+    }
+    if (!data.hasBacksignRecord) {
+      showLookupError(`Hello ${data.greeting} — there is no Medicare paperwork pending for you. If you believe you've received this link in error, please contact the office at gordon@gordonwongmd.com.`);
+      return;
+    }
+    if (!Array.isArray(data.intervals) || data.intervals.length === 0) {
+      showLookupError("Your record was found but no intervals are listed. Please contact the office at gordon@gordonwongmd.com.");
+      return;
+    }
+
+    PATIENT = {
+      firstName, lastName, dob,
+      patientId: data.patientId,
+      greeting: data.greeting,
+      // Canonical name from the patients DB — used for signature validation
+      // so the patient can type their real name even if they entered some
+      // shortened/initial form at lookup.
+      canonicalFirst: data.canonicalFirstName || data.greeting || firstName,
+      canonicalLast:  data.canonicalLastName  || lastName,
+    };
+    INTERVALS = data.intervals;
+    renderFormsScreen();
+  } catch (err) {
+    console.error('[lookupBackSignRecord]', err);
+    showLookupError(err.message || "Lookup failed. Please try again or contact the office.");
+  } finally {
+    btn.disabled = false; btn.textContent = 'Look up my forms →';
+  }
+}
+
+function showLookupError(msg) {
+  const el = document.getElementById('lk-error');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+// ─── Forms screen ──────────────────────────────────────────────────────────
+function renderFormsScreen() {
+  document.getElementById('lookup-screen').classList.remove('active-screen');
+  document.getElementById('forms-screen').classList.add('active-screen');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  const remaining = INTERVALS.filter(i => !i.signed).length;
+
+  // Greeting per the practice owner's wording
+  const g = document.getElementById('greeting-block');
+  if (remaining === 0) {
+    // All-done case: jump to the all-done screen
+    showAllDone();
+    return;
+  }
+  g.innerHTML = `<strong>${escHtml(PATIENT.greeting)},</strong> I am sorry for the inconvenience. To allow me to continue providing care for you as a non-Medicare provider, my practice needs a few signatures from you. I have attached <strong>${remaining} form${remaining === 1 ? '' : 's'}</strong> for your review. The process is quick—you only need to check the required boxes and type your name to sign.`;
+
+  const container = document.getElementById('cards-container');
+  container.innerHTML = '';
+  INTERVALS.forEach((iv, i) => container.appendChild(buildCard(iv, i)));
+}
+
+function buildCard(interval, slot) {
+  const card = document.createElement('div');
+  card.className = 'card' + (interval.signed ? ' signed' : '');
+  card.dataset.intervalIndex = String(interval.intervalIndex);
+
+  const header = document.createElement('div');
+  header.className = 'card-header';
+  header.innerHTML = `
+    <div class="badge">${slot + 1}</div>
+    <div class="title">
+      <div class="period-label">${escHtml(interval.period_start_label)} — ${escHtml(interval.period_end_label)}</div>
+      <div class="period-sub">${interval.signed ? '✓ Signed' : '2-year opt-out period'}</div>
+    </div>
+    <div class="cta-tag">${interval.signed ? 'Complete' : 'Sign →'}</div>
+  `;
+  card.appendChild(header);
+
+  // Body is built lazily on first expand to keep initial render light.
+  const body = document.createElement('div');
+  body.className = 'card-body';
+  card.appendChild(body);
+
+  if (interval.signed) {
+    // Signed cards are read-only; clicking does nothing.
+    return card;
+  }
+
+  header.addEventListener('click', () => {
+    const wasExpanded = card.classList.contains('expanded');
+    // Collapse all other open cards (one expanded at a time, per spec)
+    document.querySelectorAll('.card.expanded').forEach(c => c.classList.remove('expanded'));
+    if (wasExpanded) return;
+    if (!body.dataset.populated) {
+      populateCardBody(body, interval);
+      body.dataset.populated = '1';
+    }
+    card.classList.add('expanded');
+  });
+
+  return card;
+}
+
+function populateCardBody(body, interval) {
+  const tpl = document.getElementById('contract-template');
+  const node = tpl.content.cloneNode(true);
+
+  // Substitute the per-period placeholders. Walk text nodes so the
+  // substitution is safe regardless of HTML structure.
+  substitutePlaceholders(node, {
+    EFFECTIVE: interval.period_start_label,
+    EXPIRATION: interval.period_end_label,
+  });
+  body.appendChild(node);
+
+  // Acknowledgments + typed signature + submit button — built per-card
+  // so each card has its own state.
+  const tail = document.createElement('div');
+  tail.innerHTML = `
+    <div class="mb-6">
+      <label class="checkitem ack-1">
+        <input type="checkbox" data-ack="1">
+        <span class="check-box"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><polyline points="2 6 5 9 10 3"/></svg></span>
+        <span class="check-text">I have read and understood the entire Medicare Private Contract above.</span>
+      </label>
+      <label class="checkitem ack-2">
+        <input type="checkbox" data-ack="2">
+        <span class="check-box"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><polyline points="2 6 5 9 10 3"/></svg></span>
+        <span class="check-text">I am not currently in need of emergency or urgent care, and I am entering this contract voluntarily.</span>
+      </label>
+    </div>
+    <label class="lbl">Electronic Signature — type your name (first name then last name)<span class="req">*</span></label>
+    <input class="sig-input mb-2" type="text" placeholder="e.g. John Smith" autocomplete="off" data-sig="1">
+    <p class="font-mono text-[9px] text-charcoal/40 tracking-wider mb-4 uppercase" data-sig-hint>By typing your name, you are signing this contract electronically</p>
+    <button class="btn-cta" data-submit disabled>Submit this signature →</button>
+    <p class="text-clay text-xs text-center mt-3" data-err style="display:none"></p>
+  `;
+  body.appendChild(tail);
+
+  // Wire up local interaction
+  const checks = body.querySelectorAll('input[data-ack]');
+  const sig = body.querySelector('input[data-sig]');
+  const sigHint = body.querySelector('[data-sig-hint]');
+  const submitBtn = body.querySelector('button[data-submit]');
+  const errEl = body.querySelector('[data-err]');
+
+  function refresh() {
+    const allChecked = Array.from(checks).every(c => c.checked);
+    const sigVal = sig.value.trim();
+    const sigOk = isSignatureMatch(sigVal, PATIENT.canonicalFirst, PATIENT.canonicalLast);
+    const evalReady = isSignatureLongEnoughToEvaluate(sigVal, PATIENT.canonicalFirst, PATIENT.canonicalLast);
+    // Only nag the patient when they've typed enough that we can fairly
+    // judge — otherwise the hint flashes errors while they're still
+    // mid-name.
+    if (sigVal && evalReady && !sigOk) {
+      sigHint.textContent = 'Signature should be ' + PATIENT.canonicalFirst + ' ' + PATIENT.canonicalLast + ' (first name then last name)';
+      sigHint.style.color = '#CC5833';
+    } else {
+      sigHint.textContent = 'By typing your name, you are signing this contract electronically';
+      sigHint.style.color = '';
+    }
+    submitBtn.disabled = !(allChecked && sigOk);
+  }
+
+  checks.forEach(c => c.addEventListener('change', e => {
+    e.target.closest('.checkitem').classList.toggle('checked', e.target.checked);
+    refresh();
+  }));
+  sig.addEventListener('input', refresh);
+
+  submitBtn.addEventListener('click', () => onSubmitInterval(interval, body, submitBtn, sig, errEl));
+}
+
+async function onSubmitInterval(interval, body, btn, sig, errEl) {
+  errEl.style.display = 'none';
+  btn.disabled = true; btn.textContent = 'Submitting…';
+
+  const payload = {
+    formType: 'medicare',
+    patient: {
+      firstName: PATIENT.firstName,
+      lastName:  PATIENT.lastName,
+      dob:       PATIENT.dob,
+    },
+    signature: {
+      signedName: sig.value.trim(),
+      signerRole: 'self',
+    },
+    formData: {
+      intervalIndex:   interval.intervalIndex,
+      intervalSuffix:  interval.period_year_suffix,
+      effectiveDate:   interval.period_start_label,
+      expirationDate:  interval.period_end_label,
+    },
+    acknowledgments: [
+      'I have read and understood the entire Medicare Private Contract above.',
+      'I am not currently in need of emergency or urgent care, and I am entering this contract voluntarily.',
+    ],
+  };
+
+  try {
+    const result = await Intake.submitSignedForm(payload);
+    // Mark this interval as signed locally and re-render
+    interval.signed = true;
+    onIntervalSigned(interval);
+  } catch (err) {
+    console.error('[submitSignedForm]', err);
+    errEl.textContent = (err && err.message) || 'Submission failed. Please try again or contact the office.';
+    errEl.style.display = 'block';
+    btn.disabled = false;
+    btn.textContent = 'Submit this signature →';
+  }
+}
+
+function onIntervalSigned(interval) {
+  // Replace this card with its signed/disabled version, in place.
+  const card = document.querySelector(`.card[data-interval-index="${interval.intervalIndex}"]`);
+  if (card) {
+    const slot = Array.from(card.parentElement.children).indexOf(card);
+    const fresh = buildCard(interval, slot);
+    card.replaceWith(fresh);
+  }
+
+  // Update remaining count in greeting
+  const remaining = INTERVALS.filter(i => !i.signed).length;
+  if (remaining === 0) {
+    showAllDone();
+    return;
+  }
+  const g = document.getElementById('greeting-block');
+  // Tweak just the number — keep the text the same so the patient doesn't
+  // get a totally re-shuffled paragraph each click.
+  g.innerHTML = g.innerHTML.replace(/I have attached <strong>\d+ forms?<\/strong>/, `I have attached <strong>${remaining} form${remaining === 1 ? '' : 's'}</strong>`);
+}
+
+function showAllDone() {
+  document.getElementById('forms-screen').classList.remove('active-screen');
+  document.getElementById('all-done-screen').classList.add('active-screen');
+  const detail = document.getElementById('all-done-detail');
+  if (PATIENT && PATIENT.greeting) {
+    detail.textContent = `Thank you, ${PATIENT.greeting}.`;
+  }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ─── Signature validator — lenient fuzzy match ─────────────────────────────
+// Accepts: case-insensitive; either "first last" or "last first" order;
+// punctuation/whitespace stripped; Levenshtein typos within max(2, len/4).
+// Goal is to avoid rejections when patients type slightly off names. Worst
+// case: a near-miss matches; the typed signature is preserved verbatim on
+// the audit Doc for forensic review.
+function _levenshtein(a, b) {
+  if (a === b) return 0;
+  if (!a.length) return b.length;
+  if (!b.length) return a.length;
+  let prev = Array(b.length + 1).fill(0).map((_,j) => j);
+  let curr = Array(b.length + 1).fill(0);
+  for (let i = 1; i <= a.length; i++) {
+    curr[0] = i;
+    for (let j = 1; j <= b.length; j++) {
+      const cost = a[i-1] === b[j-1] ? 0 : 1;
+      curr[j] = Math.min(curr[j-1]+1, prev[j]+1, prev[j-1]+cost);
+    }
+    [prev, curr] = [curr, prev];
+  }
+  return prev[b.length];
+}
+function _normSig(s) {
+  return (s || '').toLowerCase().replace(/[^a-z]/g, '');
+}
+function isSignatureMatch(sigVal, canFirst, canLast) {
+  const sig = _normSig(sigVal);
+  if (!sig) return false;
+  const first = _normSig(canFirst);
+  const last = _normSig(canLast);
+  if (!first || !last) return false;
+  const fwd = first + last;
+  const rev = last + first;
+  // Length gate: don't flip the button to "accepted" until the patient has
+  // typed at least as many letters as the canonical name. Without this, a
+  // partial-but-fuzzy input like "John D" passes Levenshtein and gives the
+  // patient a confusing green state mid-typing.
+  if (sig.length < fwd.length) return false;
+  const tol = (t) => Math.max(2, Math.floor(t.length / 4));
+  return _levenshtein(sig, fwd) <= tol(fwd) ||
+         _levenshtein(sig, rev) <= tol(rev);
+}
+// Mirror of the length gate — used by the refresh handler to keep the
+// "doesn't match" error hint silent while the patient is still typing.
+function isSignatureLongEnoughToEvaluate(sigVal, canFirst, canLast) {
+  const sig = _normSig(sigVal);
+  const target = _normSig(canFirst) + _normSig(canLast);
+  return target.length > 0 && sig.length >= target.length;
+}
+
+// ─── Helpers ───────────────────────────────────────────────────────────────
+function escHtml(s) {
+  return String(s ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function substitutePlaceholders(node, vars) {
+  // node here is a DocumentFragment (cloned <template>.content). Walk all
+  // text nodes and replace %%KEY%% tokens.
+  const walker = document.createTreeWalker(node, NodeFilter.SHOW_TEXT);
+  let cur;
+  while ((cur = walker.nextNode())) {
+    let txt = cur.nodeValue;
+    if (txt.indexOf('%%') === -1) continue;
+    Object.keys(vars).forEach(k => {
+      const tag = '%%' + k + '%%';
+      while (txt.indexOf(tag) !== -1) txt = txt.replace(tag, vars[k]);
+    });
+    cur.nodeValue = txt;
+  }
+}
+</script>
+</body>
+</html>
