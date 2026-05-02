@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>New Patient Consultation — Gordon Wong MD, MPH</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{moss:'#2E4036',clay:'#CC5833',cream:'#F2F0E9',charcoal:'#1A1A1A'},fontFamily:{sans:['"Plus Jakarta Sans"','sans-serif'],display:['"Outfit"','sans-serif'],drama:['"Cormorant Garamond"','serif'],mono:['"IBM Plex Mono"','monospace']}}}}</script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&family=Outfit:wght@600;700&family=Cormorant+Garamond:ital,wght@1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}body{background:#F2F0E9;color:#1A1A1A;font-family:'Plus Jakarta Sans',sans-serif;margin:0;min-height:100vh}
+.inp{width:100%;padding:12px 16px;border:1.5px solid rgba(46,64,54,.2);border-radius:12px;background:#fff;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;color:#1A1A1A;outline:none;transition:border-color .2s,box-shadow .2s}
+.inp:focus{border-color:#2E4036;box-shadow:0 0 0 3px rgba(46,64,54,.08)}
+.inp::placeholder{color:rgba(26,26,26,.35)}
+textarea.inp{resize:vertical;min-height:90px}
+.lbl{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(26,26,26,.5);margin-bottom:6px;display:block}
+.req{color:#CC5833;margin-left:2px}
+.step{display:none}.step.active{display:block}
+.prog-bar{height:3px;background:#2E4036;border-radius:2px;transition:width .4s cubic-bezier(.25,.46,.45,.94)}
+.btn-pri{background:#2E4036;color:#F2F0E9;font-family:'Outfit',sans-serif;font-weight:600;padding:14px 32px;border-radius:50px;border:none;cursor:pointer;font-size:14px;transition:transform .2s,background .2s}
+.btn-pri:hover{background:#1e2b25;transform:scale(1.02)}
+.btn-sec{background:transparent;color:#2E4036;font-family:'Outfit',sans-serif;font-weight:600;padding:14px 24px;border-radius:50px;border:1.5px solid rgba(46,64,54,.25);cursor:pointer;font-size:14px;transition:transform .2s}
+.btn-sec:hover{background:rgba(46,64,54,.05);transform:scale(1.01)}
+.btn-cta{background:#CC5833;color:#F2F0E9;font-family:'Outfit',sans-serif;font-weight:700;padding:16px 40px;border-radius:50px;border:none;cursor:pointer;font-size:15px;transition:transform .2s,background .2s}
+.btn-cta:hover{background:#b34d2c;transform:scale(1.02)}
+select.inp{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%232E4036' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center}
+.radio-group{display:flex;gap:10px;flex-wrap:wrap}
+.radio-opt{flex:1;min-width:80px}
+.radio-opt input{display:none}
+.radio-opt label{display:block;text-align:center;padding:10px 12px;border:1.5px solid rgba(46,64,54,.2);border-radius:10px;cursor:pointer;font-size:13px;font-weight:600;transition:all .2s;color:rgba(26,26,26,.6)}
+.radio-opt input:checked+label{background:#2E4036;color:#F2F0E9;border-color:#2E4036}
+.section-card{background:#fff;border-radius:20px;padding:24px;margin-bottom:16px;border:1px solid rgba(46,64,54,.08)}
+.section-title{font-family:'Outfit',sans-serif;font-weight:700;font-size:13px;color:#2E4036;letter-spacing:.06em;text-transform:uppercase;margin-bottom:16px}
+.toggle-section{border:1.5px solid rgba(46,64,54,.15);border-radius:16px;overflow:hidden;margin-top:8px}
+.toggle-header{padding:14px 18px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-family:'Outfit',sans-serif;font-weight:600;font-size:14px;color:#2E4036;background:rgba(46,64,54,.04)}
+.toggle-body{display:none;padding:18px;background:#fff}
+.toggle-body.open{display:block}
+.inp.inp-ok{border-color:rgba(46,64,54,.5);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14' fill='none' stroke='%232E4036' stroke-width='2' stroke-linecap='round'%3E%3Cpolyline points='2 7 6 11 12 3'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:38px}
+.inp.inp-bad{border-color:#CC5833;background:rgba(204,88,51,.04)}
+.inp.inp-bad:focus{box-shadow:0 0 0 3px rgba(204,88,51,.1)}
+textarea.inp.inp-ok,select.inp.inp-ok{background-image:none;padding-right:16px}
+.field-error{display:none;font-family:'IBM Plex Mono',monospace;font-size:10px;color:#CC5833;letter-spacing:.05em;margin-top:5px;padding-left:4px}
+.missing-summary{display:none;background:rgba(204,88,51,.06);border:1px solid rgba(204,88,51,.25);border-radius:12px;padding:12px 16px;margin:10px 0 14px;flex-wrap:wrap;align-items:center;gap:8px}
+.missing-summary .ms-label{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#CC5833;margin-right:4px}
+.missing-summary .ms-list{display:flex;flex-wrap:wrap;gap:6px}
+.missing-summary .ms-pill{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.05em;background:#fff;border:1px solid rgba(204,88,51,.2);color:#CC5833;padding:3px 9px;border-radius:50px}
+.identity-banner{display:none;align-items:center;gap:10px;background:rgba(46,64,54,.05);border:1px solid rgba(46,64,54,.15);border-radius:14px;padding:12px 16px;margin-bottom:18px;font-size:12px;color:rgba(26,26,26,.7)}
+.identity-banner svg{flex-shrink:0;color:#2E4036}
+.identity-banner strong{color:#2E4036;font-weight:700}
+#success{display:none}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="py-6 px-6" style="border-bottom:1px solid rgba(46,64,54,.1)">
+  <div class="max-w-2xl mx-auto flex items-center justify-between">
+    <a href="intake.html" style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(46,64,54,.6);text-decoration:none">← Intake Hub</a>
+    <div class="flex flex-col items-center gap-1">
+      <span class="font-display font-bold text-moss tracking-[.18em] text-sm uppercase">GORDON WONG MD</span>
+      <span class="font-mono text-[9px] tracking-widest text-charcoal/30 uppercase">New Patient Intake</span>
+    </div>
+    <span class="font-mono text-[10px] tracking-widest text-charcoal/40 uppercase">Form 1</span>
+  </div>
+</header>
+
+<!-- PROGRESS -->
+<div class="max-w-2xl mx-auto px-4 pt-8 pb-2">
+  <div class="flex items-center justify-between mb-3">
+    <span class="font-mono text-[10px] tracking-widest text-charcoal/40 uppercase" id="step-label">Step 1 of 3</span>
+    <span class="font-mono text-[10px] tracking-widest text-clay uppercase" id="step-name">Personal</span>
+  </div>
+  <div style="height:3px;background:rgba(46,64,54,.12);border-radius:2px">
+    <div class="prog-bar" id="prog" style="width:33%"></div>
+  </div>
+  <div class="flex justify-between mt-2">
+    <span class="font-mono text-[9px] text-moss/70">Personal</span>
+    <span class="font-mono text-[9px] text-charcoal/30">Contact</span>
+    <span class="font-mono text-[9px] text-charcoal/30">Clinical</span>
+  </div>
+</div>
+
+<!-- FORM CONTAINER -->
+<main class="max-w-2xl mx-auto px-4 py-6">
+
+<!-- STEP 1: Personal -->
+<div class="step active" id="step1">
+  <h2 class="font-display font-bold text-2xl text-charcoal mb-1">Personal Information</h2>
+  <p class="text-sm text-charcoal/50 mb-6">Please complete all required fields marked with <span class="text-clay">*</span></p>
+
+  <div class="identity-banner" id="identity-banner">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+    <span style="flex:1">Welcome back, <strong id="ib-name">Patient</strong> — your information has been pre-filled from a prior form. Click any field to edit.</span>
+    <a href="#" onclick="if(confirm('Clear saved identity and start fresh?')){localStorage.clear();location.reload();}return false;" style="font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#CC5833;text-decoration:none;flex-shrink:0">Not me?</a>
+  </div>
+
+  <div class="grid grid-cols-2 gap-4 mb-4">
+    <div>
+      <label class="lbl">First Name<span class="req">*</span></label>
+      <input class="inp" type="text" id="f-first" placeholder="Jane" data-validate="text" data-label="First Name">
+    </div>
+    <div>
+      <label class="lbl">Last Name<span class="req">*</span></label>
+      <input class="inp" type="text" id="f-last" placeholder="Smith" data-validate="text" data-label="Last Name">
+    </div>
+  </div>
+
+  <div class="mb-4">
+    <label class="lbl">Email Address<span class="req">*</span></label>
+    <input class="inp" type="email" id="f-email" placeholder="you@example.com" data-validate="email" data-label="Email">
+  </div>
+
+  <div class="mb-4">
+    <label class="lbl">Date of Birth<span class="req">*</span></label>
+    <input class="inp" type="text" id="f-dob" placeholder="MM/DD/YYYY" maxlength="10" inputmode="numeric" oninput="formatDobLocal(this);if(window.Intake)Intake.validateField(this);" data-validate="dob" data-label="Date of Birth">
+  </div>
+
+  <div class="mb-5">
+    <label class="lbl">Gender<span class="req">*</span></label>
+    <div class="radio-group">
+      <div class="radio-opt"><input type="radio" name="gender" id="g-m" value="Male"><label for="g-m">Male</label></div>
+      <div class="radio-opt"><input type="radio" name="gender" id="g-f" value="Female"><label for="g-f">Female</label></div>
+      <div class="radio-opt"><input type="radio" name="gender" id="g-o" value="Other"><label for="g-o">Other</label></div>
+    </div>
+  </div>
+
+  <div class="mb-6">
+    <label class="lbl">Preferred Pronouns <span class="font-mono text-[9px] text-charcoal/30 normal-case tracking-normal">(optional)</span></label>
+    <select class="inp" id="f-pronouns" onchange="document.getElementById('f-pronouns-other').style.display=(this.value==='other')?'block':'none'">
+      <option value="">Prefer not to say</option>
+      <option value="he/him">he / him</option>
+      <option value="she/her">she / her</option>
+      <option value="they/them">they / them</option>
+      <option value="he/they">he / they</option>
+      <option value="she/they">she / they</option>
+      <option value="other">Other (please specify)</option>
+    </select>
+    <input class="inp mt-2" type="text" id="f-pronouns-other" placeholder="Type your pronouns" style="display:none">
+  </div>
+
+  <div class="missing-summary" id="missing-step1"></div>
+
+  <div class="flex justify-end">
+    <button class="btn-pri" onclick="goStep(2)">Continue →</button>
+  </div>
+</div>
+
+<!-- STEP 2: Contact & Pharmacy -->
+<div class="step" id="step2">
+  <h2 class="font-display font-bold text-2xl text-charcoal mb-1">Contact & Pharmacy</h2>
+  <p class="text-sm text-charcoal/50 mb-6">Your address, phone numbers, and pharmacy details.</p>
+
+  <div class="section-card">
+    <p class="section-title">Home Address</p>
+    <div class="mb-4">
+      <label class="lbl">Street Address<span class="req">*</span></label>
+      <input class="inp" type="text" id="f-street" placeholder="123 Main St" data-validate="text" data-label="Street Address">
+    </div>
+    <div class="grid grid-cols-3 gap-3">
+      <div class="col-span-1">
+        <label class="lbl">City<span class="req">*</span></label>
+        <input class="inp" type="text" id="f-city" placeholder="Palo Alto" data-validate="text" data-label="City">
+      </div>
+      <div>
+        <label class="lbl">State<span class="req">*</span></label>
+        <input class="inp" type="text" id="f-state" placeholder="CA" maxlength="2" data-validate="text" data-label="State">
+      </div>
+      <div>
+        <label class="lbl">Zip<span class="req">*</span></label>
+        <input class="inp" type="text" id="f-zip" placeholder="94301" maxlength="10" data-validate="text" data-label="Zip">
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <p class="section-title">Phone Numbers</p>
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <label class="lbl">Mobile Phone<span class="req">*</span></label>
+        <input class="inp" type="tel" id="f-mobile" placeholder="(650) 555-0100" oninput="if(window.Intake)Intake.formatPhone(this)" data-validate="phone" data-label="Mobile Phone">
+      </div>
+      <div>
+        <label class="lbl">Home Phone <span class="font-mono text-[9px] text-charcoal/30 normal-case tracking-normal">(optional)</span></label>
+        <input class="inp" type="tel" id="f-home" placeholder="Optional" oninput="if(window.Intake)Intake.formatPhone(this)">
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <p class="section-title">Emergency Contact</p>
+    <p class="text-xs text-charcoal/55 mb-4 leading-relaxed">Someone Dr. Wong may contact in a clinical emergency if needed.</p>
+    <div class="grid grid-cols-2 gap-4 mb-4">
+      <div>
+        <label class="lbl">Name<span class="req">*</span></label>
+        <input class="inp" type="text" id="f-ec-name" placeholder="Jane Smith" data-validate="text" data-label="Emergency Contact Name">
+      </div>
+      <div>
+        <label class="lbl">Relationship<span class="req">*</span></label>
+        <input class="inp" type="text" id="f-ec-rel" placeholder="Spouse" data-validate="text" data-label="Relationship">
+      </div>
+    </div>
+    <div>
+      <label class="lbl">Phone<span class="req">*</span></label>
+      <input class="inp" type="tel" id="f-ec-phone" placeholder="(650) 555-0199" oninput="if(window.Intake)Intake.formatPhone(this)" data-validate="phone" data-label="Emergency Phone">
+    </div>
+  </div>
+
+  <div class="section-card">
+    <p class="section-title">Pharmacy</p>
+    <div class="mb-4">
+      <label class="lbl">Pharmacy Name<span class="req">*</span></label>
+      <input class="inp" type="text" id="f-rxname" placeholder="CVS Pharmacy" data-validate="text" data-label="Pharmacy Name">
+    </div>
+    <div>
+      <label class="lbl">Full Address with City & Zip<span class="req">*</span></label>
+      <input class="inp" type="text" id="f-rxaddr" placeholder="100 Main St, Palo Alto, CA 94301" data-validate="text" data-label="Pharmacy Address">
+    </div>
+  </div>
+
+  <div class="missing-summary" id="missing-step2"></div>
+
+  <div class="flex justify-between">
+    <button class="btn-sec" onclick="goStep(1)">← Back</button>
+    <button class="btn-pri" onclick="goStep(3)">Continue →</button>
+  </div>
+</div>
+
+<!-- STEP 3: Clinical History -->
+<div class="step" id="step3">
+  <h2 class="font-display font-bold text-2xl text-charcoal mb-1">Clinical History</h2>
+  <p class="text-sm text-charcoal/50 mb-6">This helps Dr. Wong prepare a thorough first consultation.</p>
+
+  <div class="section-card">
+    <p class="section-title">Reason for Consultation</p>
+    <label class="lbl">Please describe what you are seeking help for<span class="req">*</span></label>
+    <textarea class="inp" id="f-reason" placeholder="Brief description of your situation and what you're hoping to address..." style="min-height:110px" data-validate="text" data-label="Reason for Consultation"></textarea>
+  </div>
+
+  <div class="section-card">
+    <p class="section-title">Current Medications</p>
+    <label class="lbl">List all medications & supplements with dosages (include OTC & herbal)</label>
+    <textarea class="inp" id="f-currmeds" placeholder="Example: Sertraline 50mg daily, Melatonin 5mg nightly..."></textarea>
+  </div>
+
+  <div class="section-card">
+    <p class="section-title">Prior Medications</p>
+    <label class="lbl">Medications you have taken in the past</label>
+    <textarea class="inp" id="f-priormeds" placeholder="Include what worked, what didn't, and any adverse reactions..."></textarea>
+  </div>
+
+  <div class="section-card">
+    <p class="section-title">Family Psychiatric History</p>
+    <label class="lbl">Both sides of the family, immediate and extended</label>
+    <textarea class="inp" id="f-famhx" placeholder="Depression, anxiety, bipolar, schizophrenia, substance use, etc. on either side..."></textarea>
+  </div>
+
+  <div class="section-card">
+    <p class="section-title">Referring Provider / Therapist <span class="font-mono text-[9px] text-charcoal/30 normal-case tracking-normal">(optional — allows care coordination)</span></p>
+    <div class="grid grid-cols-1 gap-3">
+      <div>
+        <label class="lbl">Name</label>
+        <input class="inp" type="text" id="f-refname" placeholder="Dr. Jane Smith">
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="lbl">Email</label>
+          <input class="inp" type="email" id="f-refemail" placeholder="provider@clinic.com">
+        </div>
+        <div>
+          <label class="lbl">Phone</label>
+          <input class="inp" type="tel" id="f-refphone" placeholder="(650) 555-0100" oninput="if(window.Intake)Intake.formatPhone(this)">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="p-5 rounded-2xl my-6" style="background:rgba(46,64,54,.06);border:1px solid rgba(46,64,54,.1)">
+    <p class="font-mono text-[10px] text-charcoal/40 tracking-widest uppercase mb-2">Before You Submit</p>
+    <p class="text-xs text-charcoal/55 leading-relaxed">Please double-check your email address. After you submit, you'll continue with the consent and policy forms — your name, date of birth, email, and phone will carry forward automatically.</p>
+    <p class="text-xs text-charcoal/40 mt-2">If the patient is a minor, parent/guardian details are collected in the separate <em>Consent to Treat a Minor</em> form later in the intake.</p>
+  </div>
+
+  <div class="missing-summary" id="missing-step3"></div>
+
+  <div class="flex justify-between items-center">
+    <button class="btn-sec" onclick="goStep(2)">← Back</button>
+    <button class="btn-cta" onclick="submitForm()">Submit & Continue →</button>
+  </div>
+</div>
+
+<!-- SUCCESS STATE -->
+<div id="success" class="text-center py-16">
+  <div class="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-6" style="background:#2E4036">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#F2F0E9" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+  </div>
+  <h2 class="font-drama italic text-3xl text-charcoal mb-3">Information Received</h2>
+  <p class="text-charcoal/55 text-sm max-w-sm mx-auto leading-relaxed mb-3">Thank you. Your intake information has been saved.</p>
+  <p class="text-charcoal/55 text-sm max-w-sm mx-auto leading-relaxed mb-8">Next, please complete the consent and policy forms. Your name, date of birth, email, and phone will pre-fill on the next forms automatically.</p>
+  <a href="intake.html" class="font-mono text-moss text-xs tracking-widest uppercase hover:underline">Continue to next form →</a>
+</div>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="py-8 mt-8 text-center" style="border-top:1px solid rgba(46,64,54,.1)">
+  <p class="font-mono text-[9px] text-charcoal/30 tracking-widest uppercase">This form is HIPAA compliant · gordonwongmd.com · © 2026 Gordon Wong MD, MPH</p>
+</footer>
+
+<script src="intake-shared.js"></script>
+<script>
+const FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLScdHEReRhzH-RA3ai-hyPS0TgXspK7csWczNieOEgnB0gPEEQ/formResponse';
+const stepNames = ['Personal','Contact','Clinical'];
+const progWidths = ['33%','66%','100%'];
+
+// ─── Step navigation with inline validation ─────────────────────────────
+// Replaces the prior alert()-based validation. On any attempt to advance,
+// every required field on the current step is force-validated (so green/red
+// states appear) and a "Still needed" pill list is shown at the bottom of
+// that step. Advancing only proceeds when the step is clean.
+const STEP_REQUIRED = {
+  1: [
+    ['f-first',     'First Name',           'text'],
+    ['f-last',      'Last Name',            'text'],
+    ['f-email',     'Email',                'email'],
+    ['f-dob',       'Date of Birth',        'dob'],
+  ],
+  2: [
+    ['f-street',    'Street Address',       'text'],
+    ['f-city',      'City',                 'text'],
+    ['f-state',     'State',                'text'],
+    ['f-zip',       'Zip',                  'text'],
+    ['f-mobile',    'Mobile Phone',         'phone'],
+    ['f-ec-name',   'Emergency Contact Name','text'],
+    ['f-ec-rel',    'Emergency Relationship','text'],
+    ['f-ec-phone',  'Emergency Phone',      'phone'],
+    ['f-rxname',    'Pharmacy Name',        'text'],
+    ['f-rxaddr',    'Pharmacy Address',     'text'],
+  ],
+  3: [
+    ['f-reason',    'Reason for Consultation', 'text'],
+  ],
+};
+
+function validateStepInline(n){
+  const reqs = STEP_REQUIRED[n] || [];
+  const missing = [];
+  for (const [id, label, type] of reqs) {
+    const el = document.getElementById(id);
+    if (!el) continue;
+    el.dataset.touched = '1';
+    if (window.Intake) Intake.validateField(el);
+    if (!window.Intake.isValid(type, el.value)) missing.push(label);
+  }
+  if (n === 1 && !document.querySelector('input[name="gender"]:checked')) {
+    missing.push('Gender');
+  }
+  if (window.Intake) Intake.setMissingSummary(document.getElementById('missing-step'+n), missing);
+  return missing.length === 0;
+}
+
+function goStep(n) {
+  if (n > 1) {
+    if (!validateStepInline(n-1)) {
+      // Scroll the user to the missing-summary if present
+      const sum = document.getElementById('missing-step'+(n-1));
+      if (sum) sum.scrollIntoView({behavior:'smooth', block:'center'});
+      return;
+    }
+  }
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  document.getElementById('step'+n).classList.add('active');
+  document.getElementById('step-label').textContent = 'Step '+n+' of 4';
+  document.getElementById('step-name').textContent = stepNames[n-1];
+  document.getElementById('prog').style.width = progWidths[n-1];
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// Live-update each step's missing-summary as the user types — so the
+// "Still needed" pills disappear as fields become valid without having
+// to click Continue again.
+['1','2','3'].forEach(n => {
+  const reqs = STEP_REQUIRED[+n] || [];
+  reqs.forEach(([id]) => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('input', () => {
+      const sum = document.getElementById('missing-step'+n);
+      if (sum && sum.style.display === 'flex') validateStepInline(+n);
+    });
+  });
+});
+
+// Step 3 has no Continue button — the Submit button is final. Validate all
+// three steps when Submit is clicked.
+function validateAllStepsBeforeSubmit() {
+  for (const n of [1, 2, 3]) {
+    if (!validateStepInline(n)) {
+      // Switch to the failing step so the user sees the errors
+      document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+      document.getElementById('step'+n).classList.add('active');
+      document.getElementById('step-label').textContent = 'Step '+n+' of 3';
+      document.getElementById('step-name').textContent = stepNames[n-1];
+      document.getElementById('prog').style.width = progWidths[n-1];
+      const sum = document.getElementById('missing-step'+n);
+      if (sum) sum.scrollIntoView({behavior:'smooth', block:'center'});
+      return false;
+    }
+  }
+  return true;
+}
+
+// Apply identity prefill + attach validation on every input that has
+// data-validate. Runs once after the page loads.
+window.addEventListener('DOMContentLoaded', () => {
+  if (!window.Intake) return;
+  Intake.attachAll();
+  const id = Intake.applyIdentityPrefill({
+    fullName: null,                      // not a single field on this form
+    dob:      'f-dob',
+    email:    'f-email',
+    phone:    'f-mobile',
+  }, '#identity-banner');
+  if (id) {
+    // fullName isn't stored as one field here — split into first/last if not already filled
+    if (id.fullName) {
+      const parts = id.fullName.split(/\s+/);
+      const first = document.getElementById('f-first');
+      const last  = document.getElementById('f-last');
+      if (first && !first.value && parts.length >= 1) first.value = parts[0];
+      if (last  && !last.value  && parts.length >= 2) last.value  = parts.slice(1).join(' ');
+      const ib = document.getElementById('ib-name'); if (ib) ib.textContent = id.fullName;
+      document.getElementById('identity-banner').style.display = 'flex';
+    }
+  }
+});
+
+async function submitForm() {
+  if (!validateAllStepsBeforeSubmit()) return;
+
+  const v = id => (document.getElementById(id)?.value || '').trim();
+  const gender = document.querySelector('input[name="gender"]:checked');
+  const pronounsSel = v('f-pronouns');
+  const pronouns = (pronounsSel === 'other') ? v('f-pronouns-other') : pronounsSel;
+
+  // Disable the submit button during submission and prepare an error slot
+  const btn = document.querySelector('button.btn-cta');
+  if (btn) { btn.disabled = true; btn.textContent = 'Submitting…'; }
+  let errEl = document.getElementById('err-msg');
+  if (!errEl) {
+    errEl = document.createElement('p');
+    errEl.id = 'err-msg';
+    errEl.className = 'text-clay text-xs text-center mt-4';
+    errEl.style.display = 'none';
+    if (btn) btn.insertAdjacentElement('afterend', errEl);
+  }
+  errEl.style.display = 'none';
+
+  const payload = {
+    formType: 'newpatient',
+    patient: {
+      firstName: v('f-first'),
+      lastName:  v('f-last'),
+      dob:       v('f-dob'),
+      email:     v('f-email'),
+      phone:     v('f-mobile'),
+    },
+    signature: {
+      signedName: (v('f-first') + ' ' + v('f-last')).trim(),
+      signerRole: 'self',
+    },
+    formData: {
+      gender:           gender ? gender.value : null,
+      pronouns:         pronouns || null,
+      street:           v('f-street'),
+      city:             v('f-city'),
+      state:            v('f-state'),
+      zip:              v('f-zip'),
+      homePhone:        v('f-home') || null,
+      ecName:           v('f-ec-name'),
+      ecRelationship:   v('f-ec-rel'),
+      ecPhone:          v('f-ec-phone'),
+      pharmacyName:     v('f-rxname'),
+      pharmacyAddress:  v('f-rxaddr'),
+      reason:           v('f-reason'),
+      currentMeds:      v('f-currmeds') || null,
+      priorMeds:        v('f-priormeds') || null,
+      familyHistory:    v('f-famhx') || null,
+      referringName:    v('f-refname') || null,
+      referringEmail:   v('f-refemail') || null,
+      referringPhone:   v('f-refphone') || null,
+    },
+  };
+
+  try {
+    const result = await Intake.submitSignedForm(payload);
+    Intake.saveIdentity({
+      fullName: (v('f-first') + ' ' + v('f-last')).trim(),
+      firstName: v('f-first'),
+      lastName:  v('f-last'),
+      dob:       v('f-dob'),
+      email:     v('f-email'),
+      phone:     v('f-mobile'),
+    });
+    localStorage.setItem('intake-newpatient', JSON.stringify({
+      completed: true,
+      name: (v('f-first') + ' ' + v('f-last')).trim(),
+      pronouns: pronouns || null,
+      gender: gender ? gender.value : null,
+      signedAt: new Date().toISOString(),
+      driveDocUrl: result.driveDocUrl,
+    }));
+    document.querySelectorAll('.step').forEach(s => s.style.display = 'none');
+    const progBar = document.querySelector('.max-w-2xl.mx-auto.px-4.pt-8.pb-2');
+    if (progBar) progBar.style.display = 'none';
+    document.getElementById('success').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } catch (err) {
+    if (btn) { btn.disabled = false; btn.textContent = 'Submit & Continue →'; }
+    errEl.textContent = (err && err.message) || 'Submission failed. Please try again or contact the office.';
+    errEl.style.display = 'block';
+  }
+}
+
+// MOCKUP — auto-format DOB as MM/DD/YYYY (replaces locale-dependent <input type="date">)
+function formatDobLocal(el){
+  const d = el.value.replace(/\D/g,'').slice(0,8); let o = d;
+  if (d.length >= 5) o = d.slice(0,2)+'/'+d.slice(2,4)+'/'+d.slice(4);
+  else if (d.length >= 3) o = d.slice(0,2)+'/'+d.slice(2);
+  el.value = o;
+}
+</script>
+</body>
+</html>

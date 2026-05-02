@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Consent to Treat a Minor — Gordon Wong MD, MPH</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{moss:'#2E4036',clay:'#CC5833',cream:'#F2F0E9',charcoal:'#1A1A1A'},fontFamily:{sans:['"Plus Jakarta Sans"','sans-serif'],display:['"Outfit"','sans-serif'],drama:['"Cormorant Garamond"','serif'],mono:['"IBM Plex Mono"','monospace']}}}}</script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&family=Outfit:wght@600;700&family=Cormorant+Garamond:ital,wght@1,400;1,600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}body{background:#F2F0E9;color:#1A1A1A;font-family:'Plus Jakarta Sans',sans-serif;margin:0;min-height:100vh}
+.inp{width:100%;padding:12px 16px;border:1.5px solid rgba(46,64,54,.2);border-radius:12px;background:#fff;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;color:#1A1A1A;outline:none;transition:border-color .2s,box-shadow .2s}
+.inp:focus{border-color:#2E4036;box-shadow:0 0 0 3px rgba(46,64,54,.08)}
+.inp::placeholder{color:rgba(26,26,26,.35)}
+.lbl{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(26,26,26,.5);margin-bottom:6px;display:block}
+.req{color:#CC5833;margin-left:2px}
+.btn-cta{background:#CC5833;color:#F2F0E9;font-family:'Outfit',sans-serif;font-weight:700;padding:16px 40px;border-radius:50px;border:none;cursor:pointer;font-size:15px;transition:transform .2s,background .2s;width:100%}
+.btn-cta:hover:not(:disabled){background:#b34d2c;transform:scale(1.01)}
+.btn-cta:disabled{opacity:.4;cursor:not-allowed}
+.legal{font-size:13px;line-height:1.7;color:rgba(26,26,26,.78)}
+.legal h3{font-family:'Outfit',sans-serif;font-weight:700;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#2E4036;margin:24px 0 8px}
+.legal h3:first-child{margin-top:0}
+.legal strong{color:#1A1A1A;font-weight:700}
+.scroll-card{background:#fff;border:1px solid rgba(46,64,54,.12);border-radius:20px;padding:28px;max-height:380px;overflow-y:auto;scrollbar-width:thin}
+.scroll-card::-webkit-scrollbar{width:6px}
+.scroll-card::-webkit-scrollbar-thumb{background:rgba(46,64,54,.2);border-radius:3px}
+.checkitem{display:flex;align-items:flex-start;gap:12px;padding:14px;border:1.5px solid rgba(46,64,54,.15);border-radius:12px;margin-bottom:10px;cursor:pointer;background:#fff;transition:all .2s}
+.checkitem:hover{border-color:rgba(46,64,54,.35)}
+.checkitem.checked{border-color:#2E4036;background:rgba(46,64,54,.04)}
+.checkitem input{display:none}
+.check-box{flex-shrink:0;width:20px;height:20px;border:1.5px solid rgba(46,64,54,.3);border-radius:5px;display:flex;align-items:center;justify-content:center;background:#fff;margin-top:1px;transition:all .2s}
+.checkitem.checked .check-box{background:#2E4036;border-color:#2E4036}
+.check-box svg{opacity:0;transition:opacity .2s}
+.checkitem.checked .check-box svg{opacity:1}
+.check-text{font-size:13px;line-height:1.55;color:rgba(26,26,26,.85)}
+.sig-input{width:100%;padding:14px 18px;border:1.5px solid rgba(46,64,54,.25);border-radius:12px;background:#fff;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:28px;color:#2E4036;outline:none;letter-spacing:.5px}
+.sig-input:focus{border-color:#2E4036;box-shadow:0 0 0 3px rgba(46,64,54,.08)}
+.sig-input::placeholder{color:rgba(46,64,54,.25);font-style:italic}
+.back-link{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(46,64,54,.6);text-decoration:none}
+.back-link:hover{color:#2E4036}
+.section-card{background:#fff;border:1px solid rgba(46,64,54,.12);border-radius:18px;padding:22px;margin-bottom:20px}
+.section-title{font-family:'Outfit',sans-serif;font-weight:700;font-size:13px;color:#2E4036;letter-spacing:.06em;text-transform:uppercase;margin-bottom:18px;display:flex;align-items:center;gap:10px}
+.section-num{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:#2E4036;color:#F2F0E9;font-family:'Outfit',sans-serif;font-weight:700;font-size:11px}
+.inp.inp-ok{border-color:rgba(46,64,54,.5);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14' fill='none' stroke='%232E4036' stroke-width='2' stroke-linecap='round'%3E%3Cpolyline points='2 7 6 11 12 3'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:38px}
+.inp.inp-bad{border-color:#CC5833;background:rgba(204,88,51,.04)}
+.inp.inp-bad:focus{box-shadow:0 0 0 3px rgba(204,88,51,.1)}
+.field-error{display:none;font-family:'IBM Plex Mono',monospace;font-size:10px;color:#CC5833;letter-spacing:.05em;margin-top:5px;padding-left:4px}
+.missing-summary{display:none;background:rgba(204,88,51,.06);border:1px solid rgba(204,88,51,.25);border-radius:12px;padding:12px 16px;margin-top:14px;flex-wrap:wrap;align-items:center;gap:8px}
+.missing-summary .ms-label{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#CC5833;margin-right:4px}
+.missing-summary .ms-list{display:flex;flex-wrap:wrap;gap:6px}
+.missing-summary .ms-pill{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.05em;background:#fff;border:1px solid rgba(204,88,51,.2);color:#CC5833;padding:3px 9px;border-radius:50px}
+.alert-box{background:rgba(204,88,51,.07);border:1px solid rgba(204,88,51,.3);border-radius:14px;padding:14px 16px;display:flex;gap:10px;align-items:flex-start;margin:8px 0 16px;font-size:12px;line-height:1.6;color:rgba(26,26,26,.8)}
+.alert-box svg{flex-shrink:0;margin-top:1px}
+.alert-box strong{color:#CC5833;display:block;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:4px}
+.radio-group{display:flex;gap:10px;flex-wrap:wrap}
+.radio-opt{flex:1}
+.radio-opt input{display:none}
+.radio-opt label{display:block;text-align:center;padding:12px;border:1.5px solid rgba(46,64,54,.2);border-radius:10px;cursor:pointer;font-size:13px;font-weight:600;transition:all .2s;color:rgba(26,26,26,.6)}
+.radio-opt input:checked+label{background:#2E4036;color:#F2F0E9;border-color:#2E4036}
+#success{display:none}
+@media (max-width: 640px) {.scroll-card { max-height:300px;padding:20px }}
+</style>
+</head>
+<body>
+
+<header class="py-6 px-6" style="border-bottom:1px solid rgba(46,64,54,.1)">
+  <div class="max-w-2xl mx-auto flex items-center justify-between">
+    <a href="intake.html" class="back-link">← Intake Hub</a>
+    <div class="flex flex-col items-center gap-1">
+      <span class="font-display font-bold text-moss tracking-[.18em] text-sm uppercase">GORDON WONG MD</span>
+      <span class="font-mono text-[9px] tracking-widest text-charcoal/30 uppercase">Consent to Treat a Minor</span>
+    </div>
+    <span class="font-mono text-[10px] tracking-widest text-charcoal/40 uppercase">Form 7</span>
+  </div>
+</header>
+
+<main class="max-w-2xl mx-auto px-4 py-10" id="form-main">
+
+  <h2 class="font-display font-bold text-2xl md:text-3xl text-charcoal mb-2">Consent to Treat a Minor</h2>
+  <p class="text-sm text-charcoal/55 mb-8 leading-relaxed">For patients under 18 years of age. Under California law, psychiatric treatment of a minor requires the consent of all custodial parents or legal guardians. Please complete this form before the first appointment.</p>
+
+  <div class="scroll-card legal mb-6">
+
+    <h3>1 · Both-Parent Consent Requirement</h3>
+    <p>Treatment of a minor by Dr. Gordon Wong MD, MPH ("the Practice") will only proceed with the consent of <strong>all custodial parents or legal guardians</strong>. Where a court order, custody decree, or other legal document modifies parental authority, the signing parent or guardian agrees to provide a copy of that document on request before treatment begins.</p>
+
+    <h3>2 · How Consent Is Provided</h3>
+    <p>The consent of every custodial parent or guardian may be provided in one of two ways:</p>
+    <ul>
+      <li><strong>Co-signature on this form</strong> — both parents may complete and sign the parent sections below; <em>or</em></li>
+      <li><strong>Written email consent</strong> — the absent parent may send a written, signed consent to <span class="font-mono text-[12px]">gordon@gordonwongmd.com</span> from their own email address before treatment begins.</li>
+    </ul>
+    <p>Treatment will not begin until consent from every required parent/guardian has been received.</p>
+
+    <h3>3 · Scope of Consent</h3>
+    <p>I authorize Dr. Wong to evaluate the minor patient named below, to provide psychiatric care including diagnostic assessment and the prescription of medication where clinically indicated, and to coordinate care with other treating clinicians as necessary.</p>
+
+    <h3>4 · Confidentiality</h3>
+    <p>I understand that California law affords adolescent patients certain confidentiality rights with respect to mental-health treatment, and that Dr. Wong will discuss with me how clinical information will be shared between the patient, parents, and other parties as part of the treatment relationship.</p>
+
+    <h3>5 · Financial Responsibility</h3>
+    <p>I accept financial responsibility for all care provided to the minor patient under this consent, in accordance with the Practice's Financial Policy and Card-on-File Authorization signed separately.</p>
+
+    <h3>6 · Electronic Signature</h3>
+    <p>By typing my full legal name and clicking "Submit Consent," I am providing my electronic signature with the same legal force and effect as a handwritten signature, in accordance with the federal E-SIGN Act (15 U.S.C. §7001 <em>et seq.</em>) and the California Uniform Electronic Transactions Act (Cal. Civ. Code §1633.1 <em>et seq.</em>).</p>
+
+  </div>
+
+  <!-- Section: Minor patient info -->
+  <div class="section-card">
+    <div class="section-title"><span class="section-num">1</span> Minor Patient</div>
+    <div class="grid grid-cols-2 gap-4 mb-4">
+      <div>
+        <label class="lbl">First Name<span class="req">*</span></label>
+        <input class="inp" type="text" id="f-pt-first" placeholder="Alex" data-validate="text" data-label="Minor First Name">
+      </div>
+      <div>
+        <label class="lbl">Last Name<span class="req">*</span></label>
+        <input class="inp" type="text" id="f-pt-last" placeholder="Smith" data-validate="text" data-label="Minor Last Name">
+      </div>
+    </div>
+    <div>
+      <label class="lbl">Date of Birth<span class="req">*</span></label>
+      <input class="inp" type="text" id="f-pt-dob" placeholder="MM/DD/YYYY" maxlength="10" inputmode="numeric" oninput="Intake.formatDob(this)" data-validate="dob" data-label="Minor DOB">
+    </div>
+  </div>
+
+  <!-- Section: Family situation -->
+  <div class="section-card">
+    <div class="section-title"><span class="section-num">2</span> Custody Situation</div>
+    <label class="lbl">Who has custodial authority for this minor?<span class="req">*</span></label>
+    <div class="radio-group mb-3">
+      <div class="radio-opt"><input type="radio" name="custody" id="c-both" value="both"><label for="c-both">Both Parents (Married / Together)</label></div>
+      <div class="radio-opt"><input type="radio" name="custody" id="c-divorced" value="divorced"><label for="c-divorced">Divorced — Joint / Partial Custody</label></div>
+      <div class="radio-opt"><input type="radio" name="custody" id="c-sole" value="sole"><label for="c-sole">Sole Custody</label></div>
+      <div class="radio-opt"><input type="radio" name="custody" id="c-guard" value="guardian"><label for="c-guard">Legal Guardian</label></div>
+    </div>
+    <p class="text-xs text-charcoal/50 leading-relaxed mt-1" id="custody-help">If sole custody or legal guardianship, please be prepared to provide documentation on request.</p>
+
+    <div class="alert-box" id="divorced-alert" style="display:none">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#CC5833" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+      <div>
+        <strong>Both Parents Must Consent</strong>
+        Treatment of the minor cannot begin until <strong>both</strong> divorced parents have consented, regardless of which parent holds primary physical custody. If the other parent is unavailable, unwilling, or you have reason to believe they will not consent, please contact Dr. Wong directly to discuss the situation before submitting this form. If a court order limits the other parent's authority, the order must be provided.
+      </div>
+    </div>
+  </div>
+
+  <!-- Section: Parent/Guardian 1 -->
+  <div class="section-card">
+    <div class="section-title"><span class="section-num">3</span> Parent / Legal Guardian #1 (Signing Now)</div>
+    <div class="grid grid-cols-2 gap-4 mb-4">
+      <div>
+        <label class="lbl">First Name<span class="req">*</span></label>
+        <input class="inp" type="text" id="f-p1-first" placeholder="Jamie" data-validate="text" data-label="Parent #1 First Name">
+      </div>
+      <div>
+        <label class="lbl">Last Name<span class="req">*</span></label>
+        <input class="inp" type="text" id="f-p1-last" placeholder="Smith" data-validate="text" data-label="Parent #1 Last Name">
+      </div>
+    </div>
+    <div class="grid grid-cols-2 gap-4 mb-4">
+      <div>
+        <label class="lbl">Relationship<span class="req">*</span></label>
+        <select class="inp" id="f-p1-rel">
+          <option value="">Select…</option>
+          <option>Mother</option><option>Father</option><option>Legal Guardian</option><option>Other</option>
+        </select>
+      </div>
+      <div>
+        <label class="lbl">Phone<span class="req">*</span></label>
+        <input class="inp" type="tel" id="f-p1-phone" placeholder="(650) 555-0123" oninput="Intake.formatPhone(this)" data-validate="phone" data-label="Parent #1 Phone">
+      </div>
+    </div>
+    <div>
+      <label class="lbl">Email<span class="req">*</span></label>
+      <input class="inp" type="email" id="f-p1-email" placeholder="parent@example.com" data-validate="email" data-label="Parent #1 Email">
+    </div>
+  </div>
+
+  <!-- Section: Parent/Guardian 2 (only if both parents) -->
+  <div class="section-card" id="parent2-block" style="display:none">
+    <div class="section-title"><span class="section-num">4</span> Parent / Legal Guardian #2</div>
+    <p class="text-xs text-charcoal/55 leading-relaxed mb-4">Choose how the second parent's consent will be provided:</p>
+
+    <div class="radio-group mb-5">
+      <div class="radio-opt"><input type="radio" name="p2mode" id="p2-cosign" value="cosign"><label for="p2-cosign">Co-Sign Below</label></div>
+      <div class="radio-opt"><input type="radio" name="p2mode" id="p2-email" value="email"><label for="p2-email">Email Consent Separately</label></div>
+    </div>
+
+    <div id="p2-cosign-fields" style="display:none">
+      <div class="grid grid-cols-2 gap-4 mb-4">
+        <div>
+          <label class="lbl">First Name<span class="req">*</span></label>
+          <input class="inp" type="text" id="f-p2-first" placeholder="Casey">
+        </div>
+        <div>
+          <label class="lbl">Last Name<span class="req">*</span></label>
+          <input class="inp" type="text" id="f-p2-last" placeholder="Smith">
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-4 mb-4">
+        <div>
+          <label class="lbl">Relationship<span class="req">*</span></label>
+          <select class="inp" id="f-p2-rel">
+            <option value="">Select…</option>
+            <option>Mother</option><option>Father</option><option>Legal Guardian</option><option>Other</option>
+          </select>
+        </div>
+        <div>
+          <label class="lbl">Email<span class="req">*</span></label>
+          <input class="inp" type="email" id="f-p2-email" placeholder="parent2@example.com">
+        </div>
+      </div>
+      <div class="mb-3">
+        <label class="lbl">Parent #2 Electronic Signature<span class="req">*</span></label>
+        <input class="sig-input" type="text" id="f-p2-sig" placeholder="Sign here…" autocomplete="off">
+        <p class="font-mono text-[9px] text-charcoal/40 tracking-wider mt-2 uppercase">By typing your name, you are signing this consent electronically</p>
+      </div>
+    </div>
+
+    <div id="p2-email-fields" style="display:none">
+      <div class="p-4 rounded-xl flex items-start gap-3" style="background:rgba(46,64,54,.06);border:1px solid rgba(46,64,54,.15)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2E4036" stroke-width="2" class="mt-0.5 flex-shrink-0"><path d="M22 6l-10 7L2 6"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg>
+        <div>
+          <p class="font-mono text-[10px] text-moss tracking-widest uppercase mb-1">An email will be sent to Parent #2</p>
+          <p class="text-xs text-charcoal/70 leading-relaxed">When you submit this form, an email will be sent to the second parent at the address you provide below, inviting them to come to this website and provide their own consent to treatment. The patient's chart will be flagged as <strong>"Consent Pending — Not Yet Authorized for Treatment"</strong> until that consent is received.</p>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-4 mt-4">
+        <div>
+          <label class="lbl">Parent #2 Name<span class="req">*</span></label>
+          <input class="inp" type="text" id="f-p2-email-name" placeholder="Casey Smith" data-validate="text" data-label="Parent #2 Name">
+        </div>
+        <div>
+          <label class="lbl">Parent #2 Email<span class="req">*</span></label>
+          <input class="inp" type="email" id="f-p2-email-addr" placeholder="parent2@example.com" data-validate="email" data-label="Parent #2 Email">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Acknowledgments -->
+  <div class="mb-8">
+    <label class="checkitem" id="ack1-wrap">
+      <input type="checkbox" id="ack1">
+      <span class="check-box"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><polyline points="2 6 5 9 10 3"/></svg></span>
+      <span class="check-text">I have read and understood the Consent to Treat a Minor above.</span>
+    </label>
+    <label class="checkitem" id="ack2-wrap">
+      <input type="checkbox" id="ack2">
+      <span class="check-box"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><polyline points="2 6 5 9 10 3"/></svg></span>
+      <span class="check-text">I confirm that I have legal authority to consent to medical treatment for the minor named above, and I will provide documentation of any sole custody or guardianship on request.</span>
+    </label>
+    <label class="checkitem" id="ack3-wrap">
+      <input type="checkbox" id="ack3">
+      <span class="check-box"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><polyline points="2 6 5 9 10 3"/></svg></span>
+      <span class="check-text">I consent to psychiatric evaluation and treatment of the minor by Dr. Wong as described in the form above.</span>
+    </label>
+  </div>
+
+  <!-- Signature -->
+  <div class="section-card">
+    <div class="section-title"><span class="section-num">✓</span> Parent / Guardian #1 Signature</div>
+    <label class="lbl">Type Your Full Legal Name<span class="req">*</span></label>
+    <input class="sig-input" type="text" id="f-sig" placeholder="Sign here…" autocomplete="off" oninput="checkSigMatch()">
+    <p class="font-mono text-[9px] text-charcoal/40 tracking-wider mt-2 uppercase" id="sig-hint">By typing your name, you are signing this consent electronically</p>
+  </div>
+
+  <button class="btn-cta" id="submit-btn" onclick="submitForm()" disabled>Submit Consent →</button>
+  <div class="missing-summary" id="missing-summary"></div>
+  <p id="err-msg" class="text-clay text-xs text-center mt-4" style="display:none"></p>
+
+  <p class="text-center font-mono text-[9px] text-charcoal/30 tracking-wider mt-8 uppercase">Records of Signature Retained · gordonwongmd.com</p>
+</main>
+
+<div id="success" class="text-center py-20 px-4">
+  <div class="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-6" style="background:#2E4036">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#F2F0E9" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+  </div>
+  <h2 class="font-drama italic text-3xl text-charcoal mb-3">Consent Recorded</h2>
+  <p class="text-charcoal/55 text-sm max-w-md mx-auto leading-relaxed mb-3">Thank you. Your signed consent has been saved to Dr. Wong's records.</p>
+  <p class="text-charcoal/45 text-xs mb-8 leading-relaxed max-w-md mx-auto" id="success-note"></p>
+  <a href="intake.html" class="font-mono text-moss text-xs tracking-widest uppercase hover:underline">← Return to Intake Hub</a>
+</div>
+
+<footer class="py-8 mt-4 px-6 text-center" style="border-top:1px solid rgba(46,64,54,.1)">
+  <p class="text-[10px] text-charcoal/45 leading-relaxed max-w-xl mx-auto">
+    <strong>Notice to Patients</strong> — Medical doctors are licensed and regulated by the Medical Board of California. <span class="font-mono">www.mbc.ca.gov</span> · <span class="font-mono">(800) 633-2322</span>
+  </p>
+  <p class="font-mono text-[9px] text-charcoal/30 tracking-widest uppercase mt-3">© 2026 Gordon Wong MD, MPH</p>
+</footer>
+
+<script src="intake-shared.js"></script>
+<script>
+const FORM_ID='minor';
+Intake.attachAll();
+
+['ack1','ack2','ack3'].forEach(id=>{document.getElementById(id).addEventListener('change',e=>{document.getElementById(id+'-wrap').classList.toggle('checked',e.target.checked);refreshSubmit();});});
+
+document.querySelectorAll('input[name="custody"]').forEach(r=>{
+  r.addEventListener('change',e=>{
+    const v=e.target.value;
+    // Both Parents and Divorced both require a second parent's consent
+    const requiresP2 = (v==='both' || v==='divorced');
+    document.getElementById('parent2-block').style.display=requiresP2?'block':'none';
+    document.getElementById('divorced-alert').style.display=(v==='divorced')?'flex':'none';
+    refreshSubmit();
+  });
+});
+document.querySelectorAll('input[name="p2mode"]').forEach(r=>{
+  r.addEventListener('change',e=>{
+    document.getElementById('p2-cosign-fields').style.display=(e.target.value==='cosign')?'block':'none';
+    document.getElementById('p2-email-fields').style.display=(e.target.value==='email')?'block':'none';
+    refreshSubmit();
+  });
+});
+
+function checkSigMatch(){
+  refreshSubmit();
+  const sig=Intake.normalizeName(document.getElementById('f-sig').value);
+  const expected=Intake.normalizeName(document.getElementById('f-p1-first').value+' '+document.getElementById('f-p1-last').value);
+  const hint=document.getElementById('sig-hint');
+  if(sig&&expected&&sig!==expected){hint.textContent='Signature must match Parent #1 name above';hint.style.color='#CC5833';}
+  else{hint.textContent='By typing your name, you are signing this consent electronically';hint.style.color='';}
+}
+['f-p1-first','f-p1-last'].forEach(id=>{document.getElementById(id).addEventListener('input',checkSigMatch);});
+
+function refreshSubmit(){
+  const v=id=>document.getElementById(id).value.trim();
+  const missing=[];
+  if(!['ack1','ack2','ack3'].every(id=>document.getElementById(id).checked)) missing.push('All acknowledgments');
+  if(!v('f-pt-first')) missing.push('Minor First Name');
+  if(!v('f-pt-last'))  missing.push('Minor Last Name');
+  if(!Intake.isValid('dob',v('f-pt-dob'))) missing.push('Minor DOB');
+  const custody=document.querySelector('input[name="custody"]:checked')?.value;
+  if(!custody) missing.push('Custody Situation');
+  if(!v('f-p1-first')) missing.push('Parent #1 First Name');
+  if(!v('f-p1-last'))  missing.push('Parent #1 Last Name');
+  if(!v('f-p1-rel'))   missing.push('Parent #1 Relationship');
+  if(!Intake.isValid('phone',v('f-p1-phone'))) missing.push('Parent #1 Phone');
+  if(!Intake.isValid('email',v('f-p1-email'))) missing.push('Parent #1 Email');
+  // Both-parents and divorced both require a second parent
+  if(custody==='both'||custody==='divorced'){
+    const mode=document.querySelector('input[name="p2mode"]:checked')?.value;
+    if(!mode){missing.push('Choose Parent #2 method');}
+    else if(mode==='cosign'){
+      if(!v('f-p2-first')) missing.push('Parent #2 First Name');
+      if(!v('f-p2-last'))  missing.push('Parent #2 Last Name');
+      if(!v('f-p2-rel'))   missing.push('Parent #2 Relationship');
+      if(!Intake.isValid('email',v('f-p2-email'))) missing.push('Parent #2 Email');
+      const p2sig=v('f-p2-sig');
+      const p2name=Intake.normalizeName(v('f-p2-first')+' '+v('f-p2-last'));
+      if(!p2sig||Intake.normalizeName(p2sig)!==p2name) missing.push('Parent #2 Signature');
+    }
+    else if(mode==='email'){
+      // Email-invite mode requires the second parent's name + email so the
+      // invitation can actually be sent and the consent-pending flag tracked.
+      if(!v('f-p2-email-name')) missing.push('Parent #2 Name');
+      if(!Intake.isValid('email',v('f-p2-email-addr'))) missing.push('Parent #2 Email');
+    }
+  }
+  const sig=v('f-sig');
+  const sigOk=sig&&Intake.normalizeName(sig)===Intake.normalizeName(v('f-p1-first')+' '+v('f-p1-last'));
+  if(!sigOk) missing.push(sig?'Signature must match Parent #1':'Parent #1 Signature');
+  Intake.setMissingSummary(document.getElementById('missing-summary'),missing);
+  document.getElementById('submit-btn').disabled=missing.length>0;
+}
+['f-pt-first','f-pt-last','f-pt-dob','f-p1-first','f-p1-last','f-p1-rel','f-p1-phone','f-p1-email','f-p2-first','f-p2-last','f-p2-rel','f-p2-email','f-p2-sig','f-p2-email-name','f-p2-email-addr','f-sig'].forEach(id=>{
+  const el=document.getElementById(id); if(el) el.addEventListener('input',refreshSubmit);
+});
+refreshSubmit();
+
+async function submitForm(){
+  const btn=document.getElementById('submit-btn');
+  const errEl=document.getElementById('err-msg');
+  errEl.style.display='none';
+  btn.disabled=true; btn.textContent='Submitting…';
+  const v=id=>document.getElementById(id).value.trim();
+
+  const custody=document.querySelector('input[name="custody"]:checked')?.value;
+  const p2mode=document.querySelector('input[name="p2mode"]:checked')?.value;
+  const requiresP2 = (custody==='both' || custody==='divorced');
+
+  const ackLabels = [
+    'I have read and understood the Consent to Treat a Minor above.',
+    'I confirm that I have legal authority to consent to medical treatment for the minor named above, and I will provide documentation of any sole custody or guardianship on request.',
+    'I consent to psychiatric evaluation and treatment of the minor by Dr. Wong as described in the form above.',
+  ];
+
+  const custodyLabel = {
+    both: 'Both Parents (Married / Together)',
+    divorced: 'Divorced — Joint / Partial Custody',
+    sole: 'Sole Custody',
+    guardian: 'Legal Guardian',
+  }[custody] || custody;
+
+  const parent2Block = (() => {
+    if (!requiresP2) return undefined;
+    if (p2mode === 'cosign') {
+      return {
+        name: (v('f-p2-first') + ' ' + v('f-p2-last')).trim(),
+        email: v('f-p2-email'),
+        pending: false,           // co-signed in person — not pending
+      };
+    }
+    if (p2mode === 'email') {
+      return {
+        name: v('f-p2-email-name'),
+        email: v('f-p2-email-addr'),
+        pending: true,            // waiting on parent #2 to email back
+      };
+    }
+    return undefined;
+  })();
+
+  const payload = {
+    formType: 'minor',
+    patient: {
+      firstName: v('f-pt-first'),
+      lastName:  v('f-pt-last'),
+      dob:       v('f-pt-dob'),
+      email:     v('f-p1-email'),   // parent #1 email is the contact channel
+      phone:     v('f-p1-phone'),
+    },
+    signature: {
+      signedName: v('f-sig'),
+      signerRole: 'parent1',
+    },
+    acknowledgments: ackLabels,
+    formData: {
+      custody: custodyLabel,
+      parent1: {
+        name: (v('f-p1-first') + ' ' + v('f-p1-last')).trim(),
+        relationship: v('f-p1-rel'),
+        phone: v('f-p1-phone'),
+        email: v('f-p1-email'),
+      },
+      parent2Mode: p2mode || null,
+    },
+    parent2: parent2Block,
+  };
+
+  try {
+    const result = await Intake.submitSignedForm(payload);
+    // Save minor's identity so subsequent forms (HIPAA/etc) pre-fill with
+    // the minor's name + DOB; parent #1 email/phone serve as contact info.
+    Intake.saveIdentity({
+      fullName: (v('f-pt-first') + ' ' + v('f-pt-last')).trim(),
+      firstName: v('f-pt-first'),
+      lastName:  v('f-pt-last'),
+      dob: v('f-pt-dob'),
+      email: v('f-p1-email'),
+      phone: v('f-p1-phone'),
+    });
+    let note = '';
+    if (requiresP2 && p2mode === 'email') {
+      note = 'An invitation email has been sent to ' + v('f-p2-email-addr') +
+             '. The patient’s chart is flagged as "Consent Pending — Not Yet Authorized for Treatment" until the second parent completes their consent.';
+    }
+    document.getElementById('success-note').textContent = note;
+    const ptName = (v('f-pt-last') + ' ' + v('f-pt-first')).trim();
+    localStorage.setItem('intake-' + FORM_ID, JSON.stringify({
+      completed: true, name: ptName,
+      signedAt: new Date().toISOString(),
+      driveDocUrl: result.driveDocUrl,
+    }));
+    document.getElementById('form-main').style.display='none';
+    document.getElementById('success').style.display='block';
+    window.scrollTo({top:0,behavior:'smooth'});
+  } catch (err) {
+    btn.disabled = false;
+    btn.textContent = 'Submit Consent →';
+    errEl.textContent = (err && err.message) || 'Submission failed. Please try again or contact the office.';
+    errEl.style.display = 'block';
+  }
+}
+</script>
+</body>
+</html>

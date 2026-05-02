@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Medicare Private Contract — Gordon Wong MD, MPH</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{moss:'#2E4036',clay:'#CC5833',cream:'#F2F0E9',charcoal:'#1A1A1A'},fontFamily:{sans:['"Plus Jakarta Sans"','sans-serif'],display:['"Outfit"','sans-serif'],drama:['"Cormorant Garamond"','serif'],mono:['"IBM Plex Mono"','monospace']}}}}</script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&family=Outfit:wght@600;700&family=Cormorant+Garamond:ital,wght@1,400;1,600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}body{background:#F2F0E9;color:#1A1A1A;font-family:'Plus Jakarta Sans',sans-serif;margin:0;min-height:100vh}
+.inp{width:100%;padding:12px 16px;border:1.5px solid rgba(46,64,54,.2);border-radius:12px;background:#fff;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;color:#1A1A1A;outline:none;transition:border-color .2s,box-shadow .2s}
+.inp:focus{border-color:#2E4036;box-shadow:0 0 0 3px rgba(46,64,54,.08)}
+.inp::placeholder{color:rgba(26,26,26,.35)}
+.lbl{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(26,26,26,.5);margin-bottom:6px;display:block}
+.req{color:#CC5833;margin-left:2px}
+.btn-cta{background:#CC5833;color:#F2F0E9;font-family:'Outfit',sans-serif;font-weight:700;padding:16px 40px;border-radius:50px;border:none;cursor:pointer;font-size:15px;transition:transform .2s,background .2s;width:100%}
+.btn-cta:hover:not(:disabled){background:#b34d2c;transform:scale(1.01)}
+.btn-cta:disabled{opacity:.4;cursor:not-allowed}
+.contract{background:#fff;border:1px solid rgba(46,64,54,.12);border-radius:20px;padding:32px;font-size:13px;line-height:1.75;color:rgba(26,26,26,.85)}
+.contract h3{font-family:'Outfit',sans-serif;font-weight:700;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#2E4036;margin:0 0 16px;text-align:center}
+.contract p{margin:0 0 14px}
+.contract .preamble{font-size:12px;color:rgba(26,26,26,.6);font-style:italic;border-bottom:1px solid rgba(46,64,54,.1);padding-bottom:14px;margin-bottom:18px}
+.fillin{display:inline-block;font-family:'IBM Plex Mono',monospace;font-weight:600;color:#2E4036;background:rgba(46,64,54,.05);padding:1px 6px;border-radius:4px;font-size:12px}
+.checkitem{display:flex;align-items:flex-start;gap:12px;padding:14px;border:1.5px solid rgba(46,64,54,.15);border-radius:12px;margin-bottom:10px;cursor:pointer;background:#fff;transition:all .2s}
+.checkitem:hover{border-color:rgba(46,64,54,.35)}
+.checkitem.checked{border-color:#2E4036;background:rgba(46,64,54,.04)}
+.checkitem input{display:none}
+.check-box{flex-shrink:0;width:20px;height:20px;border:1.5px solid rgba(46,64,54,.3);border-radius:5px;display:flex;align-items:center;justify-content:center;background:#fff;margin-top:1px;transition:all .2s}
+.checkitem.checked .check-box{background:#2E4036;border-color:#2E4036}
+.check-box svg{opacity:0;transition:opacity .2s}
+.checkitem.checked .check-box svg{opacity:1}
+.check-text{font-size:13px;line-height:1.55;color:rgba(26,26,26,.85)}
+.sig-input{width:100%;padding:14px 18px;border:1.5px solid rgba(46,64,54,.25);border-radius:12px;background:#fff;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:28px;color:#2E4036;outline:none;letter-spacing:.5px}
+.sig-input:focus{border-color:#2E4036;box-shadow:0 0 0 3px rgba(46,64,54,.08)}
+.sig-input::placeholder{color:rgba(46,64,54,.25);font-style:italic}
+.back-link{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(46,64,54,.6);text-decoration:none}
+.back-link:hover{color:#2E4036}
+.provider-block{background:rgba(46,64,54,.04);border:1px solid rgba(46,64,54,.15);border-radius:14px;padding:18px;margin:16px 0;font-family:'IBM Plex Mono',monospace;font-size:12px;line-height:1.7}
+.provider-block .pl{color:rgba(26,26,26,.5);text-transform:uppercase;letter-spacing:.08em;font-size:10px}
+.inp.inp-ok{border-color:rgba(46,64,54,.5);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14' fill='none' stroke='%232E4036' stroke-width='2' stroke-linecap='round'%3E%3Cpolyline points='2 7 6 11 12 3'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:38px}
+.inp.inp-bad{border-color:#CC5833;background:rgba(204,88,51,.04)}
+.inp.inp-bad:focus{box-shadow:0 0 0 3px rgba(204,88,51,.1)}
+.field-error{display:none;font-family:'IBM Plex Mono',monospace;font-size:10px;color:#CC5833;letter-spacing:.05em;margin-top:5px;padding-left:4px}
+.missing-summary{display:none;background:rgba(204,88,51,.06);border:1px solid rgba(204,88,51,.25);border-radius:12px;padding:12px 16px;margin-top:14px;flex-wrap:wrap;align-items:center;gap:8px}
+.missing-summary .ms-label{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#CC5833;margin-right:4px}
+.missing-summary .ms-list{display:flex;flex-wrap:wrap;gap:6px}
+.missing-summary .ms-pill{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.05em;background:#fff;border:1px solid rgba(204,88,51,.2);color:#CC5833;padding:3px 9px;border-radius:50px}
+.identity-banner{display:none;align-items:center;gap:10px;background:rgba(46,64,54,.05);border:1px solid rgba(46,64,54,.15);border-radius:14px;padding:12px 16px;margin-bottom:18px;font-size:12px;color:rgba(26,26,26,.7)}
+.identity-banner svg{flex-shrink:0;color:#2E4036}
+.identity-banner strong{color:#2E4036;font-weight:700}
+#success{display:none}
+</style>
+</head>
+<body>
+
+<header class="py-6 px-6" style="border-bottom:1px solid rgba(46,64,54,.1)">
+  <div class="max-w-2xl mx-auto flex items-center justify-between">
+    <a href="intake.html" class="back-link">← Intake Hub</a>
+    <div class="flex flex-col items-center gap-1">
+      <span class="font-display font-bold text-moss tracking-[.18em] text-sm uppercase">GORDON WONG MD</span>
+      <span class="font-mono text-[9px] tracking-widest text-charcoal/30 uppercase">Medicare Private Contract</span>
+    </div>
+    <span class="font-mono text-[10px] tracking-widest text-charcoal/40 uppercase">Form 6</span>
+  </div>
+</header>
+
+<main class="max-w-2xl mx-auto px-4 py-10" id="form-main">
+
+  <h2 class="font-display font-bold text-2xl md:text-3xl text-charcoal mb-2">Medicare Private Contract</h2>
+  <p class="text-sm text-charcoal/55 mb-2 leading-relaxed">Required for patients age 65 or older.</p>
+  <p class="text-sm text-charcoal/55 mb-8 leading-relaxed">Dr. Wong has opted out of Medicare under Section 4507 of the 1997 Balanced Budget Act. Patients who are eligible for Medicare must sign this private contract before any service is provided, acknowledging that Dr. Wong will not submit any claim to Medicare and that Medicare will not pay for the services.</p>
+
+  <div class="contract mb-6">
+
+    <h3>Medicare Private Contract</h3>
+
+    <p class="preamble">Section 4507 of the 1997 Balanced Budget Act allows a physician or practitioner to enter a private contract with a Medicare beneficiary. Signatures from the provider, a witness and the patient/beneficiary or their legal representative are required below. The supplier must submit an affidavit to Medicare expressing his/her decision to opt-out.</p>
+
+    <p>I, <span class="fillin">GORDON WONG MD</span> (provider's name) have not been excluded from Medicare under sections 1128, 1156 or 1892 of the Social Security Act. Provider's NPI: <span class="fillin">1770608101</span>.</p>
+
+    <p>I (the Medicare beneficiary) or my legal representative accept full responsibility for payment of charges for all services furnished by <span class="fillin">GORDON WONG MD</span>.</p>
+
+    <p>I (the Medicare beneficiary) or my legal representative understand that Medicare limits do not apply to what <span class="fillin">GORDON WONG MD</span> may charge for items or services furnished.</p>
+
+    <p>I (the Medicare beneficiary) or my legal representative agree not to submit a claim to Medicare or to ask <span class="fillin">GORDON WONG MD</span> to submit a claim to Medicare.</p>
+
+    <p>I (the Medicare beneficiary) or my legal representative understand that Medicare payment will not be made for any items or services furnished by <span class="fillin">GORDON WONG MD</span> that would have otherwise been covered by Medicare if there was no private contract and a proper Medicare claim had been submitted.</p>
+
+    <p>I (the Medicare beneficiary) or my legal representative enter into this contract with the knowledge that I have the right to obtain Medicare-covered items and services from a physician and/or practitioner who has not opted-out of Medicare, and I am not compelled to enter into private contracts that apply to other Medicare-covered services furnished by other physicians or practitioners who have not opted-out.</p>
+
+    <p>The expected or known effective date and expected or known expiration date of the opt-out period is <span class="fillin">January 13, 2026</span> (effective date) and <span class="fillin">without expiration date</span> (expiration date).</p>
+
+    <p>I (the Medicare beneficiary) or my legal representative understand that Medigap plans do not, and that other supplemental plans may elect not to, make payments for items and services not paid for by Medicare.</p>
+
+    <p>This contract cannot be entered into by me, (the Medicare beneficiary), or by my legal representative during a time when I, (the Medicare beneficiary), require emergency care services or urgent care services. (However, a physician/practitioner may furnish emergency or urgent care services to a Medicare beneficiary in accordance with §3044.28 of the Medicare Carriers Manual.)</p>
+
+    <p>I (the Medicare beneficiary) or my legal representative will receive or have received a copy (a photocopy is permissible) of this contract, before items or services are furnished to me under the terms of this contract.</p>
+
+    <p>I, <span class="fillin">GORDON WONG MD</span>, will retain the original contract (original signatures of both parties required) for the duration of the opt-out period.</p>
+
+    <p>I, <span class="fillin">GORDON WONG MD</span>, will supply CMS with a copy of this contract upon request.</p>
+
+    <p>I, <span class="fillin">GORDON WONG MD</span>, understand that the current private contract remains in effect for two years. If I again opt-out of Medicare, I will expediently complete a new contract for each Medicare beneficiary and will expediently submit the appropriate affidavit(s) to all local Medicare carriers.</p>
+
+    <div class="provider-block">
+      <div class="pl">Provider</div>
+      <div>GORDON WONG MD</div>
+      <div class="pl mt-2">NPI</div>
+      <div>1770608101</div>
+      <div class="pl mt-2">Phone</div>
+      <div>(650) 521-6111</div>
+      <div class="pl mt-2">Email</div>
+      <div>gordon@gordonwongmd.com</div>
+      <div class="pl mt-2">Provider Signature on File</div>
+      <div>Yes — original on file with the Practice</div>
+    </div>
+
+  </div>
+
+  <div class="mb-8">
+    <label class="checkitem" id="ack1-wrap">
+      <input type="checkbox" id="ack1">
+      <span class="check-box"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><polyline points="2 6 5 9 10 3"/></svg></span>
+      <span class="check-text">I have read and understood the entire Medicare Private Contract above.</span>
+    </label>
+    <label class="checkitem" id="ack2-wrap">
+      <input type="checkbox" id="ack2">
+      <span class="check-box"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><polyline points="2 6 5 9 10 3"/></svg></span>
+      <span class="check-text">I am not currently in need of emergency or urgent care, and I am entering this contract voluntarily.</span>
+    </label>
+  </div>
+
+  <h3 class="font-display font-bold text-base text-charcoal mb-4">Patient (Medicare Beneficiary) Information</h3>
+
+  <div class="identity-banner" id="identity-banner">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+    <span style="flex:1">Welcome back, <strong id="ib-name">Patient</strong> — your information has been pre-filled from a prior form. Click any field to edit.</span>
+    <a href="#" onclick="if(confirm('Clear saved identity and start fresh?')){localStorage.clear();location.reload();}return false;" style="font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#CC5833;text-decoration:none;flex-shrink:0">Not me?</a>
+  </div>
+
+  <div class="mb-5">
+    <label class="lbl">Patient Full Legal Name<span class="req">*</span></label>
+    <input class="inp" type="text" id="f-name" placeholder="Jane Marie Smith" autocomplete="name" data-validate="text" data-label="Full Name">
+  </div>
+
+  <div class="grid grid-cols-2 gap-4 mb-5">
+    <div>
+      <label class="lbl">Date of Birth<span class="req">*</span></label>
+      <input class="inp" type="text" id="f-dob" placeholder="MM/DD/YYYY" maxlength="10" inputmode="numeric" oninput="Intake.formatDob(this)" data-validate="dob" data-label="Date of Birth">
+    </div>
+    <div>
+      <label class="lbl">Today's Date</label>
+      <input class="inp" type="text" id="f-today" readonly style="background:rgba(46,64,54,.04)">
+    </div>
+  </div>
+
+  <div class="mb-8">
+    <label class="lbl">Are you signing on your own behalf, or as Legal Representative?<span class="req">*</span></label>
+    <select class="inp" id="f-role">
+      <option value="">Select…</option>
+      <option value="self">I am signing on my own behalf as the patient</option>
+      <option value="rep">I am signing as the patient's Legal Representative</option>
+    </select>
+  </div>
+
+  <div id="rep-block" style="display:none" class="mb-8">
+    <div class="grid grid-cols-2 gap-4 mb-4">
+      <div>
+        <label class="lbl">Representative Full Name</label>
+        <input class="inp" type="text" id="f-rep-name" placeholder="John Smith">
+      </div>
+      <div>
+        <label class="lbl">Relationship to Patient</label>
+        <input class="inp" type="text" id="f-rep-rel" placeholder="Spouse / Power of Attorney">
+      </div>
+    </div>
+  </div>
+
+  <div class="mb-8">
+    <label class="lbl">Electronic Signature — Type Your Full Legal Name<span class="req">*</span></label>
+    <input class="sig-input" type="text" id="f-sig" placeholder="Sign here…" autocomplete="off" oninput="checkSigMatch()">
+    <p class="font-mono text-[9px] text-charcoal/40 tracking-wider mt-2 uppercase" id="sig-hint">By typing your name, you are signing this contract electronically</p>
+  </div>
+
+  <button class="btn-cta" id="submit-btn" onclick="submitForm()" disabled>Submit Contract →</button>
+  <div class="missing-summary" id="missing-summary"></div>
+  <p id="err-msg" class="text-clay text-xs text-center mt-4" style="display:none"></p>
+
+  <p class="text-center font-mono text-[9px] text-charcoal/30 tracking-wider mt-8 uppercase">Records of Signature Retained · gordonwongmd.com</p>
+</main>
+
+<div id="success" class="text-center py-20 px-4">
+  <div class="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-6" style="background:#2E4036">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#F2F0E9" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+  </div>
+  <h2 class="font-drama italic text-3xl text-charcoal mb-3">Contract Recorded</h2>
+  <p class="text-charcoal/55 text-sm max-w-md mx-auto leading-relaxed mb-8">Thank you. Your signed Medicare Private Contract has been saved to Dr. Wong's records and will be retained for the duration of the opt-out period as required by CMS.</p>
+  <a href="intake.html" class="font-mono text-moss text-xs tracking-widest uppercase hover:underline">← Return to Intake Hub</a>
+</div>
+
+<footer class="py-8 mt-4 px-6 text-center" style="border-top:1px solid rgba(46,64,54,.1)">
+  <p class="text-[10px] text-charcoal/45 leading-relaxed max-w-xl mx-auto">
+    <strong>Notice to Patients</strong> — Medical doctors are licensed and regulated by the Medical Board of California. <span class="font-mono">www.mbc.ca.gov</span> · <span class="font-mono">(800) 633-2322</span>
+  </p>
+  <p class="font-mono text-[9px] text-charcoal/30 tracking-widest uppercase mt-3">© 2026 Gordon Wong MD, MPH</p>
+</footer>
+
+<script src="intake-shared.js"></script>
+<script>
+const FORM_ID='medicare';
+(function(){const t=new Date();document.getElementById('f-today').value=String(t.getMonth()+1).padStart(2,'0')+'/'+String(t.getDate()).padStart(2,'0')+'/'+t.getFullYear();})();
+
+Intake.attachAll();
+const id=Intake.applyIdentityPrefill({fullName:'f-name',dob:'f-dob'},'#identity-banner');
+if(id&&id.fullName){document.getElementById('ib-name').textContent=id.fullName;}
+
+['ack1','ack2'].forEach(id=>{document.getElementById(id).addEventListener('change',e=>{document.getElementById(id+'-wrap').classList.toggle('checked',e.target.checked);refreshSubmit();});});
+document.getElementById('f-role').addEventListener('change',e=>{document.getElementById('rep-block').style.display=(e.target.value==='rep')?'block':'none';refreshSubmit();});
+
+function checkSigMatch(){
+  refreshSubmit();
+  const sig=Intake.normalizeName(document.getElementById('f-sig').value);
+  const role=document.getElementById('f-role').value;
+  const expected=Intake.normalizeName(role==='rep'?document.getElementById('f-rep-name').value:document.getElementById('f-name').value);
+  const hint=document.getElementById('sig-hint');
+  if(sig&&expected&&sig!==expected){hint.textContent='Signature must match the '+(role==='rep'?'Representative':'Patient')+' name above';hint.style.color='#CC5833';}
+  else{hint.textContent='By typing your name, you are signing this contract electronically';hint.style.color='';}
+}
+['f-name','f-rep-name','f-role'].forEach(id=>{document.getElementById(id).addEventListener('input',checkSigMatch);});
+
+function refreshSubmit(){
+  const v=i=>document.getElementById(i).value.trim();
+  const acks=['ack1','ack2'].every(id=>document.getElementById(id).checked);
+  const name=v('f-name'),dob=v('f-dob'),role=v('f-role'),sig=v('f-sig');
+  let sigExpected=name;
+  const missing=[];
+  if(!acks) missing.push('All acknowledgments');
+  if(!name) missing.push('Patient Name');
+  if(!Intake.isValid('dob',dob)) missing.push('Date of Birth');
+  if(!role) missing.push('Self / Representative');
+  if(role==='rep'){
+    const rn=v('f-rep-name'),rr=v('f-rep-rel');
+    if(!rn) missing.push('Representative Name');
+    if(!rr) missing.push('Representative Relationship');
+    sigExpected=rn;
+  }
+  const sigOk=sig&&Intake.normalizeName(sig)===Intake.normalizeName(sigExpected);
+  if(!sigOk) missing.push(sig?'Signature must match name':'Signature');
+  Intake.setMissingSummary(document.getElementById('missing-summary'),missing);
+  document.getElementById('submit-btn').disabled=missing.length>0;
+}
+['f-name','f-dob','f-rep-name','f-rep-rel','f-sig'].forEach(id=>{document.getElementById(id).addEventListener('input',refreshSubmit);});
+refreshSubmit();
+
+async function submitForm(){
+  const btn=document.getElementById('submit-btn');
+  const errEl=document.getElementById('err-msg');
+  errEl.style.display='none';
+  btn.disabled=true; btn.textContent='Submitting…';
+  const v=i=>document.getElementById(i).value.trim();
+
+  const ackLabels = [
+    'I have read and understood the entire Medicare Private Contract above.',
+    'I am not currently in need of emergency or urgent care, and I am entering this contract voluntarily.',
+  ];
+
+  const fullName = v('f-name');
+  const {firstName, lastName} = Intake.splitName(fullName);
+  const role = v('f-role'); // "self" or "rep"
+  const isRep = role === 'rep';
+
+  const payload = {
+    formType: 'medicare',
+    patient: { firstName, lastName, dob: v('f-dob') },
+    signature: {
+      signedName: v('f-sig'),
+      signerRole: isRep ? 'legal_rep' : 'self',
+      ...(isRep && {
+        representativeName: v('f-rep-name'),
+        representativeRelationship: v('f-rep-rel'),
+      }),
+    },
+    acknowledgments: ackLabels,
+  };
+
+  try {
+    const result = await Intake.submitSignedForm(payload);
+    Intake.saveIdentity({fullName, firstName, lastName, dob: v('f-dob')});
+    localStorage.setItem('intake-'+FORM_ID, JSON.stringify({
+      completed: true, name: fullName, signedAt: new Date().toISOString(),
+      driveDocUrl: result.driveDocUrl,
+    }));
+    document.getElementById('form-main').style.display='none';
+    document.getElementById('success').style.display='block';
+    window.scrollTo({top:0,behavior:'smooth'});
+  } catch (err) {
+    btn.disabled = false;
+    btn.textContent = 'Submit Contract →';
+    errEl.textContent = (err && err.message) || 'Submission failed. Please try again or contact the office.';
+    errEl.style.display = 'block';
+  }
+}
+</script>
+</body>
+</html>

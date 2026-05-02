@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Update Card on File — Gordon Wong MD, MPH</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{moss:'#2E4036',clay:'#CC5833',cream:'#F2F0E9',charcoal:'#1A1A1A'},fontFamily:{sans:['"Plus Jakarta Sans"','sans-serif'],display:['"Outfit"','sans-serif'],drama:['"Cormorant Garamond"','serif'],mono:['"IBM Plex Mono"','monospace']}}}}</script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&family=Outfit:wght@600;700&family=Cormorant+Garamond:ital,wght@1,400;1,600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}body{background:#F2F0E9;color:#1A1A1A;font-family:'Plus Jakarta Sans',sans-serif;margin:0;min-height:100vh}
+.inp{width:100%;padding:12px 16px;border:1.5px solid rgba(46,64,54,.2);border-radius:12px;background:#fff;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;color:#1A1A1A;outline:none;transition:border-color .2s,box-shadow .2s;letter-spacing:.02em}
+.inp:focus{border-color:#2E4036;box-shadow:0 0 0 3px rgba(46,64,54,.08)}
+.inp::placeholder{color:rgba(26,26,26,.35)}
+textarea.inp{resize:vertical;min-height:80px}
+.lbl{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(26,26,26,.5);margin-bottom:6px;display:block}
+.req{color:#CC5833;margin-left:2px}
+.btn-cta{background:#CC5833;color:#F2F0E9;font-family:'Outfit',sans-serif;font-weight:700;padding:16px 40px;border-radius:50px;border:none;cursor:pointer;font-size:15px;transition:transform .2s,background .2s;width:100%}
+.btn-cta:hover:not(:disabled){background:#b34d2c;transform:scale(1.01)}
+.btn-cta:disabled{opacity:.4;cursor:not-allowed}
+#f-cardnum{letter-spacing:.12em;font-family:'IBM Plex Mono',monospace;font-size:15px}
+.inp.inp-ok{border-color:rgba(46,64,54,.5);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14' fill='none' stroke='%232E4036' stroke-width='2' stroke-linecap='round'%3E%3Cpolyline points='2 7 6 11 12 3'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:38px}
+.inp.inp-bad{border-color:#CC5833;background:rgba(204,88,51,.04)}
+.inp.inp-bad:focus{box-shadow:0 0 0 3px rgba(204,88,51,.1)}
+textarea.inp.inp-ok{background-image:none;padding-right:16px}
+/* Card-number field has card icons on the right — keep checkmark from
+   colliding with them by hiding it */
+#f-cardnum.inp-ok{background-image:none;padding-right:80px}
+.field-error{display:none;font-family:'IBM Plex Mono',monospace;font-size:10px;color:#CC5833;letter-spacing:.05em;margin-top:5px;padding-left:4px}
+.missing-summary{display:none;background:rgba(204,88,51,.06);border:1px solid rgba(204,88,51,.25);border-radius:12px;padding:12px 16px;margin-top:14px;flex-wrap:wrap;align-items:center;gap:8px}
+.missing-summary .ms-label{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#CC5833;margin-right:4px}
+.missing-summary .ms-list{display:flex;flex-wrap:wrap;gap:6px}
+.missing-summary .ms-pill{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.05em;background:#fff;border:1px solid rgba(204,88,51,.2);color:#CC5833;padding:3px 9px;border-radius:50px}
+.identity-banner{display:none;align-items:center;gap:10px;background:rgba(46,64,54,.05);border:1px solid rgba(46,64,54,.15);border-radius:14px;padding:12px 16px;margin-bottom:18px;font-size:12px;color:rgba(26,26,26,.7)}
+.identity-banner svg{flex-shrink:0;color:#2E4036}
+.identity-banner strong{color:#2E4036;font-weight:700}
+.back-link{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(46,64,54,.6);text-decoration:none}
+.back-link:hover{color:#2E4036}
+#success{display:none}
+</style>
+</head>
+<body>
+
+<header class="py-6 px-6" style="border-bottom:1px solid rgba(46,64,54,.1)">
+  <div class="max-w-md mx-auto flex items-center justify-between">
+    <a href="intake.html" class="back-link">← Intake Hub</a>
+    <div class="flex flex-col items-center gap-1">
+      <span class="font-display font-bold text-moss tracking-[.18em] text-sm uppercase">GORDON WONG MD</span>
+      <span class="font-mono text-[9px] tracking-widest text-charcoal/30 uppercase">Update Card on File</span>
+    </div>
+    <span class="font-mono text-[10px] tracking-widest text-charcoal/40 uppercase">Form 5</span>
+  </div>
+</header>
+
+<main class="max-w-md mx-auto px-4 py-10" id="form-main">
+  <h2 class="font-display font-bold text-2xl text-charcoal mb-1">Card on File</h2>
+  <p class="text-sm text-charcoal/50 mb-6 leading-relaxed">For current and new patients. Visa and Mastercard accepted. Your card details are transmitted directly to the Practice's PCI-DSS-compliant payment processor.</p>
+
+  <div class="identity-banner" id="identity-banner">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+    <span style="flex:1">Continuing as <strong id="ib-name">Patient</strong>.</span>
+    <a href="#" onclick="if(confirm('Clear saved identity and start fresh?')){localStorage.clear();location.reload();}return false;" style="font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#CC5833;text-decoration:none;flex-shrink:0">Not me?</a>
+  </div>
+
+  <!-- Security notice -->
+  <div class="flex items-start gap-3 p-4 rounded-2xl mb-8" style="background:rgba(46,64,54,.06);border:1px solid rgba(46,64,54,.1)">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2E4036" stroke-width="2" class="mt-0.5 flex-shrink-0"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+    <div>
+      <p class="font-mono text-[10px] text-moss tracking-widest uppercase mb-1">Secure</p>
+      <p class="text-xs text-charcoal/60 leading-relaxed">Card details are submitted via HTTPS and stored as a token only — the Practice never sees or holds your full card number. Visa and Mastercard only.</p>
+    </div>
+  </div>
+
+  <!-- Cardholder -->
+  <div class="mb-5">
+    <label class="lbl">Cardholder Name (Last, First)<span class="req">*</span></label>
+    <input class="inp" type="text" id="f-name" placeholder="Smith, Jane" data-validate="text" data-label="Cardholder Name">
+  </div>
+
+  <!-- Card number -->
+  <div class="mb-5">
+    <label class="lbl">Credit Card Number<span class="req">*</span></label>
+    <div style="position:relative">
+      <input class="inp" type="text" id="f-cardnum" placeholder="•••• •••• •••• ••••" maxlength="19" inputmode="numeric" oninput="formatCard(this);if(window.Intake)Intake.validateField(this);" data-validate="card" data-label="Card Number">
+      <div style="position:absolute;right:14px;top:50%;transform:translateY(-50%);display:flex;gap:6px;pointer-events:none">
+        <svg width="28" height="18" viewBox="0 0 50 32" fill="none"><rect width="50" height="32" rx="4" fill="#1A1F71"/><circle cx="20" cy="16" r="9" fill="#EB001B" opacity=".9"/><circle cx="30" cy="16" r="9" fill="#F79E1B" opacity=".9"/><path d="M25 9.5a9 9 0 0 1 0 13A9 9 0 0 1 25 9.5z" fill="#FF5F00"/></svg>
+        <svg width="28" height="18" viewBox="0 0 50 32" fill="none"><rect width="50" height="32" rx="4" fill="#fff" stroke="#ddd"/><text x="6" y="22" font-family="Arial" font-size="12" font-weight="bold" fill="#FF6600">VISA</text></svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- Expiry + CVV -->
+  <div class="grid grid-cols-2 gap-4 mb-5">
+    <div>
+      <label class="lbl">Expiration Date<span class="req">*</span></label>
+      <input class="inp" type="text" id="f-exp" placeholder="MM/YYYY" maxlength="7" inputmode="numeric" oninput="formatExp(this);if(window.Intake)Intake.validateField(this);" data-validate="exp" data-label="Expiration">
+    </div>
+    <div>
+      <label class="lbl">Security Code (CVV)<span class="req">*</span></label>
+      <input class="inp" type="text" id="f-cvv" placeholder="•••" maxlength="4" inputmode="numeric" data-validate="cvv" data-label="CVV">
+    </div>
+  </div>
+
+  <!-- Billing address -->
+  <div class="mb-8">
+    <label class="lbl">Billing Street Address & Zip Code<span class="req">*</span></label>
+    <textarea class="inp" id="f-addr" placeholder="123 Main St&#10;Palo Alto, CA 94301" data-validate="text" data-label="Billing Address"></textarea>
+  </div>
+
+  <button class="btn-cta" id="submit-btn" onclick="submitForm()" disabled>Submit Securely →</button>
+  <div class="missing-summary" id="missing-summary"></div>
+
+  <p class="text-center font-mono text-[9px] text-charcoal/30 tracking-wider mt-6 uppercase">HIPAA Compliant · gordonwongmd.com · Visa & Mastercard Only</p>
+</main>
+
+<!-- SUCCESS -->
+<div id="success" class="text-center py-20 px-4">
+  <div class="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-6" style="background:#2E4036">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#F2F0E9" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+  </div>
+  <h2 class="font-drama italic text-3xl text-charcoal mb-3">Card on File Updated</h2>
+  <p class="text-charcoal/55 text-sm max-w-sm mx-auto leading-relaxed mb-8">Your card details have been submitted securely. Dr. Wong's office will use this card per the Card-on-File Authorization you signed.</p>
+  <a href="intake.html" class="font-mono text-moss text-xs tracking-widest uppercase hover:underline">← Return to Intake Hub</a>
+</div>
+
+<footer class="py-8 mt-4 px-6 text-center" style="border-top:1px solid rgba(46,64,54,.1)">
+  <p class="text-[10px] text-charcoal/45 leading-relaxed max-w-xl mx-auto">
+    <strong>Notice to Patients</strong> — Medical doctors are licensed and regulated by the Medical Board of California. <span class="font-mono">www.mbc.ca.gov</span> · <span class="font-mono">(800) 633-2322</span>
+  </p>
+  <p class="font-mono text-[9px] text-charcoal/30 tracking-widest uppercase mt-3">© 2026 Gordon Wong MD, MPH</p>
+</footer>
+
+<script src="intake-shared.js"></script>
+<script>
+const FORM_ID='cardonfile';
+
+// ─── Card-specific formatters ───────────────────────────────────────────
+function formatCard(el){
+  const v = el.value.replace(/\D/g,'').slice(0,16);
+  el.value = v.replace(/(.{4})/g,'$1 ').trim();
+}
+function formatExp(el){
+  let v = el.value.replace(/\D/g,'').slice(0,6);
+  if (v.length >= 2) v = v.slice(0,2) + '/' + v.slice(2,6);
+  el.value = v;
+}
+
+// Card / exp / cvv validators live in intake-shared.js so the inline
+// error rendering (red border + message under field) stays consistent
+// with every other form in the intake flow.
+
+// Wire validation visuals + identity prefill
+Intake.attachAll();
+const id = Intake.applyIdentityPrefill({}, '#identity-banner');
+if (id && id.fullName) {
+  document.getElementById('ib-name').textContent = id.fullName;
+  // Auto-fill cardholder if not already filled — note Last, First convention
+  const nameEl = document.getElementById('f-name');
+  if (nameEl && !nameEl.value) {
+    const parts = id.fullName.split(/\s+/);
+    if (parts.length >= 2) nameEl.value = parts.slice(1).join(' ') + ', ' + parts[0];
+    else nameEl.value = id.fullName;
+  }
+}
+
+function refreshSubmit(){
+  const v = i => document.getElementById(i).value.trim();
+  const missing = [];
+  if (!v('f-name'))                           missing.push('Cardholder Name');
+  if (!Intake.isValid('card', v('f-cardnum'))) missing.push('Card Number');
+  if (!Intake.isValid('exp',  v('f-exp')))     missing.push('Expiration');
+  if (!Intake.isValid('cvv',  v('f-cvv')))     missing.push('CVV');
+  if (!v('f-addr'))                           missing.push('Billing Address');
+  Intake.setMissingSummary(document.getElementById('missing-summary'), missing);
+  document.getElementById('submit-btn').disabled = missing.length > 0;
+}
+['f-name','f-cardnum','f-exp','f-cvv','f-addr'].forEach(i => {
+  document.getElementById(i).addEventListener('input', refreshSubmit);
+});
+refreshSubmit();
+
+async function submitForm(){
+  const btn = document.getElementById('submit-btn');
+  // Card-on-file form has no err-msg element by default — create one inline
+  let errEl = document.getElementById('err-msg');
+  if (!errEl) {
+    errEl = document.createElement('p');
+    errEl.id = 'err-msg';
+    errEl.className = 'text-clay text-xs text-center mt-4';
+    errEl.style.display = 'none';
+    btn.insertAdjacentElement('afterend', errEl);
+  }
+  errEl.style.display='none';
+  btn.disabled = true; btn.textContent = 'Submitting…';
+
+  const v = i => document.getElementById(i).value.trim();
+  const last4 = v('f-cardnum').replace(/\D/g,'').slice(-4);
+
+  // Cardholder name on this form is "Last, First" — split that for payload.
+  // If the patient came through the intake flow, use the saved identity's
+  // firstName/lastName instead since they're more reliable.
+  let firstName = '', lastName = '';
+  const id = Intake.loadIdentity();
+  if (id && id.firstName && id.lastName) {
+    firstName = id.firstName; lastName = id.lastName;
+  } else {
+    const cardholder = v('f-name');
+    if (cardholder.includes(',')) {
+      const [last, first] = cardholder.split(',');
+      lastName = (last || '').trim();
+      firstName = (first || '').trim();
+    } else {
+      ({firstName, lastName} = Intake.splitName(cardholder));
+    }
+  }
+  const dob = (id && id.dob) || ''; // card form doesn't ask for DOB; identity supplies it
+  if (!dob) {
+    btn.disabled = false;
+    btn.textContent = 'Submit Securely →';
+    errEl.textContent = 'Patient date of birth is required. Please complete the New Patient Intake form first, or contact the office.';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  const payload = {
+    formType: 'cardonfile',
+    patient: { firstName, lastName, dob, email: id?.email, phone: id?.phone },
+    signature: { signedName: v('f-name'), signerRole: 'self' },
+    formData: {
+      last4,
+      expiration: v('f-exp'),       // MM/YYYY
+      billingAddress: v('f-addr'),
+      // Full PAN and CVV are NOT included in the signed-doc payload — those
+      // go directly to the payment processor (Elavon Converge) via the
+      // existing live pipeline. The signed Doc records only what's safe
+      // to retain: cardholder name + last 4 + exp + billing address.
+    },
+  };
+
+  try {
+    const result = await Intake.submitSignedForm(payload);
+    localStorage.setItem('intake-' + FORM_ID, JSON.stringify({
+      completed: true, name: v('f-name'), last4,
+      signedAt: new Date().toISOString(),
+      driveDocUrl: result.driveDocUrl,
+    }));
+    document.getElementById('form-main').style.display = 'none';
+    document.getElementById('success').style.display  = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } catch (err) {
+    btn.disabled = false;
+    btn.textContent = 'Submit Securely →';
+    errEl.textContent = (err && err.message) || 'Submission failed. Please try again or contact the office.';
+    errEl.style.display = 'block';
+  }
+}
+</script>
+</body>
+</html>

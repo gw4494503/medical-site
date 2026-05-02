@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>New Patient Intake — Gordon Wong MD, MPH</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{moss:'#2E4036',clay:'#CC5833',cream:'#F2F0E9',charcoal:'#1A1A1A'},fontFamily:{sans:['"Plus Jakarta Sans"','sans-serif'],display:['"Outfit"','sans-serif'],drama:['"Cormorant Garamond"','serif'],mono:['"IBM Plex Mono"','monospace']}}}}</script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&family=Outfit:wght@600;700&family=Cormorant+Garamond:ital,wght@1,400;1,600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}body{background:#F2F0E9;color:#1A1A1A;font-family:'Plus Jakarta Sans',sans-serif;margin:0;min-height:100vh}
+.card-form{background:#fff;border:1.5px solid rgba(46,64,54,.12);border-radius:20px;padding:24px;display:flex;align-items:flex-start;gap:18px;transition:all .2s;text-decoration:none;color:#1A1A1A;position:relative;overflow:hidden}
+.card-form:hover{border-color:rgba(46,64,54,.4);transform:translateY(-2px);box-shadow:0 8px 24px rgba(46,64,54,.08)}
+/* Completed-state styling — strong visual cue */
+.card-form.done{background:linear-gradient(180deg,rgba(46,64,54,.08) 0%,rgba(46,64,54,.04) 100%);border-color:#2E4036}
+.card-form.done::before{content:'';position:absolute;left:0;top:0;bottom:0;width:5px;background:#2E4036}
+/* Not-applicable state — for conditional forms the patient does not need */
+.card-form.not-applicable{opacity:.5;background:rgba(46,64,54,.02);pointer-events:none;cursor:default}
+.card-form.not-applicable:hover{transform:none;box-shadow:none;border-color:rgba(46,64,54,.12)}
+.card-form.not-applicable .card-num{background:rgba(46,64,54,.04);color:rgba(46,64,54,.4)}
+.card-num{flex-shrink:0;width:40px;height:40px;border-radius:50%;background:rgba(46,64,54,.06);display:flex;align-items:center;justify-content:center;font-family:'Outfit',sans-serif;font-weight:700;color:#2E4036;font-size:14px}
+.card-form.done .card-num{background:#2E4036;color:#F2F0E9}
+.tag-cond{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#CC5833;background:rgba(204,88,51,.08);padding:2px 8px;border-radius:6px;margin-left:8px}
+.tag-required{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#CC5833;background:rgba(204,88,51,.08);padding:2px 8px;border-radius:6px;margin-left:8px;font-weight:600}
+.tag-done{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#2E4036;background:rgba(46,64,54,.12);padding:2px 8px;border-radius:6px;margin-left:8px;font-weight:600}
+.card-cta{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#CC5833;align-self:center;flex-shrink:0;font-weight:600}
+.card-form.done .card-cta{color:#2E4036}
+.btn-clear{background:transparent;border:1px solid rgba(46,64,54,.25);color:#2E4036;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;padding:6px 14px;border-radius:50px;cursor:pointer}
+.btn-clear:hover{background:rgba(46,64,54,.05)}
+/* All-complete celebratory banner */
+.complete-banner{display:none;background:linear-gradient(135deg,#2E4036 0%,#3a5246 100%);color:#F2F0E9;border-radius:24px;padding:36px 32px;margin-bottom:32px;text-align:center;position:relative;overflow:hidden}
+.complete-banner::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 20% 0%,rgba(204,88,51,.18) 0%,transparent 50%)}
+.complete-banner > *{position:relative}
+.complete-banner .check-circle{width:54px;height:54px;border-radius:50%;background:#CC5833;display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
+.complete-banner h2{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:32px;margin:0 0 10px;color:#F2F0E9}
+.complete-banner p{font-size:14px;line-height:1.65;color:rgba(242,240,233,.75);max-width:380px;margin:0 auto 8px}
+/* Identity hint at top */
+.identity-hint{display:none;background:rgba(46,64,54,.05);border:1px solid rgba(46,64,54,.15);border-radius:14px;padding:12px 16px;margin-bottom:18px;font-size:12px;color:rgba(26,26,26,.7);align-items:center;gap:10px}
+.identity-hint svg{flex-shrink:0;color:#2E4036}
+.identity-hint strong{color:#2E4036;font-weight:700}
+</style>
+</head>
+<body>
+
+<header class="py-6 px-6 flex justify-center" style="border-bottom:1px solid rgba(46,64,54,.1)">
+  <div class="flex flex-col items-center gap-1">
+    <span class="font-display font-bold text-moss tracking-[.18em] text-sm uppercase">GORDON WONG MD, MPH</span>
+    <span class="font-mono text-[9px] tracking-widest text-charcoal/30 uppercase">New Patient Intake</span>
+  </div>
+</header>
+
+<main class="max-w-2xl mx-auto px-4 py-12">
+
+  <!-- All-complete celebratory state -->
+  <div class="complete-banner" id="complete-banner">
+    <div class="check-circle">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#F2F0E9" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+    <h2>Intake Complete</h2>
+    <p>Thank you, <strong id="complete-name" style="color:#F2F0E9;font-weight:600">Patient</strong>. All required forms have been signed and saved to Dr. Wong's records.</p>
+    <p>Dr. Wong will be in touch by email about your first appointment. There is nothing further you need to do.</p>
+  </div>
+
+  <h1 class="font-drama italic text-3xl md:text-4xl text-charcoal mb-3" id="welcome-heading">Welcome.</h1>
+  <p class="text-charcoal/60 text-base leading-relaxed mb-2" id="welcome-line1">
+    Before our first appointment, please complete the intake forms below. Each takes only a few minutes.
+  </p>
+  <p class="text-charcoal/55 text-sm leading-relaxed mb-6">
+    Forms are signed electronically and a record is kept securely on file. Once you complete the first form, your name and date of birth carry forward so you don't have to re-enter them.
+  </p>
+
+  <div class="identity-hint" id="identity-hint">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="7" r="4"/><path d="M5 21v-2a4 4 0 0 1 4-4h6a4 4 0 0 1 4 4v2"/></svg>
+    <span style="flex:1">Continuing as <strong id="identity-name">Patient</strong>. Forms below have been pre-marked based on your age.</span>
+    <a href="#" onclick="if(confirm('Clear saved identity and start fresh?')){localStorage.clear();location.reload();}return false;" style="font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#CC5833;text-decoration:none;flex-shrink:0">Not me?</a>
+  </div>
+
+  <div class="space-y-3" id="form-list">
+
+    <a href="new-patient.html" class="card-form" data-form="newpatient">
+      <span class="card-num">1</span>
+      <div class="flex-1">
+        <div class="flex items-baseline flex-wrap"><span class="font-display font-bold text-lg text-charcoal">New Patient Intake</span><span class="status-tag-slot"></span></div>
+        <p class="text-charcoal/55 text-sm mt-1.5 leading-relaxed">Personal information, contact and pharmacy details, clinical history, and (if applicable) parent/guardian information for adolescents.</p>
+      </div>
+      <span class="card-cta">Begin →</span>
+    </a>
+
+    <a href="hipaa.html" class="card-form" data-form="hipaa">
+      <span class="card-num">2</span>
+      <div class="flex-1">
+        <div class="flex items-baseline flex-wrap"><span class="font-display font-bold text-lg text-charcoal">HIPAA Privacy Acknowledgment</span><span class="status-tag-slot"></span></div>
+        <p class="text-charcoal/55 text-sm mt-1.5 leading-relaxed">How your protected health information is used, your rights under HIPAA and California's CMIA, and your preferences for communication.</p>
+      </div>
+      <span class="card-cta">Begin →</span>
+    </a>
+
+    <a href="telehealth.html" class="card-form" data-form="telehealth">
+      <span class="card-num">3</span>
+      <div class="flex-1">
+        <div class="flex items-baseline flex-wrap"><span class="font-display font-bold text-lg text-charcoal">Telehealth Informed Consent</span><span class="status-tag-slot"></span></div>
+        <p class="text-charcoal/55 text-sm mt-1.5 leading-relaxed">Risks, benefits, and ground rules for video and phone visits, including emergency procedures and recording policy.</p>
+      </div>
+      <span class="card-cta">Begin →</span>
+    </a>
+
+    <a href="financial.html" class="card-form" data-form="financial">
+      <span class="card-num">4</span>
+      <div class="flex-1">
+        <div class="flex items-baseline flex-wrap"><span class="font-display font-bold text-lg text-charcoal">Financial Policy & Card-on-File Authorization</span><span class="status-tag-slot"></span></div>
+        <p class="text-charcoal/55 text-sm mt-1.5 leading-relaxed">Fee-for-service policy, 48-hour cancellation policy, and authorization to charge your card on file for sessions and missed appointments.</p>
+      </div>
+      <span class="card-cta">Begin →</span>
+    </a>
+
+    <a href="card-on-file.html" class="card-form" data-form="cardonfile">
+      <span class="card-num">5</span>
+      <div class="flex-1">
+        <div class="flex items-baseline flex-wrap"><span class="font-display font-bold text-lg text-charcoal">Update Card on File</span><span class="status-tag-slot"></span></div>
+        <p class="text-charcoal/55 text-sm mt-1.5 leading-relaxed">Submit your Visa or Mastercard securely. The Practice never holds your full card number — only a tokenized reference held by the payment processor.</p>
+      </div>
+      <span class="card-cta">Begin →</span>
+    </a>
+
+    <a href="medicare-optout.html" class="card-form" data-form="medicare">
+      <span class="card-num">6</span>
+      <div class="flex-1">
+        <div class="flex items-baseline flex-wrap"><span class="font-display font-bold text-lg text-charcoal">Medicare Private Contract</span><span class="status-tag-slot"></span></div>
+        <p class="text-charcoal/55 text-sm mt-1.5 leading-relaxed">Required for patients age 65 or older. Acknowledges that Dr. Wong has opted out of Medicare and that no claim will be submitted on your behalf.</p>
+      </div>
+      <span class="card-cta">Begin →</span>
+    </a>
+
+    <a href="minor-consent.html" class="card-form" data-form="minor">
+      <span class="card-num">7</span>
+      <div class="flex-1">
+        <div class="flex items-baseline flex-wrap"><span class="font-display font-bold text-lg text-charcoal">Consent to Treat a Minor</span><span class="status-tag-slot"></span></div>
+        <p class="text-charcoal/55 text-sm mt-1.5 leading-relaxed">Required if the patient is under 18. Both parents or legal guardians must consent to psychiatric treatment of a minor.</p>
+      </div>
+      <span class="card-cta">Begin →</span>
+    </a>
+
+  </div>
+
+  <div class="mt-12 p-5 rounded-2xl flex items-start gap-3" style="background:rgba(46,64,54,.06);border:1px solid rgba(46,64,54,.1)">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2E4036" stroke-width="2" class="mt-0.5 flex-shrink-0"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+    <div>
+      <p class="font-mono text-[10px] text-moss tracking-widest uppercase mb-1.5">Your Privacy</p>
+      <p class="text-xs text-charcoal/60 leading-relaxed">Your responses are stored securely and reviewed only by Dr. Wong. Submissions are signed under the federal E-SIGN Act and California UETA, and a record of your signature (with timestamp) is retained.</p>
+    </div>
+  </div>
+
+  <div class="mt-10 text-center">
+    <button class="btn-clear" onclick="if(confirm('Reset all completed checkmarks and saved identity? (Mockup only.)')){localStorage.clear();render();}">Reset Mockup Progress</button>
+  </div>
+
+</main>
+
+<footer class="py-8 mt-4 px-6 text-center" style="border-top:1px solid rgba(46,64,54,.1)">
+  <p class="text-[10px] text-charcoal/45 leading-relaxed max-w-xl mx-auto mb-2">
+    <strong>Notice to Patients</strong> — Medical doctors are licensed and regulated by the Medical Board of California. To check on a license or to file a complaint, visit <span class="font-mono">www.mbc.ca.gov</span>, email <span class="font-mono">licensecheck@mbc.ca.gov</span>, or call <span class="font-mono">(800) 633-2322</span>.
+  </p>
+  <p class="font-mono text-[9px] text-charcoal/30 tracking-widest uppercase mt-3">© 2026 Gordon Wong MD, MPH</p>
+</footer>
+
+<script>
+// ─── Compute age in whole years from MM/DD/YYYY string ─────────────────────
+function ageFromDob(dob){
+  const m = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(dob||'');
+  if(!m) return null;
+  const [_,mm,dd,yyyy] = m;
+  const d = new Date(+yyyy, +mm-1, +dd);
+  if(isNaN(d.getTime())) return null;
+  const now = new Date();
+  let age = now.getFullYear() - d.getFullYear();
+  const md = (now.getMonth() - d.getMonth()) || (now.getDate() - d.getDate());
+  if (md < 0) age--;
+  return age;
+}
+
+function loadFormStatus(formId){
+  try { return JSON.parse(localStorage.getItem('intake-' + formId) || 'null'); }
+  catch { return null; }
+}
+
+function render(){
+  const identity = JSON.parse(localStorage.getItem('intake-identity') || 'null');
+  const age = identity ? ageFromDob(identity.dob) : null;
+  const isUnder18 = age !== null && age < 18;
+  const is65Plus = age !== null && age >= 65;
+
+  // Required = always-required forms + age-conditional ones
+  const requiredMap = {
+    newpatient: true,
+    hipaa: true,
+    telehealth: true,
+    financial: true,
+    cardonfile: true,             // every patient must have a card on file
+    medicare: is65Plus,           // mandatory only if age ≥ 65
+    minor: isUnder18,             // mandatory only if patient < 18
+  };
+
+  // Identity banner at top
+  if (identity && identity.fullName) {
+    document.getElementById('identity-name').textContent = identity.fullName;
+    document.getElementById('identity-hint').style.display = 'flex';
+  }
+
+  // Update each card
+  document.querySelectorAll('.card-form').forEach(card => {
+    const formId = card.dataset.form;
+    const data = loadFormStatus(formId);
+    const isDone = !!(data && data.completed);
+    const isRequired = requiredMap[formId];
+    // A conditional form is "not applicable" when age is known AND it isn't
+    // required for this patient (Medicare for under-65; Minor for 18+).
+    const isConditional = (formId === 'medicare' || formId === 'minor');
+    const notApplicable = isConditional && age !== null && !isRequired;
+
+    card.classList.toggle('done', isDone);
+    card.classList.toggle('not-applicable', notApplicable && !isDone);
+
+    // Tag
+    const slot = card.querySelector('.status-tag-slot');
+    let tag = '';
+    if (isDone) {
+      tag = '<span class="tag-done">✓ Completed</span>';
+    } else if (notApplicable && formId === 'medicare') {
+      tag = '<span class="tag-cond">Not required for you</span>';
+    } else if (notApplicable && formId === 'minor') {
+      tag = '<span class="tag-cond">Not required for you</span>';
+    } else if (formId === 'medicare') {
+      tag = is65Plus
+        ? '<span class="tag-required">Required (Age 65+)</span>'
+        : '<span class="tag-cond">Patients age 65 or older</span>';
+    } else if (formId === 'minor') {
+      tag = isUnder18
+        ? '<span class="tag-required">Required (Under 18)</span>'
+        : '<span class="tag-cond">Patient under 18 only</span>';
+    }
+    slot.innerHTML = tag;
+
+    // CTA text
+    const cta = card.querySelector('.card-cta');
+    if (cta) {
+      if (isDone) cta.textContent = 'Edit →';
+      else if (notApplicable) cta.textContent = 'Skip — Not required';
+      else cta.textContent = 'Begin →';
+    }
+  });
+
+  // All-required-complete check
+  const requiredIds = Object.entries(requiredMap).filter(([_,r])=>r).map(([id])=>id);
+  const allDone = requiredIds.length > 0 && requiredIds.every(id => {
+    const d = loadFormStatus(id);
+    return d && d.completed;
+  });
+  const banner = document.getElementById('complete-banner');
+  if (allDone) {
+    banner.style.display = 'block';
+    document.getElementById('complete-name').textContent = identity?.fullName || 'Patient';
+    document.getElementById('welcome-heading').textContent = 'Everything Is Signed.';
+    document.getElementById('welcome-line1').textContent = 'You can review or edit any form below if you need to make a change.';
+  } else {
+    banner.style.display = 'none';
+  }
+}
+render();
+</script>
+</body>
+</html>

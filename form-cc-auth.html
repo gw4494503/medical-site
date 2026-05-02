@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Financial Policy & Card Authorization — Gordon Wong MD, MPH</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{moss:'#2E4036',clay:'#CC5833',cream:'#F2F0E9',charcoal:'#1A1A1A'},fontFamily:{sans:['"Plus Jakarta Sans"','sans-serif'],display:['"Outfit"','sans-serif'],drama:['"Cormorant Garamond"','serif'],mono:['"IBM Plex Mono"','monospace'],signature:['"Cormorant Garamond"','cursive']}}}}</script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&family=Outfit:wght@600;700&family=Cormorant+Garamond:ital,wght@1,400;1,600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}body{background:#F2F0E9;color:#1A1A1A;font-family:'Plus Jakarta Sans',sans-serif;margin:0;min-height:100vh}
+.inp{width:100%;padding:12px 16px;border:1.5px solid rgba(46,64,54,.2);border-radius:12px;background:#fff;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;color:#1A1A1A;outline:none;transition:border-color .2s,box-shadow .2s}
+.inp:focus{border-color:#2E4036;box-shadow:0 0 0 3px rgba(46,64,54,.08)}
+.inp::placeholder{color:rgba(26,26,26,.35)}
+.lbl{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(26,26,26,.5);margin-bottom:6px;display:block}
+.req{color:#CC5833;margin-left:2px}
+.btn-cta{background:#CC5833;color:#F2F0E9;font-family:'Outfit',sans-serif;font-weight:700;padding:16px 40px;border-radius:50px;border:none;cursor:pointer;font-size:15px;transition:transform .2s,background .2s;width:100%}
+.btn-cta:hover:not(:disabled){background:#b34d2c;transform:scale(1.01)}
+.btn-cta:disabled{opacity:.4;cursor:not-allowed}
+.legal{font-size:13px;line-height:1.7;color:rgba(26,26,26,.78)}
+.legal h3{font-family:'Outfit',sans-serif;font-weight:700;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#2E4036;margin:24px 0 8px}
+.legal h3:first-child{margin-top:0}
+.legal ul{margin:6px 0 6px 18px;padding:0}
+.legal li{margin-bottom:4px}
+.legal strong{color:#1A1A1A;font-weight:700}
+.scroll-card{background:#fff;border:1px solid rgba(46,64,54,.12);border-radius:20px;padding:28px;max-height:420px;overflow-y:auto;scrollbar-width:thin}
+.scroll-card::-webkit-scrollbar{width:6px}
+.scroll-card::-webkit-scrollbar-thumb{background:rgba(46,64,54,.2);border-radius:3px}
+.checkitem{display:flex;align-items:flex-start;gap:12px;padding:14px;border:1.5px solid rgba(46,64,54,.15);border-radius:12px;margin-bottom:10px;cursor:pointer;background:#fff;transition:all .2s}
+.checkitem:hover{border-color:rgba(46,64,54,.35)}
+.checkitem.checked{border-color:#2E4036;background:rgba(46,64,54,.04)}
+.checkitem input{display:none}
+.check-box{flex-shrink:0;width:20px;height:20px;border:1.5px solid rgba(46,64,54,.3);border-radius:5px;display:flex;align-items:center;justify-content:center;background:#fff;margin-top:1px;transition:all .2s}
+.checkitem.checked .check-box{background:#2E4036;border-color:#2E4036}
+.check-box svg{opacity:0;transition:opacity .2s}
+.checkitem.checked .check-box svg{opacity:1}
+.check-text{font-size:13px;line-height:1.55;color:rgba(26,26,26,.85)}
+.sig-input{width:100%;padding:14px 18px;border:1.5px solid rgba(46,64,54,.25);border-radius:12px;background:#fff;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:28px;color:#2E4036;outline:none;letter-spacing:.5px}
+.sig-input:focus{border-color:#2E4036;box-shadow:0 0 0 3px rgba(46,64,54,.08)}
+.sig-input::placeholder{color:rgba(46,64,54,.25);font-style:italic}
+#success{display:none}
+@media (max-width: 640px) {
+  .scroll-card { max-height:340px;padding:20px }
+}
+</style>
+</head>
+<body>
+
+<header class="py-6 px-6 flex justify-center" style="border-bottom:1px solid rgba(46,64,54,.1)">
+  <div class="flex flex-col items-center gap-1">
+    <a href="https://www.gordonwongmd.com" class="font-display font-bold text-moss tracking-[.18em] text-sm uppercase">GORDON WONG MD</a>
+    <span class="font-mono text-[9px] tracking-widest text-charcoal/30 uppercase">Financial Policy & Card Authorization</span>
+  </div>
+</header>
+
+<main class="max-w-2xl mx-auto px-4 py-10" id="form-main">
+
+  <h2 class="font-display font-bold text-2xl md:text-3xl text-charcoal mb-2">Financial Policy & Card-on-File Authorization</h2>
+  <p class="text-sm text-charcoal/55 mb-8 leading-relaxed">Please read the policy below in full. Your card on file is held securely by our payment processor and is used only for the charges you authorize here.</p>
+
+  <!-- Policy text -->
+  <div class="scroll-card legal mb-6" id="policy-text">
+
+    <h3>1 · Out-of-Pocket Practice</h3>
+    <p>The Practice of Gordon Wong MD, MPH is an <strong>out-of-pocket, fee-for-service</strong> psychiatric practice. The Practice does not contract with commercial insurance, Medicare, Medi-Cal, or any preferred-provider panel, and does not submit claims on behalf of patients. I understand that I am financially responsible for the full fee for every service rendered, regardless of any insurance coverage I may have.</p>
+
+    <h3>2 · Fee Schedule and Superbills</h3>
+    <p>The Practice's current fee schedule has been provided to me separately. I understand that fees may be revised from time to time and that I will be notified of any change in writing. On request, the Practice will provide an itemized superbill containing the diagnosis and procedure codes necessary for me to submit my own claim to an out-of-network insurer; filing and pursuing such claims is solely my responsibility.</p>
+
+    <h3>3 · What I Authorize the Practice to Charge</h3>
+    <p>I authorize the Practice to charge the credit or debit card I provide ("Card on File") for the following:</p>
+    <ul>
+      <li>Initial-consultation and follow-up session fees at the rates in the current fee schedule;</li>
+      <li><strong>Late-cancellation and no-show fees</strong> as described in Section 4;</li>
+      <li>Charges for substantive telephone, email, or coordination-of-care work performed outside of session, billed at the Practice's hourly rate;</li>
+      <li>Any other charge I expressly authorize at the time of service.</li>
+    </ul>
+
+    <h3>4 · Cancellation Policy</h3>
+    <p>There is no charge for any appointment cancelled with at least <strong>48 hours' notice</strong>. Appointments cancelled with less than 48 hours' notice, or no-shows, will be charged at the full session rate.</p>
+    <p>The Practice will <strong>not charge for unavoidable absences</strong> even without notice (illness, emergency, and similar circumstances) at the Practice's discretion. The Practice reserves the right to apply this exception more strictly for patients for whom cancellations have become a recurring problem.</p>
+
+    <h3>5 · Timing of Payment</h3>
+    <p>Payment is due at the time of each session. To ensure that this policy can be honored without delay, I agree to upload my current billing information through the Practice's secure portal at <span class="font-mono text-[12px]">gordonwongmd.com</span> at least <strong>48 hours before</strong> my first appointment, and to keep that information current thereafter.</p>
+
+    <h3>6 · How My Card Information Is Stored</h3>
+    <p>I understand that the Practice <strong>does not store</strong> my full card number on its own systems. Card information is transmitted through a HIPAA-compliant connection directly to the Practice's PCI-DSS-compliant payment processor (Elavon Converge), which returns a tokenized reference. The Practice retains only the last four digits, the expiration month/year, and the token used to process future charges. I agree not to send my full card number by ordinary email.</p>
+
+    <h3>7 · Notice and Receipts</h3>
+    <p>I will receive an emailed receipt for every charge to my Card on File. Cancellation fees will be charged on or after the business day following the missed appointment.</p>
+
+    <h3>8 · Right to Revoke</h3>
+    <p>I may revoke this authorization at any time by written notice to the Practice. Revocation takes effect after any session already rendered, and any other balance owed to date, has been paid in full. The Practice may decline to schedule further appointments if a current authorization is not on file.</p>
+
+    <h3>9 · Updating My Card</h3>
+    <p>I will promptly notify the Practice if my card is lost, replaced, expires, or is otherwise no longer valid. An invalid card does not relieve me of my financial obligations; any balance will become directly payable by check, cash, or another card.</p>
+
+    <h3>10 · Disputes</h3>
+    <p>If I believe a charge is incorrect, I agree to contact the Practice in writing within <strong>30 days</strong> of the charge so the matter may be resolved directly before initiating a chargeback through my card issuer.</p>
+
+    <h3>11 · Electronic Signature</h3>
+    <p>I understand that by typing my full legal name and clicking "Submit Authorization," I am providing my <strong>electronic signature</strong> with the same legal force and effect as a handwritten signature, in accordance with the federal Electronic Signatures in Global and National Commerce Act (E-SIGN Act, 15 U.S.C. §7001 <em>et seq.</em>) and the California Uniform Electronic Transactions Act (Cal. Civ. Code §1633.1 <em>et seq.</em>). I affirm that I have read this entire authorization, understand its terms, and intend to be legally bound by them.</p>
+
+  </div>
+
+  <p class="font-mono text-[10px] text-charcoal/40 tracking-widest uppercase mb-6 text-center">Scroll through the full policy above before continuing</p>
+
+  <!-- Acknowledgments -->
+  <div class="mb-8">
+    <label class="checkitem" id="ack1-wrap">
+      <input type="checkbox" id="ack1">
+      <span class="check-box"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><polyline points="2 6 5 9 10 3"/></svg></span>
+      <span class="check-text">I have read and understood the entire Financial Policy and Card-on-File Authorization above.</span>
+    </label>
+    <label class="checkitem" id="ack2-wrap">
+      <input type="checkbox" id="ack2">
+      <span class="check-box"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><polyline points="2 6 5 9 10 3"/></svg></span>
+      <span class="check-text">I understand that I will be charged the full session fee for any appointment cancelled with less than 48 hours' notice, or for any no-show, except for unavoidable absences at the Practice's discretion.</span>
+    </label>
+    <label class="checkitem" id="ack3-wrap">
+      <input type="checkbox" id="ack3">
+      <span class="check-box"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><polyline points="2 6 5 9 10 3"/></svg></span>
+      <span class="check-text">I authorize the Practice to charge my card on file for the categories listed in Section 2 above.</span>
+    </label>
+  </div>
+
+  <!-- Patient identification -->
+  <div class="mb-5">
+    <label class="lbl">Patient Full Legal Name<span class="req">*</span></label>
+    <input class="inp" type="text" id="f-name" placeholder="Jane Marie Smith" autocomplete="name">
+  </div>
+
+  <div class="grid grid-cols-2 gap-4 mb-5">
+    <div>
+      <label class="lbl">Date of Birth<span class="req">*</span></label>
+      <input class="inp" type="text" id="f-dob" placeholder="MM/DD/YYYY" maxlength="10" inputmode="numeric" oninput="formatDob(this)">
+    </div>
+    <div>
+      <label class="lbl">Today's Date</label>
+      <input class="inp" type="text" id="f-today" readonly style="background:rgba(46,64,54,.04)">
+    </div>
+  </div>
+
+  <div class="mb-8">
+    <label class="lbl">Email (for signed copy)<span class="req">*</span></label>
+    <input class="inp" type="email" id="f-email" placeholder="you@example.com" autocomplete="email">
+  </div>
+
+  <!-- Signature -->
+  <div class="mb-8">
+    <label class="lbl">Electronic Signature — Type Your Full Legal Name<span class="req">*</span></label>
+    <input class="sig-input" type="text" id="f-sig" placeholder="Sign here…" autocomplete="off" oninput="checkSigMatch()">
+    <p class="font-mono text-[9px] text-charcoal/40 tracking-wider mt-2 uppercase" id="sig-hint">By typing your name, you are signing this document electronically</p>
+  </div>
+
+  <button class="btn-cta" id="submit-btn" onclick="submitForm()" disabled>Submit Authorization →</button>
+  <p id="err-msg" class="text-clay text-xs text-center mt-4" style="display:none"></p>
+
+  <p class="text-center font-mono text-[9px] text-charcoal/30 tracking-wider mt-8 uppercase">HIPAA Compliant · gordonwongmd.com · Records of Signature Retained</p>
+</main>
+
+<!-- SUCCESS -->
+<div id="success" class="text-center py-20 px-4">
+  <div class="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-6" style="background:#2E4036">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#F2F0E9" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+  </div>
+  <h2 class="font-drama italic text-3xl text-charcoal mb-3">Authorization Received</h2>
+  <p class="text-charcoal/55 text-sm max-w-md mx-auto leading-relaxed mb-3">Thank you. A signed copy of this authorization has been recorded in our system and a copy will be emailed to you shortly.</p>
+  <p class="text-charcoal/40 text-xs max-w-md mx-auto leading-relaxed mb-8">Reference: <span id="ref-id" class="font-mono"></span></p>
+  <a href="https://www.gordonwongmd.com" class="font-mono text-moss text-xs tracking-widest uppercase hover:underline">← Return to gordonwongmd.com</a>
+</div>
+
+<footer class="py-8 mt-4 text-center" style="border-top:1px solid rgba(46,64,54,.1)">
+  <p class="font-mono text-[9px] text-charcoal/30 tracking-widest uppercase">© 2026 Gordon Wong MD, MPH · All Rights Reserved</p>
+</footer>
+
+<script>
+// ─── Set today's date ──────────────────────────────────────────────────────
+(function(){
+  const t = new Date();
+  const mm = String(t.getMonth()+1).padStart(2,'0');
+  const dd = String(t.getDate()).padStart(2,'0');
+  const yyyy = t.getFullYear();
+  document.getElementById('f-today').value = `${mm}/${dd}/${yyyy}`;
+})();
+
+// ─── DOB auto-format MM/DD/YYYY ────────────────────────────────────────────
+function formatDob(el) {
+  const d = el.value.replace(/\D/g,'').slice(0,8);
+  let out = d;
+  if (d.length >= 5) out = d.slice(0,2)+'/'+d.slice(2,4)+'/'+d.slice(4);
+  else if (d.length >= 3) out = d.slice(0,2)+'/'+d.slice(2);
+  el.value = out;
+}
+
+// ─── Acknowledgment checkboxes ─────────────────────────────────────────────
+['ack1','ack2','ack3'].forEach(id => {
+  document.getElementById(id).addEventListener('change', e => {
+    document.getElementById(id+'-wrap').classList.toggle('checked', e.target.checked);
+    refreshSubmit();
+  });
+});
+
+// ─── Signature must match printed name (case-insensitive, fuzzy on spacing)
+function normalizeName(s){ return (s||'').trim().replace(/\s+/g,' ').toLowerCase(); }
+function checkSigMatch(){
+  refreshSubmit();
+  const sig = normalizeName(document.getElementById('f-sig').value);
+  const name = normalizeName(document.getElementById('f-name').value);
+  const hint = document.getElementById('sig-hint');
+  if (sig && name && sig !== name) {
+    hint.textContent = 'Signature must match the full legal name above';
+    hint.style.color = '#CC5833';
+  } else {
+    hint.textContent = 'By typing your name, you are signing this document electronically';
+    hint.style.color = '';
+  }
+}
+document.getElementById('f-name').addEventListener('input', checkSigMatch);
+
+// ─── Enable submit only when everything is valid ───────────────────────────
+function refreshSubmit(){
+  const allChecked = ['ack1','ack2','ack3'].every(id => document.getElementById(id).checked);
+  const name = document.getElementById('f-name').value.trim();
+  const dob  = document.getElementById('f-dob').value.trim();
+  const email= document.getElementById('f-email').value.trim();
+  const sig  = document.getElementById('f-sig').value.trim();
+  const sigOk = sig && normalizeName(sig) === normalizeName(name);
+  const dobOk = /^\d{2}\/\d{2}\/\d{4}$/.test(dob);
+  const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  document.getElementById('submit-btn').disabled = !(allChecked && name && dobOk && emailOk && sigOk);
+}
+['f-name','f-dob','f-email','f-sig'].forEach(id => {
+  document.getElementById(id).addEventListener('input', refreshSubmit);
+});
+
+// ─── Submit ────────────────────────────────────────────────────────────────
+async function submitForm(){
+  const btn = document.getElementById('submit-btn');
+  const err = document.getElementById('err-msg');
+  btn.disabled = true;
+  btn.textContent = 'Submitting…';
+  err.style.display = 'none';
+
+  // TODO: replace with Cloud Function endpoint (writes to Firestore +
+  // emails signed PDF to patient + practice). See note in handoff.
+  // For now, this is a placeholder that simply shows the success screen
+  // so the form aesthetic can be reviewed.
+  const refId = 'CCA-' + Date.now().toString(36).toUpperCase();
+  document.getElementById('ref-id').textContent = refId;
+  setTimeout(() => {
+    document.getElementById('form-main').style.display = 'none';
+    document.getElementById('success').style.display = 'block';
+    window.scrollTo({top:0,behavior:'smooth'});
+  }, 600);
+}
+</script>
+</body>
+</html>
