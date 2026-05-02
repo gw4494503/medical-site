@@ -65,9 +65,9 @@
 
 <header class="py-6 px-6" style="border-bottom:1px solid rgba(46,64,54,.1)">
   <div class="max-w-2xl mx-auto flex items-center justify-between">
-    <a href="intake.html" class="back-link">← Intake Hub</a>
+    <a href="/" class="back-link" data-hub-href="intake.html?flow=intake">← gordonwongmd.com</a>
     <div class="flex flex-col items-center gap-1">
-      <span class="font-display font-bold text-moss tracking-[.18em] text-sm uppercase">GORDON WONG MD</span>
+      <a href="/" class="font-display font-bold text-moss tracking-[.18em] text-sm uppercase hover:opacity-80 transition-opacity" style="text-decoration:none">GORDON WONG MD</a>
       <span class="font-mono text-[9px] tracking-widest text-charcoal/30 uppercase">Consent to Treat a Minor</span>
     </div>
     <span class="font-mono text-[10px] tracking-widest text-charcoal/40 uppercase">Form 7</span>
@@ -281,7 +281,7 @@
   <h2 class="font-drama italic text-3xl text-charcoal mb-3">Consent Recorded</h2>
   <p class="text-charcoal/55 text-sm max-w-md mx-auto leading-relaxed mb-3">Thank you. Your signed consent has been saved to Dr. Wong's records.</p>
   <p class="text-charcoal/45 text-xs mb-8 leading-relaxed max-w-md mx-auto" id="success-note"></p>
-  <a href="intake.html" class="font-mono text-moss text-xs tracking-widest uppercase hover:underline">← Return to Intake Hub</a>
+  <a href="/" class="font-mono text-moss text-xs tracking-widest uppercase hover:underline" data-hub-href="intake.html?flow=intake">← Return to gordonwongmd.com</a>
 </div>
 
 <footer class="py-8 mt-4 px-6 text-center" style="border-top:1px solid rgba(46,64,54,.1)">
@@ -291,7 +291,7 @@
   <p class="font-mono text-[9px] text-charcoal/30 tracking-widest uppercase mt-3">© 2026 Gordon Wong MD, MPH</p>
 </footer>
 
-<script src="intake-shared.js"></script>
+<script src="intake-shared.js?v=3"></script>
 <script>
 const FORM_ID='minor';
 Intake.attachAll();

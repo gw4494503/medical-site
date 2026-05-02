@@ -55,9 +55,9 @@ textarea.inp.inp-ok,select.inp.inp-ok{background-image:none;padding-right:16px}
 <!-- HEADER -->
 <header class="py-6 px-6" style="border-bottom:1px solid rgba(46,64,54,.1)">
   <div class="max-w-2xl mx-auto flex items-center justify-between">
-    <a href="intake.html" style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(46,64,54,.6);text-decoration:none">← Intake Hub</a>
+    <a href="/" data-hub-href="intake.html?flow=intake" style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(46,64,54,.6);text-decoration:none">← gordonwongmd.com</a>
     <div class="flex flex-col items-center gap-1">
-      <span class="font-display font-bold text-moss tracking-[.18em] text-sm uppercase">GORDON WONG MD</span>
+      <a href="/" class="font-display font-bold text-moss tracking-[.18em] text-sm uppercase hover:opacity-80 transition-opacity" style="text-decoration:none">GORDON WONG MD</a>
       <span class="font-mono text-[9px] tracking-widest text-charcoal/30 uppercase">New Patient Intake</span>
     </div>
     <span class="font-mono text-[10px] tracking-widest text-charcoal/40 uppercase">Form 1</span>
@@ -296,7 +296,7 @@ textarea.inp.inp-ok,select.inp.inp-ok{background-image:none;padding-right:16px}
   <h2 class="font-drama italic text-3xl text-charcoal mb-3">Information Received</h2>
   <p class="text-charcoal/55 text-sm max-w-sm mx-auto leading-relaxed mb-3">Thank you. Your intake information has been saved.</p>
   <p class="text-charcoal/55 text-sm max-w-sm mx-auto leading-relaxed mb-8">Next, please complete the consent and policy forms. Your name, date of birth, email, and phone will pre-fill on the next forms automatically.</p>
-  <a href="intake.html" class="font-mono text-moss text-xs tracking-widest uppercase hover:underline">Continue to next form →</a>
+  <a href="/" class="font-mono text-moss text-xs tracking-widest uppercase hover:underline" data-hub-href="intake.html?flow=intake">← Return to gordonwongmd.com</a>
 </div>
 
 </main>
@@ -306,7 +306,7 @@ textarea.inp.inp-ok,select.inp.inp-ok{background-image:none;padding-right:16px}
   <p class="font-mono text-[9px] text-charcoal/30 tracking-widest uppercase">This form is HIPAA compliant · gordonwongmd.com · © 2026 Gordon Wong MD, MPH</p>
 </footer>
 
-<script src="intake-shared.js"></script>
+<script src="intake-shared.js?v=3"></script>
 <script>
 const FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLScdHEReRhzH-RA3ai-hyPS0TgXspK7csWczNieOEgnB0gPEEQ/formResponse';
 const stepNames = ['Personal','Contact','Clinical'];

@@ -212,41 +212,34 @@ window.Intake = (function () {
   }
 
   // ─── Flow-aware navigation ──────────────────────────────────────────────
-  // Patients arrive at a form one of two ways:
-  //   (1) Through the intake hub (URL has ?flow=intake). The "← Intake Hub"
-  //       back-link makes sense; the success screen's "Continue to next
-  //       form" pointer makes sense.
-  //   (2) Deep-linked from the homepage Patient Portal or an email. The
-  //       patient is here for ONE form. A back-link to the intake hub
-  //       would dump them into the new-patient flow, which is confusing.
-  //       Redirect those links back to the homepage instead.
+  // Each form's HTML defaults to a "← gordonwongmd.com" back-link pointing
+  // home, because the most common way patients reach a single form is via
+  // a deep link (homepage Patient Portal button or an email link). This is
+  // also the case where it's most important to NOT dump them into the
+  // new-patient intake flow when they back out without submitting.
   //
-  // Hub card links append ?flow=intake to each form URL. This helper runs
-  // on every form load:
-  //   • If flow=intake → propagate the param onto any other hub-internal
-  //     links so the patient stays in the flow as they navigate.
-  //   • If not → rewrite any "intake.html" link to "/" and soften the
-  //     visible text accordingly.
+  // When a patient is going through the full intake flow via the hub, the
+  // hub appends ?flow=intake to each form URL. On those pages we swap the
+  // back-link to the hub-friendly version using the data-hub-href
+  // attribute hardcoded in the HTML (e.g. data-hub-href="intake.html?flow=intake").
+  //
+  // The flipped-default approach (HTML correct for deep-link, JS rewrites
+  // when in flow) is more robust than the previous one because the
+  // back-link works correctly even if this script is cached, blocked,
+  // or fails to run for any reason.
   function applyFlowAwareNavigation() {
     const inHubFlow = new URLSearchParams(location.search).get("flow") === "intake";
-    document.querySelectorAll("a[href]").forEach((a) => {
-      const raw = a.getAttribute("href") || "";
-      if (!raw) return;
-      const isHubLink = raw === "intake.html" || raw === "./intake.html" || raw.endsWith("/intake.html");
-      if (inHubFlow) {
-        if (isHubLink && !raw.includes("?flow=")) {
-          a.setAttribute("href", raw + "?flow=intake");
-        }
-      } else {
-        if (isHubLink) {
-          a.setAttribute("href", "/");
-          const txt = a.textContent || "";
-          if (/intake hub/i.test(txt)) {
-            a.textContent = txt.replace(/intake hub/gi, "gordonwongmd.com");
-          } else if (/continue to next form/i.test(txt)) {
-            a.textContent = "← Return to gordonwongmd.com";
-          }
-        }
+    if (!inHubFlow) return; // HTML defaults already correct for deep-link case
+
+    document.querySelectorAll("a[data-hub-href]").forEach((a) => {
+      const hubHref = a.getAttribute("data-hub-href");
+      if (!hubHref) return;
+      a.setAttribute("href", hubHref);
+      const txt = a.textContent || "";
+      if (/return to gordonwongmd\.com/i.test(txt)) {
+        a.textContent = "Continue to next form →";
+      } else if (/gordonwongmd\.com/i.test(txt)) {
+        a.textContent = "← Intake Hub";
       }
     });
   }
