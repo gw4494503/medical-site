@@ -490,6 +490,58 @@ async function submitForm() {
     },
   };
 
+  // ── Continue updating the original Google Form / Sheet ─────────────────
+  // The old form-new-patient.html posted to this Google Form. The
+  // resulting Sheet at
+  //   docs.google.com/spreadsheets/d/197gUJqwvoNCbjQN9dIH2ePm-LvivXJbv2frErR52xjM
+  // is the practice's new-patient inquiry tracker. Continue feeding it so
+  // the office workflow doesn't change.
+  // The Cloud Function path below ALSO fires (audit Doc + Firestore +
+  // notification email). Both paths run in parallel; failure of either
+  // does not block the patient submission.
+  try {
+    const sheetData = new FormData();
+    // Email field (Google's special question type)
+    sheetData.append('emailAddress',     v('f-email'));
+    sheetData.append('entry.2132668499', v('f-last'));
+    sheetData.append('entry.832494460',  v('f-first'));
+    sheetData.append('entry.588503652',  gender ? gender.value : '');
+    sheetData.append('entry.950068948',  v('f-street'));
+    sheetData.append('entry.1461157383', v('f-city'));
+    sheetData.append('entry.1333103088', v('f-state'));
+    sheetData.append('entry.1411032168', v('f-zip'));
+    sheetData.append('entry.475963612',  v('f-mobile'));
+    sheetData.append('entry.658383259',  v('f-home') || '');
+    sheetData.append('entry.553054778',  v('f-dob'));
+    sheetData.append('entry.683501831',  v('f-reason'));
+    sheetData.append('entry.67858805',   v('f-rxname'));
+    sheetData.append('entry.1457910239', v('f-rxaddr'));
+    // Old form had a single "Emergency Contact Name & Phone" textarea.
+    // Compose from the new structured fields.
+    sheetData.append('entry.742467901',
+      `${v('f-ec-name')} (${v('f-ec-rel')}) — ${v('f-ec-phone')}`);
+    sheetData.append('entry.797069621',  v('f-refname')   || '');
+    sheetData.append('entry.993955779',  v('f-refemail')  || '');
+    sheetData.append('entry.179804209',  v('f-refphone')  || '');
+    sheetData.append('entry.78023142',   v('f-currmeds')  || '');
+    sheetData.append('entry.1275173453', v('f-priormeds') || '');
+    sheetData.append('entry.60283495',   v('f-famhx')     || '');
+    // Adolescent/parent fields are no longer collected on the new form
+    // (they live on form-minor-consent.html). Submit empty strings so
+    // the Sheet's columns line up.
+    sheetData.append('entry.1881916147', '');
+    sheetData.append('entry.1082032273', '');
+    sheetData.append('entry.1660922529', '');
+    sheetData.append('entry.1693271154', '');
+    sheetData.append('entry.997174503',  '');
+    sheetData.append('entry.1509713333', '');
+    sheetData.append('entry.384320379',  '');
+    sheetData.append('entry.1166882863', '');
+    fetch('https://docs.google.com/forms/d/e/1FAIpQLScdHEReRhzH-RA3ai-hyPS0TgXspK7csWczNieOEgnB0gPEEQ/formResponse',
+          { method: 'POST', mode: 'no-cors', body: sheetData })
+      .catch(() => {});
+  } catch (_e) { /* best-effort — never block submission */ }
+
   try {
     const result = await Intake.submitSignedForm(payload);
     Intake.saveIdentity({
