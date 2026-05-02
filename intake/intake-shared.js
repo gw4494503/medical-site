@@ -211,11 +211,59 @@ window.Intake = (function () {
     return { firstName: parts[0], lastName: parts.slice(1).join(" ") };
   }
 
+  // ─── Flow-aware navigation ──────────────────────────────────────────────
+  // Patients arrive at a form one of two ways:
+  //   (1) Through the intake hub (URL has ?flow=intake). The "← Intake Hub"
+  //       back-link makes sense; the success screen's "Continue to next
+  //       form" pointer makes sense.
+  //   (2) Deep-linked from the homepage Patient Portal or an email. The
+  //       patient is here for ONE form. A back-link to the intake hub
+  //       would dump them into the new-patient flow, which is confusing.
+  //       Redirect those links back to the homepage instead.
+  //
+  // Hub card links append ?flow=intake to each form URL. This helper runs
+  // on every form load:
+  //   • If flow=intake → propagate the param onto any other hub-internal
+  //     links so the patient stays in the flow as they navigate.
+  //   • If not → rewrite any "intake.html" link to "/" and soften the
+  //     visible text accordingly.
+  function applyFlowAwareNavigation() {
+    const inHubFlow = new URLSearchParams(location.search).get("flow") === "intake";
+    document.querySelectorAll("a[href]").forEach((a) => {
+      const raw = a.getAttribute("href") || "";
+      if (!raw) return;
+      const isHubLink = raw === "intake.html" || raw === "./intake.html" || raw.endsWith("/intake.html");
+      if (inHubFlow) {
+        if (isHubLink && !raw.includes("?flow=")) {
+          a.setAttribute("href", raw + "?flow=intake");
+        }
+      } else {
+        if (isHubLink) {
+          a.setAttribute("href", "/");
+          const txt = a.textContent || "";
+          if (/intake hub/i.test(txt)) {
+            a.textContent = txt.replace(/intake hub/gi, "gordonwongmd.com");
+          } else if (/continue to next form/i.test(txt)) {
+            a.textContent = "← Return to gordonwongmd.com";
+          }
+        }
+      }
+    });
+  }
+
+  // Run automatically once the DOM is ready.
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", applyFlowAwareNavigation);
+  } else {
+    applyFlowAwareNavigation();
+  }
+
   return {
     loadIdentity, saveIdentity,
     formatDob, formatPhone, normalizeName,
     isValid, validationMessage, validateField, attachAll,
     setMissingSummary, applyIdentityPrefill,
     submitSignedForm, splitName,
+    applyFlowAwareNavigation,
   };
 })();
