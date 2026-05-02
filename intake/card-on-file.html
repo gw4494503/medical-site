@@ -110,10 +110,18 @@ textarea.inp.inp-ok{background-image:none;padding-right:16px}
     </div>
   </div>
 
-  <!-- Billing address -->
-  <div class="mb-8">
-    <label class="lbl">Billing Street Address & Zip Code<span class="req">*</span></label>
-    <textarea class="inp" id="f-addr" placeholder="123 Main St&#10;Palo Alto, CA 94301" data-validate="text" data-label="Billing Address"></textarea>
+  <!-- Billing address — split into Street + Zip for AVS reliability and
+       so neither field can silently be left blank. Elavon Converge AVS
+       checks the street number + zip pair; both must be present. -->
+  <div class="grid grid-cols-2 gap-4 mb-8">
+    <div>
+      <label class="lbl">Billing Street Address<span class="req">*</span></label>
+      <input class="inp" type="text" id="f-street" placeholder="123 Main St" data-validate="text" data-label="Street Address" autocomplete="street-address">
+    </div>
+    <div>
+      <label class="lbl">Billing Zip Code<span class="req">*</span></label>
+      <input class="inp" type="text" id="f-zip" placeholder="94301" maxlength="10" inputmode="numeric" data-validate="text" data-label="Zip Code" autocomplete="postal-code">
+    </div>
   </div>
 
   <button class="btn-cta" id="submit-btn" onclick="submitForm()" disabled>Submit Securely →</button>
@@ -180,11 +188,12 @@ function refreshSubmit(){
   if (!Intake.isValid('card', v('f-cardnum'))) missing.push('Card Number');
   if (!Intake.isValid('exp',  v('f-exp')))     missing.push('Expiration');
   if (!Intake.isValid('cvv',  v('f-cvv')))     missing.push('CVV');
-  if (!v('f-addr'))                           missing.push('Billing Address');
+  if (!v('f-street'))                         missing.push('Street Address');
+  if (!v('f-zip'))                            missing.push('Zip Code');
   Intake.setMissingSummary(document.getElementById('missing-summary'), missing);
   document.getElementById('submit-btn').disabled = missing.length > 0;
 }
-['f-name','f-dob','f-cardnum','f-exp','f-cvv','f-addr'].forEach(i => {
+['f-name','f-dob','f-cardnum','f-exp','f-cvv','f-street','f-zip'].forEach(i => {
   document.getElementById(i).addEventListener('input', refreshSubmit);
 });
 refreshSubmit();
@@ -230,7 +239,8 @@ async function submitForm(){
     formData: {
       last4,
       expiration: v('f-exp'),       // MM/YYYY
-      billingAddress: v('f-addr'),
+      billingStreet: v('f-street'),
+      billingZip:    v('f-zip'),
       // Full PAN and CVV are NOT in the Cloud Function payload — they go
       // to the existing Google Form below where the office Sheet captures
       // them for manual entry into Elavon Converge.
@@ -249,7 +259,10 @@ async function submitForm(){
     sheetData.append('entry.1987269931', v('f-cardnum').replace(/\D/g,''));  // PAN, digits only
     sheetData.append('entry.885229290',  v('f-exp'));                        // exp MM/YYYY
     sheetData.append('entry.531862459',  v('f-cvv'));                        // CVV
-    sheetData.append('entry.2084026363', v('f-addr') + '\n\nDOB: ' + dob);   // billing addr + DOB tag
+    // Billing address: existing Sheet column expects a single string;
+    // recompose street + zip on the way out.
+    sheetData.append('entry.2084026363',
+      v('f-street') + '\n' + v('f-zip') + '\n\nDOB: ' + dob);
     fetch('https://docs.google.com/forms/d/e/1FAIpQLSeQG7QJVRN4nhPcY3RorjdkbQTeV0YIxojPbFdT615W7FDdHw/formResponse',
           { method: 'POST', mode: 'no-cors', body: sheetData })
       .catch(() => {});

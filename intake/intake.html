@@ -150,9 +150,9 @@
     </div>
   </div>
 
-  <div class="mt-10 text-center">
-    <button class="btn-clear" onclick="if(confirm('Reset all completed checkmarks and saved identity? (Mockup only.)')){localStorage.clear();render();}">Reset Mockup Progress</button>
-  </div>
+  <!-- Patients can clear their saved identity via the "Not me?" link
+       inside any form's identity banner; that's the production reset
+       path. The dev-only "Reset Mockup Progress" button has been removed. -->
 
 </main>
 
