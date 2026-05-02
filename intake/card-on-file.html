@@ -77,6 +77,15 @@ textarea.inp.inp-ok{background-image:none;padding-right:16px}
     <input class="inp" type="text" id="f-name" placeholder="Smith, Jane" data-validate="text" data-label="Cardholder Name">
   </div>
 
+  <!-- Patient DOB — used to match the card update to the right patient
+       record in the practice's system. Same identifier already required
+       for AVS along with billing zip. Identity-prefilled when the patient
+       has already gone through the intake flow in this browser. -->
+  <div class="mb-5">
+    <label class="lbl">Patient Date of Birth<span class="req">*</span></label>
+    <input class="inp" type="text" id="f-dob" placeholder="MM/DD/YYYY" maxlength="10" inputmode="numeric" oninput="Intake.formatDob(this)" data-validate="dob" data-label="Patient DOB">
+  </div>
+
   <!-- Card number -->
   <div class="mb-5">
     <label class="lbl">Credit Card Number<span class="req">*</span></label>
@@ -151,7 +160,7 @@ function formatExp(el){
 
 // Wire validation visuals + identity prefill
 Intake.attachAll();
-const id = Intake.applyIdentityPrefill({}, '#identity-banner');
+const id = Intake.applyIdentityPrefill({ dob: 'f-dob' }, '#identity-banner');
 if (id && id.fullName) {
   document.getElementById('ib-name').textContent = id.fullName;
   // Auto-fill cardholder if not already filled — note Last, First convention
@@ -167,6 +176,7 @@ function refreshSubmit(){
   const v = i => document.getElementById(i).value.trim();
   const missing = [];
   if (!v('f-name'))                           missing.push('Cardholder Name');
+  if (!Intake.isValid('dob',  v('f-dob')))     missing.push('Patient DOB');
   if (!Intake.isValid('card', v('f-cardnum'))) missing.push('Card Number');
   if (!Intake.isValid('exp',  v('f-exp')))     missing.push('Expiration');
   if (!Intake.isValid('cvv',  v('f-cvv')))     missing.push('CVV');
@@ -174,7 +184,7 @@ function refreshSubmit(){
   Intake.setMissingSummary(document.getElementById('missing-summary'), missing);
   document.getElementById('submit-btn').disabled = missing.length > 0;
 }
-['f-name','f-cardnum','f-exp','f-cvv','f-addr'].forEach(i => {
+['f-name','f-dob','f-cardnum','f-exp','f-cvv','f-addr'].forEach(i => {
   document.getElementById(i).addEventListener('input', refreshSubmit);
 });
 refreshSubmit();
@@ -197,30 +207,21 @@ async function submitForm(){
   const last4 = v('f-cardnum').replace(/\D/g,'').slice(-4);
 
   // Cardholder name on this form is "Last, First" — split that for payload.
-  // If the patient came through the intake flow, use the saved identity's
-  // firstName/lastName instead since they're more reliable.
+  // (If the patient went through the intake flow, saved identity is more
+  // reliable, but for an existing patient updating their card, the
+  // cardholder field IS the source of truth.)
   let firstName = '', lastName = '';
-  const id = Intake.loadIdentity();
-  if (id && id.firstName && id.lastName) {
-    firstName = id.firstName; lastName = id.lastName;
+  const cardholder = v('f-name');
+  if (cardholder.includes(',')) {
+    const [last, first] = cardholder.split(',');
+    lastName = (last || '').trim();
+    firstName = (first || '').trim();
   } else {
-    const cardholder = v('f-name');
-    if (cardholder.includes(',')) {
-      const [last, first] = cardholder.split(',');
-      lastName = (last || '').trim();
-      firstName = (first || '').trim();
-    } else {
-      ({firstName, lastName} = Intake.splitName(cardholder));
-    }
+    ({firstName, lastName} = Intake.splitName(cardholder));
   }
-  const dob = (id && id.dob) || ''; // card form doesn't ask for DOB; identity supplies it
-  if (!dob) {
-    btn.disabled = false;
-    btn.textContent = 'Submit Securely →';
-    errEl.textContent = 'Patient date of birth is required. Please complete the New Patient Intake form first, or contact the office.';
-    errEl.style.display = 'block';
-    return;
-  }
+
+  const dob = v('f-dob');
+  const id = Intake.loadIdentity();   // optional — fills email/phone if present
 
   const payload = {
     formType: 'cardonfile',
