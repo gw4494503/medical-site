@@ -1,140 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Billing Update — Gordon Wong MD, MPH</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config={theme:{extend:{colors:{moss:'#2E4036',clay:'#CC5833',cream:'#F2F0E9',charcoal:'#1A1A1A'},fontFamily:{sans:['"Plus Jakarta Sans"','sans-serif'],display:['"Outfit"','sans-serif'],drama:['"Cormorant Garamond"','serif'],mono:['"IBM Plex Mono"','monospace']}}}}</script>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&family=Outfit:wght@600;700&family=Cormorant+Garamond:ital,wght@1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<style>
-*{box-sizing:border-box}body{background:#F2F0E9;color:#1A1A1A;font-family:'Plus Jakarta Sans',sans-serif;margin:0;min-height:100vh}
-.inp{width:100%;padding:12px 16px;border:1.5px solid rgba(46,64,54,.2);border-radius:12px;background:#fff;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;color:#1A1A1A;outline:none;transition:border-color .2s,box-shadow .2s;letter-spacing:.02em}
-.inp:focus{border-color:#2E4036;box-shadow:0 0 0 3px rgba(46,64,54,.08)}
-.inp::placeholder{color:rgba(26,26,26,.35)}
-textarea.inp{resize:vertical;min-height:80px}
-.lbl{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(26,26,26,.5);margin-bottom:6px;display:block}
-.req{color:#CC5833;margin-left:2px}
-.btn-cta{background:#CC5833;color:#F2F0E9;font-family:'Outfit',sans-serif;font-weight:700;padding:16px 40px;border-radius:50px;border:none;cursor:pointer;font-size:15px;transition:transform .2s,background .2s;width:100%}
-.btn-cta:hover{background:#b34d2c;transform:scale(1.01)}
-/* Card number spacing */
-#f-cardnum{letter-spacing:.12em;font-family:'IBM Plex Mono',monospace;font-size:15px}
-#success{display:none}
-</style>
+  <meta charset="UTF-8">
+  <title>Update Card on File — Gordon Wong MD, MPH</title>
+  <!-- This URL is preserved for backward-compatibility with prior emailed
+       links. The card-update flow now lives at /intake/card-on-file.html
+       (hardened validation, signed Google Doc record, Cloud Function
+       backend). Bounce visitors to the new page. -->
+  <meta http-equiv="refresh" content="0; url=/intake/card-on-file.html">
+  <link rel="canonical" href="/intake/card-on-file.html">
+  <script>window.location.replace("/intake/card-on-file.html");</script>
 </head>
-<body>
-
-<header class="py-6 px-6 flex justify-center" style="border-bottom:1px solid rgba(46,64,54,.1)">
-  <div class="flex flex-col items-center gap-1">
-    <a href="https://www.gordonwongmd.com" class="font-display font-bold text-moss tracking-[.18em] text-sm uppercase">GORDON WONG MD</a>
-    <span class="font-mono text-[9px] tracking-widest text-charcoal/30 uppercase">Billing Information Update</span>
-  </div>
-</header>
-
-<main class="max-w-md mx-auto px-4 py-10" id="form-main">
-  <h2 class="font-display font-bold text-2xl text-charcoal mb-1">Update Payment Method</h2>
-  <p class="text-sm text-charcoal/50 mb-2">For current patients only. Visa and Mastercard accepted.</p>
-
-  <!-- Security notice -->
-  <div class="flex items-start gap-3 p-4 rounded-2xl mb-8" style="background:rgba(46,64,54,.06);border:1px solid rgba(46,64,54,.1)">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2E4036" stroke-width="2" class="mt-0.5 flex-shrink-0"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-    <div>
-      <p class="font-mono text-[10px] text-moss tracking-widest uppercase mb-1">Secure Submission</p>
-      <p class="text-xs text-charcoal/50 leading-relaxed">Your information is submitted directly to gordonwongmd.com via HTTPS. Visa and Mastercard only.</p>
-    </div>
-  </div>
-
-  <!-- Cardholder -->
-  <div class="mb-5">
-    <label class="lbl">Cardholder Name (Last, First)<span class="req">*</span></label>
-    <input class="inp" type="text" id="f-name" placeholder="Smith, Jane">
-  </div>
-
-  <!-- Card number -->
-  <div class="mb-5">
-    <label class="lbl">Credit Card Number<span class="req">*</span></label>
-    <div style="position:relative">
-      <input class="inp" type="text" id="f-cardnum" placeholder="•••• •••• •••• ••••" maxlength="19" inputmode="numeric" oninput="formatCard(this)">
-      <div style="position:absolute;right:14px;top:50%;transform:translateY(-50%);display:flex;gap:6px">
-        <svg width="28" height="18" viewBox="0 0 50 32" fill="none"><rect width="50" height="32" rx="4" fill="#1A1F71"/><circle cx="20" cy="16" r="9" fill="#EB001B" opacity=".9"/><circle cx="30" cy="16" r="9" fill="#F79E1B" opacity=".9"/><path d="M25 9.5a9 9 0 0 1 0 13A9 9 0 0 1 25 9.5z" fill="#FF5F00"/></svg>
-        <svg width="28" height="18" viewBox="0 0 50 32" fill="none"><rect width="50" height="32" rx="4" fill="#fff" stroke="#ddd"/><text x="6" y="22" font-family="Arial" font-size="12" font-weight="bold" fill="#FF6600">VISA</text></svg>
-      </div>
-    </div>
-  </div>
-
-  <!-- Expiry + CVV -->
-  <div class="grid grid-cols-2 gap-4 mb-5">
-    <div>
-      <label class="lbl">Expiration Date<span class="req">*</span></label>
-      <input class="inp" type="text" id="f-exp" placeholder="MM/YYYY" maxlength="7" oninput="formatExp(this)">
-    </div>
-    <div>
-      <label class="lbl">Security Code (CVV)<span class="req">*</span></label>
-      <input class="inp" type="text" id="f-cvv" placeholder="•••" maxlength="4" inputmode="numeric">
-    </div>
-  </div>
-
-  <!-- Billing address -->
-  <div class="mb-8">
-    <label class="lbl">Billing Street Address & Zip Code<span class="req">*</span></label>
-    <textarea class="inp" id="f-addr" placeholder="123 Main St&#10;Palo Alto, CA 94301"></textarea>
-  </div>
-
-  <button class="btn-cta" onclick="submitForm()">Submit Securely →</button>
-  <p class="text-center font-mono text-[9px] text-charcoal/30 tracking-wider mt-5 uppercase">HIPAA Compliant · gordonwongmd.com · Visa & Mastercard Only</p>
-</main>
-
-<!-- SUCCESS -->
-<div id="success" class="text-center py-20 px-4">
-  <div class="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-6" style="background:#2E4036">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#F2F0E9" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
-  </div>
-  <h2 class="font-drama italic text-3xl text-charcoal mb-3">Information Received</h2>
-  <p class="text-charcoal/55 text-sm max-w-sm mx-auto leading-relaxed mb-8">Your billing information has been submitted. Dr. Wong's office will update your file accordingly.</p>
-  <a href="https://www.gordonwongmd.com" class="font-mono text-moss text-xs tracking-widest uppercase hover:underline">← Return to gordonwongmd.com</a>
-</div>
-
-<footer class="py-8 mt-4 text-center" style="border-top:1px solid rgba(46,64,54,.1)">
-  <p class="font-mono text-[9px] text-charcoal/30 tracking-widest uppercase">© 2026 Gordon Wong MD, MPH · All Rights Reserved</p>
-</footer>
-
-<script>
-const FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSeQG7QJVRN4nhPcY3RorjdkbQTeV0YIxojPbFdT615W7FDdHw/formResponse';
-
-function formatCard(el) {
-  let v = el.value.replace(/\D/g,'').slice(0,16);
-  el.value = v.replace(/(.{4})/g,'$1 ').trim();
-}
-function formatExp(el) {
-  let v = el.value.replace(/\D/g,'');
-  if (v.length>=2) v = v.slice(0,2)+'/'+v.slice(2,6);
-  el.value = v;
-}
-function submitForm() {
-  const v = id => document.getElementById(id).value.trim();
-  const required = [['f-name','Cardholder Name'],['f-cardnum','Card Number'],['f-exp','Expiration Date'],['f-cvv','Security Code'],['f-addr','Billing Address']];
-  for (const [id, label] of required) {
-    const el = document.getElementById(id);
-    if (!el.value.trim()) {
-      el.focus(); el.style.borderColor='#CC5833';
-      setTimeout(()=>el.style.borderColor='',2000);
-      alert(label+' is required.'); return;
-    }
-  }
-  const data = new FormData();
-  data.append('entry.1018594116', v('f-name'));
-  data.append('entry.1987269931', v('f-cardnum').replace(/\D/g,''));
-  data.append('entry.885229290', v('f-exp'));
-  data.append('entry.531862459', v('f-cvv'));
-  data.append('entry.2084026363', v('f-addr'));
-  fetch(FORM_URL, {method:'POST', mode:'no-cors', body:data})
-    .then(()=>showSuccess()).catch(()=>showSuccess());
-}
-function showSuccess() {
-  document.getElementById('form-main').style.display='none';
-  document.getElementById('success').style.display='block';
-  window.scrollTo({top:0,behavior:'smooth'});
-}
-</script>
+<body style="font-family:system-ui,sans-serif;text-align:center;padding:48px 16px;color:#444">
+  <p>This page has moved.</p>
+  <p><a href="/intake/card-on-file.html">Click here to update your card on file →</a></p>
 </body>
 </html>
