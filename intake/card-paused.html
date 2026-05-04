@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<!--
+  TEMPORARY PAUSE PAGE for the Update Card on File feature.
+  ================================================================
+  REVERTING this page (when the feature is brought back online):
+    1. Update homepage Patient Portal link in `index.html` —
+       change Action 03 href from `/intake/card-paused.html` back
+       to `/intake/card-on-file.html`. That's it.
+    2. This file can be left in place for future use, or deleted.
+
+  The new-patient intake hub flow is UNAFFECTED by this page.
+  Form 5 of the hub still points to `/intake/card-on-file.html?flow=intake`
+  and works normally.
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Card Update — Briefly Offline — Gordon Wong MD, MPH</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{moss:'#2E4036',clay:'#CC5833',cream:'#F2F0E9',charcoal:'#1A1A1A'},fontFamily:{sans:['"Plus Jakarta Sans"','sans-serif'],display:['"Outfit"','sans-serif'],drama:['"Cormorant Garamond"','serif'],mono:['"IBM Plex Mono"','monospace']}}}}</script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&family=Outfit:wght@600;700&family=Cormorant+Garamond:ital,wght@1,400;1,600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}body{background:#F2F0E9;color:#1A1A1A;font-family:'Plus Jakarta Sans',sans-serif;margin:0;min-height:100vh}
+.back-link{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(46,64,54,.6);text-decoration:none}
+.back-link:hover{color:#2E4036}
+</style>
+</head>
+<body>
+
+<header class="py-6 px-6" style="border-bottom:1px solid rgba(46,64,54,.1)">
+  <div class="max-w-md mx-auto flex items-center justify-between">
+    <a href="/" class="back-link">← gordonwongmd.com</a>
+    <div class="flex flex-col items-center gap-1">
+      <a href="/" class="font-display font-bold text-moss tracking-[.18em] text-sm uppercase hover:opacity-80 transition-opacity" style="text-decoration:none">GORDON WONG MD</a>
+      <span class="font-mono text-[9px] tracking-widest text-charcoal/30 uppercase">Card Update</span>
+    </div>
+    <span class="font-mono text-[10px] tracking-widest text-charcoal/40 uppercase">Paused</span>
+  </div>
+</header>
+
+<main class="max-w-md mx-auto px-4 py-20 text-center">
+
+  <!-- Soft moss-tinted icon, matching success screens elsewhere -->
+  <div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-8" style="background:rgba(46,64,54,.08);border:1.5px solid rgba(46,64,54,.2)">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#2E4036" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"></circle>
+      <polyline points="12 6 12 12 16 14"></polyline>
+    </svg>
+  </div>
+
+  <h1 class="font-drama italic text-3xl md:text-4xl text-charcoal mb-5">Briefly Offline</h1>
+
+  <p class="text-charcoal/65 text-base leading-relaxed mb-4">
+    Our online card-update form is paused for a few days while we make some improvements. It will be back up shortly.
+  </p>
+
+  <p class="text-charcoal/65 text-base leading-relaxed mb-8">
+    If you need to update your card right away, please call the office at
+    <a href="tel:+16505216111" class="font-display font-semibold text-moss hover:underline whitespace-nowrap">(650) 521-6111</a>
+    and we'll handle it directly.
+  </p>
+
+  <p class="text-charcoal/55 text-sm leading-relaxed mb-12">
+    Thank you for your patience.<br>
+    <span class="font-drama italic text-charcoal/70">— Dr. Wong's office</span>
+  </p>
+
+  <a href="/" class="font-mono text-moss text-xs tracking-widest uppercase hover:underline">← Return to gordonwongmd.com</a>
+
+</main>
+
+<footer class="py-8 mt-4 px-6 text-center" style="border-top:1px solid rgba(46,64,54,.1)">
+  <p class="text-[10px] text-charcoal/45 leading-relaxed max-w-xl mx-auto">
+    <strong>Notice to Patients</strong> — Medical doctors are licensed and regulated by the Medical Board of California. <span class="font-mono">www.mbc.ca.gov</span> · <span class="font-mono">(800) 633-2322</span>
+  </p>
+  <p class="font-mono text-[9px] text-charcoal/30 tracking-widest uppercase mt-3">© 2026 Gordon Wong MD, MPH</p>
+</footer>
+
+</body>
+</html>
