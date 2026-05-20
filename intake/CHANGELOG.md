@@ -32,8 +32,18 @@ medical-site/
     ├── telehealth.html              # Form 3 — Telehealth Informed Consent
     ├── financial.html               # Form 4 — Financial Policy + Card-on-File Authorization
     ├── card-on-file.html            # Form 5 — Update Card on File
-    ├── medicare-optout.html         # Form 6 — Medicare Private Contract (65+)
-    └── minor-consent.html           # Form 7 — Consent to Treat a Minor (<18)
+    ├── medicare-optout.html         # Form 6 — Medicare Private Contract (new patients 65+)
+    ├── minor-consent.html           # Form 7 — Consent to Treat a Minor (<18)
+    ├── medicare-paperwork.html      # Standalone back-sign page (existing
+    │                                  65+ patients catching up on 2-yr periods).
+    │                                  Calls lookupBackSignRecord Cloud Fn.
+    ├── ga-paperwork.html            # Redirect alias for medicare-paperwork.html
+    │                                  (kept for an out-in-the-wild typo link)
+    └── card-paused.html             # Dormant "Briefly Offline" template.
+                                       Wire the homepage's Action 03 href to
+                                       this to pause the card-update flow;
+                                       wire it back to card-on-file.html to
+                                       restore. Intake hub Form 5 unaffected.
 ```
 
 ### Back-end
@@ -42,7 +52,8 @@ medical-site/
 |---|---|
 | **Firebase project `gordonwongmd-billing`** | Hosts all Cloud Functions, Firestore, secrets. |
 | **Cloud Function `verifyPatient`** | `onRequest`, public. Powers the scheduling-gate verification. DOB exact + fuzzy first/last name match against `patients` collection. Returns `{match, greeting}`. |
-| **Cloud Function `submitSignedForm`** | `onRequest`, public. Receives every form's submit. (1) Tries to match patient via the same fuzzy rule. (2) Generates a Google Doc of the signed form (full policy text + signature + audit footer with IP, user-agent, timestamp, policy version). (3) Writes the Doc to the **Signed Forms Drive folder** with filename `LastName FirstName MMDDYY [FormName]`. (4) Writes a `signed_documents` Firestore record. (5) Calls `notifyOffice()` for `cardonfile` and `newpatient` form types. |
+| **Cloud Function `submitSignedForm`** | `onRequest`, public. Receives every form's submit. (1) Tries to match patient via the same fuzzy rule. (2) Generates a Google Doc of the signed form (full policy text + signature + audit footer with IP, user-agent, timestamp, policy version). (3) Writes the Doc to the **Signed Forms Drive folder** with filename `LastName FirstName MMDDYY [FormName]` (or `… Medicare Opt-Out 2018-2020` when `formData.intervalSuffix` is supplied by the back-sign flow). (4) Writes a `signed_documents` Firestore record. (5) Calls `notifyOffice()` for `cardonfile` and `newpatient` form types. |
+| **Cloud Function `lookupBackSignRecord`** | `onRequest`, public. Powers the Medicare back-sign landing page (`/intake/medicare-paperwork.html`). Same DOB-exact + fuzzy-name match as `verifyPatient`. Returns the list of 2-year opt-out intervals the patient still owes signatures for, computed from their first-seen date + DOB by the admin-side `buildBacksignTracker` function. |
 | **Cloud Function `notifyOffice` (helper)** | Sends a notification email via Gmail SMTP using nodemailer + `SMTP_APP_PASS` secret (Google Workspace App Password for `gordon@gordonwongmd.com`). Skip-if-not-configured: logs warning, returns gracefully if secret missing. |
 | **Drive folder `Signed Forms`** | `1KF3DPA7WH93KDt_O1GFh5QVzrQjhX5VI` — on a Shared Drive (so files don't count against personal storage). All signed form Docs land here, sorted alphabetically by patient last name. |
 | **Firestore collection `signed_documents`** | One record per submission. Fields: `patient_id`, `unmatched`, `form_type`, `signed_at`, `patient_name_first/last`, `patient_dob_mmddyy`, `patient_email/phone`, `signed_name`, `signer_role`, `ip_address`, `user_agent`, `policy_version`, `drive_doc_id`, `drive_doc_filename`, `parent2_pending`, `parent2_email/name`, `provider`, `created_at`. Read by future Intake Status dashboard. |
@@ -87,6 +98,24 @@ git push origin <backup-branch-name>:main --force
 ```
 
 ---
+
+## Recently completed (was previously listed as open)
+
+- **Medicare back-sign project** — patient-facing page + lookup Cloud
+  Function + per-interval audit-Doc filename convention all live as of
+  2026-05-03 (`c7a8c3e`, `ce04cb7`, `89ddc59`). Admin-side tracker
+  builder (`buildBacksignTracker`) and status summarizer
+  (`summarizeBacksignStatus`) exist in
+  `gordonwongmd-billing/functions/src/admin/` for the practice to
+  generate per-patient intervals from invoice-folder history. See
+  the standalone project docs at
+  `/Users/gwai/Claude Project AI-Frozen/Website Gordon/medicare-backsign/`
+  for the full design.
+
+- **Download receipts portal** — Patient Portal homepage now links to
+  `receipts.gordonwongmd.com` so patients can self-serve receipts.
+  Backed by `getMyReceipts` + `handleDownloadReceipt` Cloud Functions
+  in the billing project (`functions/src/portal/`).
 
 ## Open items (future work)
 
@@ -142,6 +171,59 @@ git push origin <backup-branch-name>:main --force
 ---
 
 ## Commit log (reverse chronological)
+
+### 2026-05-03 — Hero text trim
+
+- **`7aa35f2`** — Homepage hero: deleted "is the" from the first
+  display line so the headline reads "**Precision** *Medicine.*"
+  on two lines instead of "Precision is the / Medicine.". Same fonts
+  (Outfit display bold for "Precision", Cormorant Garamond italic for
+  "Medicine."), same layout, same colors — text-only change.
+
+### 2026-05-03 — Card on File pause + restore (zero-data-loss test)
+
+- **`2e58e28`** — Restore Update Card on File link — feature back online.
+  Homepage Patient Portal Action 03 href returned from
+  `/intake/card-paused.html` to `/intake/card-on-file.html`. The
+  `card-paused.html` page itself is kept in the repo as a dormant,
+  ready-to-redeploy template — flipping one href in `index.html`
+  re-enables the pause if ever needed again.
+- **`90ac509`** — Update card-paused wording per Dr. Wong.
+- **`e92d0d9`** — Temporarily routed the Update Card on File homepage
+  button to `/intake/card-paused.html` for ~24 hours (planned
+  maintenance window). The new patient intake hub's Form 5 card was
+  **left untouched** (still `/intake/card-on-file.html?flow=intake`)
+  so new patients going through full intake could still submit their
+  card. Backup branch `backup-pre-card-pause-2026-05-03-2350` captured
+  the exact state immediately before the pause.
+
+### 2026-05-03 — Download Receipts patient portal addition
+
+- **`4db87be`** — New homepage Patient Portal card linking to
+  `receipts.gordonwongmd.com` (separate subdomain / app) so patients
+  can self-serve receipt downloads. Background plumbing for this lives
+  in the billing-app Cloud Functions (see `getMyReceipts` and
+  `handleDownloadReceipt` in `gordonwongmd-billing/functions/src/portal/`).
+
+### 2026-05-03 — Medicare back-sign patient page
+
+- **`ce04cb7`** — Renamed `/intake/medicare-backsign.html` to
+  `/intake/medicare-paperwork.html` (friendlier wording in the URL).
+  Added `/intake/ga-paperwork.html` (`89ddc59`) as a redirect alias
+  so an existing-typo deep link still works.
+- **`c7a8c3e`** — New patient-facing page for the Medicare opt-out
+  back-signing project (existing 65+ patients who never signed
+  contracts for past 2-year opt-out periods). Patients land on the
+  page, enter Last + First + DOB, and the page calls the new
+  `lookupBackSignRecord` Cloud Function (registered in `index.ts`
+  alongside the existing `verifyPatient` / `submitSignedForm`
+  exports) which returns the list of 2-year intervals they owe.
+  Each interval is rendered as its own collapsible card with the
+  Medicare contract text and acknowledgment checkboxes pre-filled
+  for that period. Each form submits independently to
+  `submitSignedForm`; the audit Doc filename uses an `intervalSuffix`
+  formData field (e.g. `Smith Jane 031560 Medicare Opt-Out 2018-2020`)
+  via the new conditional branch in `createSignedDoc.buildSignedDocFilename`.
 
 ### 2026-05-02 — Card form polish + dev cleanup
 
