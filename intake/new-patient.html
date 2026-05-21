@@ -94,6 +94,14 @@ textarea.inp.inp-ok,select.inp.inp-ok{background-image:none;padding-right:16px}
     <a href="#" onclick="if(confirm('Clear saved identity and start fresh?')){localStorage.clear();location.reload();}return false;" style="font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#CC5833;text-decoration:none;flex-shrink:0">Not me?</a>
   </div>
 
+  <!-- Draft restored banner — only shows if auto-save restored fields
+       from a prior partial session (closed tab without submitting). -->
+  <div class="identity-banner" id="draft-banner" style="background:rgba(204,88,51,.06);border-color:rgba(204,88,51,.2);color:rgba(26,26,26,.7)">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#CC5833" stroke-width="2"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="10"/></svg>
+    <span style="flex:1">Resuming where you left off. Your entries from your previous visit have been restored.</span>
+    <a href="#" onclick="if(confirm('Clear saved draft and start over?')){localStorage.removeItem('intake-newpatient-draft');location.reload();}return false;" style="font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#CC5833;text-decoration:none;flex-shrink:0">Start fresh</a>
+  </div>
+
   <div class="grid grid-cols-2 gap-4 mb-4">
     <div>
       <label class="lbl">First Name<span class="req">*</span></label>
@@ -306,7 +314,7 @@ textarea.inp.inp-ok,select.inp.inp-ok{background-image:none;padding-right:16px}
   <p class="font-mono text-[9px] text-charcoal/30 tracking-widest uppercase">This form is HIPAA compliant · gordonwongmd.com · © 2026 Gordon Wong MD, MPH</p>
 </footer>
 
-<script src="intake-shared.js?v=3"></script>
+<script src="intake-shared.js?v=4"></script>
 <script>
 const FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLScdHEReRhzH-RA3ai-hyPS0TgXspK7csWczNieOEgnB0gPEEQ/formResponse';
 const stepNames = ['Personal','Contact','Clinical'];
@@ -408,6 +416,64 @@ function validateAllStepsBeforeSubmit() {
   return true;
 }
 
+// ─── Auto-save draft to localStorage ───────────────────────────────────
+// If a patient fills out part of the intake and closes the tab without
+// hitting Submit, we'd lose everything they typed. To prevent that, every
+// field on every step is saved to localStorage on input (debounced); on
+// reload, the draft is restored and a small banner offers a "start fresh"
+// reset. Cleared automatically on successful submit.
+//
+// localStorage key: intake-newpatient-draft
+// Schema: { [field_id]: value, gender: <radio value>, ts: <iso> }
+const DRAFT_KEY = 'intake-newpatient-draft';
+const DRAFT_FIELDS = [
+  'f-first','f-last','f-email','f-dob',
+  'f-pronouns','f-pronouns-other',
+  'f-street','f-city','f-state','f-zip',
+  'f-mobile','f-home',
+  'f-ec-name','f-ec-rel','f-ec-phone',
+  'f-rxname','f-rxaddr',
+  'f-reason','f-currmeds','f-priormeds','f-famhx',
+  'f-refname','f-refemail','f-refphone',
+];
+let _draftSaveTimer = null;
+function saveDraft(){
+  clearTimeout(_draftSaveTimer);
+  _draftSaveTimer = setTimeout(() => {
+    const draft = { ts: new Date().toISOString() };
+    DRAFT_FIELDS.forEach(id => {
+      const el = document.getElementById(id);
+      if (el && el.value) draft[id] = el.value;
+    });
+    const g = document.querySelector('input[name="gender"]:checked');
+    if (g) draft.gender = g.value;
+    try { localStorage.setItem(DRAFT_KEY, JSON.stringify(draft)); } catch {}
+  }, 400);
+}
+function restoreDraft(){
+  let draft;
+  try { draft = JSON.parse(localStorage.getItem(DRAFT_KEY) || 'null'); } catch { return false; }
+  if (!draft) return false;
+  let restoredCount = 0;
+  DRAFT_FIELDS.forEach(id => {
+    const el = document.getElementById(id);
+    if (el && !el.value && draft[id]) {
+      el.value = draft[id];
+      restoredCount++;
+    }
+  });
+  if (draft.gender) {
+    const radio = document.querySelector(`input[name="gender"][value="${CSS.escape(draft.gender)}"]`);
+    if (radio && !radio.checked) { radio.checked = true; restoredCount++; }
+  }
+  // Show pronouns "other" field if needed
+  const ps = document.getElementById('f-pronouns');
+  const po = document.getElementById('f-pronouns-other');
+  if (ps && po && ps.value === 'other') po.style.display = 'block';
+  return restoredCount > 0;
+}
+function clearDraft(){ try { localStorage.removeItem(DRAFT_KEY); } catch {} }
+
 // Apply identity prefill + attach validation on every input that has
 // data-validate. Runs once after the page loads.
 window.addEventListener('DOMContentLoaded', () => {
@@ -431,6 +497,21 @@ window.addEventListener('DOMContentLoaded', () => {
       document.getElementById('identity-banner').style.display = 'flex';
     }
   }
+  // Restore draft from localStorage (fills any field the identity prefill
+  // didn't already populate). If anything was restored, show the banner.
+  const restored = restoreDraft();
+  if (restored) {
+    const banner = document.getElementById('draft-banner');
+    if (banner) banner.style.display = 'flex';
+  }
+  // Attach the auto-save listener to every draft field
+  DRAFT_FIELDS.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('input', saveDraft);
+  });
+  document.querySelectorAll('input[name="gender"]').forEach(r => {
+    r.addEventListener('change', saveDraft);
+  });
 });
 
 async function submitForm() {
@@ -575,6 +656,8 @@ async function submitForm() {
       signedAt: new Date().toISOString(),
       driveDocUrl: result.driveDocUrl,
     }));
+    // Successful submit — discard the auto-save draft (no longer needed).
+    clearDraft();
     document.querySelectorAll('.step').forEach(s => s.style.display = 'none');
     const progBar = document.querySelector('.max-w-2xl.mx-auto.px-4.pt-8.pb-2');
     if (progBar) progBar.style.display = 'none';

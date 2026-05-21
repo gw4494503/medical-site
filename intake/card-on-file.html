@@ -62,6 +62,20 @@ textarea.inp.inp-ok{background-image:none;padding-right:16px}
     <a href="#" onclick="if(confirm('Clear saved identity and start fresh?')){localStorage.clear();location.reload();}return false;" style="font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#CC5833;text-decoration:none;flex-shrink:0">Not me?</a>
   </div>
 
+  <!-- Inquirer-friendly intro: makes clear that this step is for patients
+       who have a tentative appointment, and that new inquirers can stop
+       here without submitting a card. The "Skip" link takes them to a
+       friendly inquiry-complete screen. -->
+  <div class="p-5 rounded-2xl mb-6" style="background:rgba(46,64,54,.05);border:1px solid rgba(46,64,54,.12)">
+    <p class="font-mono text-[10px] text-moss tracking-widest uppercase mb-2">Almost done</p>
+    <p class="text-sm text-charcoal/70 leading-relaxed">
+      If you've already spoken with Dr. Wong and have a tentative appointment, please complete this form to finalize and confirm it. If you're just inquiring and haven't yet been in touch with Dr. Wong, feel free to stop here — your inquiry is complete and we'll be in touch.
+    </p>
+    <div class="mt-4">
+      <a href="#" onclick="showInquiryComplete();return false;" class="font-mono text-clay text-[11px] tracking-widest uppercase hover:underline">Skip — I'm just inquiring →</a>
+    </div>
+  </div>
+
   <!-- Security notice -->
   <div class="flex items-start gap-3 p-4 rounded-2xl mb-8" style="background:rgba(46,64,54,.06);border:1px solid rgba(46,64,54,.1)">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2E4036" stroke-width="2" class="mt-0.5 flex-shrink-0"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
@@ -130,7 +144,7 @@ textarea.inp.inp-ok{background-image:none;padding-right:16px}
   <p class="text-center font-mono text-[9px] text-charcoal/30 tracking-wider mt-6 uppercase">HIPAA Compliant · gordonwongmd.com · Visa & Mastercard Only</p>
 </main>
 
-<!-- SUCCESS -->
+<!-- SUCCESS — card-on-file submission completed -->
 <div id="success" class="text-center py-20 px-4">
   <div class="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-6" style="background:#2E4036">
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#F2F0E9" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
@@ -140,6 +154,24 @@ textarea.inp.inp-ok{background-image:none;padding-right:16px}
   <a href="/" class="font-mono text-moss text-xs tracking-widest uppercase hover:underline" data-hub-href="intake.html?flow=intake">← Return to gordonwongmd.com</a>
 </div>
 
+<!-- INQUIRY COMPLETE — patient chose to skip the card form because
+     they're just inquiring (not a confirmed appointment yet). Warm
+     close-out message that matches the inquiry-acknowledgment email
+     they'll receive. -->
+<div id="inquiry-complete" class="text-center py-20 px-4" style="display:none">
+  <div class="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-6" style="background:#2E4036">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#F2F0E9" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+  </div>
+  <h2 class="font-drama italic text-3xl text-charcoal mb-3">Your Inquiry Is Complete</h2>
+  <p class="text-charcoal/65 text-base max-w-md mx-auto leading-relaxed mb-4">
+    Thank you for reaching out to Dr. Wong's office. Dr. Wong personally reviews all new-patient inquiries and will contact you directly if there is an opening in the practice that seems like it may be a good fit.
+  </p>
+  <p class="text-charcoal/55 text-sm max-w-md mx-auto leading-relaxed mb-8">
+    Because the practice is often quite full, please don't read silence as a reflection on your situation. If your need is urgent, please continue exploring other options.
+  </p>
+  <a href="/" class="font-mono text-moss text-xs tracking-widest uppercase hover:underline">← Return to gordonwongmd.com</a>
+</div>
+
 <footer class="py-8 mt-4 px-6 text-center" style="border-top:1px solid rgba(46,64,54,.1)">
   <p class="text-[10px] text-charcoal/45 leading-relaxed max-w-xl mx-auto">
     <strong>Notice to Patients</strong> — Medical doctors are licensed and regulated by the Medical Board of California. <span class="font-mono">www.mbc.ca.gov</span> · <span class="font-mono">(800) 633-2322</span>
@@ -147,7 +179,7 @@ textarea.inp.inp-ok{background-image:none;padding-right:16px}
   <p class="font-mono text-[9px] text-charcoal/30 tracking-widest uppercase mt-3">© 2026 Gordon Wong MD, MPH</p>
 </footer>
 
-<script src="intake-shared.js?v=3"></script>
+<script src="intake-shared.js?v=4"></script>
 <script>
 const FORM_ID='cardonfile';
 
@@ -197,6 +229,17 @@ function refreshSubmit(){
   document.getElementById(i).addEventListener('input', refreshSubmit);
 });
 refreshSubmit();
+
+// Patient clicked "Skip — I'm just inquiring" at the top of the card form.
+// Show the inquiry-complete close-out screen. No data is submitted (the
+// new-patient intake at Form 1 already captured everything the office
+// needs to follow up with them).
+function showInquiryComplete(){
+  document.getElementById('form-main').style.display = 'none';
+  document.getElementById('success').style.display  = 'none';
+  document.getElementById('inquiry-complete').style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
 
 async function submitForm(){
   const btn = document.getElementById('submit-btn');
