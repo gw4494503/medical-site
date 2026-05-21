@@ -1,7 +1,7 @@
 # Handoff — gordonwongmd.com
 
 *Read this before doing anything else in this repo.*
-*Last updated: 2026-05-03.*
+*Last updated: 2026-05-04.*
 
 This repo is the public website for Gordon Wong M.D., M.P.H. (private
 psychiatry, Palo Alto, California). Served from `main` via GitHub
@@ -80,9 +80,14 @@ git push origin <backup-branch-name>:main --force
 
 ## Hard rules (do not violate)
 
-1. **No patient emails ever.** Office gets a notification at
-   `gordon@gordonwongmd.com` per submission; patients never receive
-   anything automated from this codebase.
+1. **Limited patient emails — one acknowledgment only, no PHI.** As of
+   2026-05-04, new-patient inquiry submissions trigger ONE warm
+   acknowledgment email from `noreply@gordonwongmd.com` to the
+   submitting patient (handled by `notifyPatient.ts`). It contains no
+   PHI — just a thank-you and honest-capacity messaging. **No other
+   form type sends patient-side email.** Office notifications still
+   route to `gordon@gordonwongmd.com` via `notifyOffice.ts` for
+   `cardonfile` and `newpatient` form types.
 2. **CMS Medicare contract text is verbatim.** Don't paraphrase. Only
    per-interval effective/expiration dates change between back-sign forms.
 3. **Full credit card PANs are never stored on practice systems.**
@@ -127,3 +132,13 @@ git push origin <backup-branch-name>:main --force
   printf "<new>" | firebase functions:secrets:set SMTP_APP_PASS
   firebase deploy --only functions:submitSignedForm
   ```
+- **Patient acknowledgment emails** are sent FROM
+  `noreply@gordonwongmd.com` (Send-As alias on the gordon@ Gmail
+  account). If patients stop getting them, the most common cause is
+  the alias being removed from Gmail settings. Re-add in Gmail →
+  Settings → Accounts → Send mail as → Add another email address →
+  `noreply@gordonwongmd.com`.
+- **Auto-save** on the new-patient form persists field values to
+  `localStorage['intake-newpatient-draft']` so patients can resume a
+  partial submission. Banner offers a "Start fresh" reset link. Draft
+  is cleared automatically on successful submission.

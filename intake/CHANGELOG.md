@@ -54,7 +54,8 @@ medical-site/
 | **Cloud Function `verifyPatient`** | `onRequest`, public. Powers the scheduling-gate verification. DOB exact + fuzzy first/last name match against `patients` collection. Returns `{match, greeting}`. |
 | **Cloud Function `submitSignedForm`** | `onRequest`, public. Receives every form's submit. (1) Tries to match patient via the same fuzzy rule. (2) Generates a Google Doc of the signed form (full policy text + signature + audit footer with IP, user-agent, timestamp, policy version). (3) Writes the Doc to the **Signed Forms Drive folder** with filename `LastName FirstName MMDDYY [FormName]` (or `… Medicare Opt-Out 2018-2020` when `formData.intervalSuffix` is supplied by the back-sign flow). (4) Writes a `signed_documents` Firestore record. (5) Calls `notifyOffice()` for `cardonfile` and `newpatient` form types. |
 | **Cloud Function `lookupBackSignRecord`** | `onRequest`, public. Powers the Medicare back-sign landing page (`/intake/medicare-paperwork.html`). Same DOB-exact + fuzzy-name match as `verifyPatient`. Returns the list of 2-year opt-out intervals the patient still owes signatures for, computed from their first-seen date + DOB by the admin-side `buildBacksignTracker` function. |
-| **Cloud Function `notifyOffice` (helper)** | Sends a notification email via Gmail SMTP using nodemailer + `SMTP_APP_PASS` secret (Google Workspace App Password for `gordon@gordonwongmd.com`). Skip-if-not-configured: logs warning, returns gracefully if secret missing. |
+| **Cloud Function `notifyOffice` (helper)** | Sends a notification email TO the practice (`gordon@gordonwongmd.com`) via Gmail SMTP using nodemailer + `SMTP_APP_PASS` secret. Triggers on `cardonfile` and `newpatient` submissions. Skip-if-not-configured: logs warning, returns gracefully if secret missing. |
+| **Cloud Function `notifyPatient` (helper)** | Sends a warm acknowledgment email TO the patient on `newpatient` submissions only. From `noreply@gordonwongmd.com` (requires Send-As alias configured in gordon@'s Gmail settings). Reply-To: `gordon@`. Reuses `SMTP_APP_PASS`. Honest about capacity ("we may not be able to respond to every inquiry") so patients aren't left wondering. Best-effort; form submission never fails because of email. |
 | **Drive folder `Signed Forms`** | `1KF3DPA7WH93KDt_O1GFh5QVzrQjhX5VI` — on a Shared Drive (so files don't count against personal storage). All signed form Docs land here, sorted alphabetically by patient last name. |
 | **Firestore collection `signed_documents`** | One record per submission. Fields: `patient_id`, `unmatched`, `form_type`, `signed_at`, `patient_name_first/last`, `patient_dob_mmddyy`, `patient_email/phone`, `signed_name`, `signer_role`, `ip_address`, `user_agent`, `policy_version`, `drive_doc_id`, `drive_doc_filename`, `parent2_pending`, `parent2_email/name`, `provider`, `created_at`. Read by future Intake Status dashboard. |
 | **Existing `patients` Firestore collection** | Pre-existing from the billing app. `submitSignedForm` reads from it for patient matching and `verifyPatient` reads from it for the scheduling gate. **Never written to** by the new pipeline. |
@@ -171,6 +172,49 @@ git push origin <backup-branch-name>:main --force
 ---
 
 ## Commit log (reverse chronological)
+
+### 2026-05-04 — Auto-save draft, patient ack email, softer card form
+
+- **`51cff74`** — Three connected gaps closed:
+
+  1. **Auto-save intake draft** on `/intake/new-patient.html`. Every
+     keystroke saves to localStorage (`intake-newpatient-draft`,
+     400 ms debounce). On return — same browser, same device — every
+     field is restored and a clay-orange banner appears: *"Resuming
+     where you left off. Your entries from your previous visit have
+     been restored. [Start fresh]"*. Draft is cleared on successful
+     submit. Closes the gap where a patient fills out half the intake,
+     closes the tab, and we'd otherwise lose everything they typed.
+
+  2. **Card on File softer for inquirers.** Added a moss-tinted intro
+     section at the top of `/intake/card-on-file.html`: *"If you've
+     already spoken with Dr. Wong and have a tentative appointment,
+     please complete this form to finalize and confirm it. If you're
+     just inquiring and haven't yet been in touch with Dr. Wong, feel
+     free to stop here — your inquiry is complete and we'll be in
+     touch."* Plus a *"Skip — I'm just inquiring →"* clay-orange link
+     that routes to a warm `#inquiry-complete` close-out screen
+     mirroring the acknowledgment email. Inquirers no longer feel
+     pressured to surrender a credit card.
+
+  3. **Cache-bust** `intake-shared.js?v=3` → `?v=4` so browsers
+     immediately refetch.
+
+- **Cloud Function side** (`gordonwongmd-billing`):
+  - New file `functions/src/signed-forms/notifyPatient.ts` sends a
+    warm acknowledgment email TO the patient on `newpatient`
+    submissions only. From: `noreply@gordonwongmd.com` (via Send-As
+    alias on the gordon@ Gmail account). Reply-To: gordon@. Subject:
+    *"Inquiry received — Dr. Gordon Wong MD"*. Body uses Dr. Wong's
+    exact wording — honest about capacity, gentle about silence.
+  - Wired into `submitSignedForm.ts` as a best-effort parallel send
+    alongside the existing `notifyOffice` call. Failures log and
+    move on; form submission itself never fails because of email.
+  - Uses the existing `SMTP_APP_PASS` secret (no new secret needed).
+  - The noreply alias must be configured once in Gmail → Settings →
+    Accounts → Send mail as → Add `noreply@gordonwongmd.com`. If
+    missing, `notifyPatient` logs a hint and the form submission
+    still succeeds.
 
 ### 2026-05-03 — Hero text trim
 
@@ -334,17 +378,28 @@ owner). Highlights:
 
 - **Cache-busting**: `intake-shared.js` is referenced as `?v=N` in every
   HTML. When updating the shared script, bump N to force browsers to
-  refetch immediately. Currently at `?v=3`.
+  refetch immediately. Currently at `?v=4`.
 - **Cloud Function logs**: `firebase functions:log --only submitSignedForm`
-- **Email troubleshooting**: if notification emails stop arriving, check
-  function logs for `[notifyOffice]` messages. The most likely failure
-  is an invalidated Gmail App Password — regenerate at
+- **Email troubleshooting (office)**: if office notifications stop
+  arriving at `gordon@gordonwongmd.com`, check function logs for
+  `[notifyOffice]` messages. The most likely failure is an invalidated
+  Gmail App Password — regenerate at
   https://myaccount.google.com/apppasswords and update the secret with
   `printf "<new>" | firebase functions:secrets:set SMTP_APP_PASS`.
+- **Email troubleshooting (patient ack)**: if patients aren't receiving
+  the "Inquiry received" email, check function logs for `[notifyPatient]`
+  messages. Most likely failure is that the `noreply@gordonwongmd.com`
+  Send-As alias isn't configured on the gordon@ Gmail account. Set up
+  in Gmail → Settings → Accounts → Send mail as → Add address.
 - **Drive folder access**: if signed-form generation starts failing
   with "File not found", the most likely cause is the runtime service
   account losing access to the Drive folder. Re-share `Signed Forms`
   with `667274028685-compute@developer.gserviceaccount.com` as Editor.
+- **Auto-save draft**: the new-patient form keeps a draft in
+  `localStorage['intake-newpatient-draft']`. The draft is cleared on
+  successful submission. If a patient ever reports stale data
+  pre-filling on their device, instruct them to click the "Start fresh"
+  link in the orange banner at the top of the form.
 
 ---
 
