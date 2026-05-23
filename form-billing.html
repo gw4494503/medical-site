@@ -3,10 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <title>Update Card on File — Gordon Wong MD, MPH</title>
-  <!-- This URL is preserved for backward-compatibility with prior emailed
-       links. The card-update flow now lives at /intake/card-on-file.html
-       (hardened validation, signed Google Doc record, Cloud Function
-       backend). Bounce visitors to the new page. -->
+  <!--
+    ================================================================
+    LEGACY REDIRECT PAGE — DO NOT REPLACE WITH FORM CONTENT.
+    ================================================================
+    Kept ONLY for backward-compatibility with old emailed links.
+    The hardened card-update flow lives at /intake/card-on-file.html.
+
+    If this file is replaced with a real form again, patient card
+    submissions will silently bypass:
+      - the audit Drive Doc generation
+      - the signed_documents Firestore record
+      - the notifyOffice email to gordon@gordonwongmd.com
+    See form-new-patient.html for the cautionary tale.
+    ================================================================
+  -->
   <meta http-equiv="refresh" content="0; url=/intake/card-on-file.html">
   <link rel="canonical" href="/intake/card-on-file.html">
   <script>window.location.replace("/intake/card-on-file.html");</script>
